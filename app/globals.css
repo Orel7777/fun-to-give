@@ -1,2 +1,10 @@
 @import "tailwindcss";
 
+:root {
+  --font-quicksand: var(--font-quicksand);
+}
+
+body {
+  font-family: var(--font-quicksand);
+  background-color: #fdf6ed;
+}
