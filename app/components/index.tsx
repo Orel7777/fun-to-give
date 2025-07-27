@@ -1,0 +1,1 @@
+export { TextType } from './Text_type'; 
