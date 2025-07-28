@@ -12,6 +12,7 @@ export default function LoadPage({ onLoadComplete, duration = 8000 }: LoadPagePr
   const [isVisible, setIsVisible] = useState(true);
   const preloaderRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
+  const progressFillRef = useRef<HTMLDivElement>(null);
   const numberRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const logoBgRef = useRef<HTMLDivElement>(null);
@@ -30,41 +31,83 @@ export default function LoadPage({ onLoadComplete, duration = 8000 }: LoadPagePr
         requestAnimationFrame(updateProgress);
       } else {
         // הטעינה הסתיימה - אפקטי GSAP
-        gsap.to(progressBarRef.current, {
-          opacity: 0,
-          duration: 0.5,
-          ease: "power2.out"
-        });
-
+        
+        // קודם כל, הסתר את המספרים והלוגו
         gsap.to(numberRef.current, {
           opacity: 0,
-          duration: 0.5,
+          duration: 0.1,
           ease: "power2.out"
         });
 
         gsap.to(logoRef.current, {
           opacity: 0,
-          duration: 0.5,
+          duration: 0.1,
           ease: "power2.out"
         });
 
         gsap.to(logoBgRef.current, {
           opacity: 0,
           scale: 0.8,
-          duration: 0.5,
+          duration: 0.1,
           ease: "power2.out"
         });
 
-        gsap.to(preloaderRef.current, {
-          opacity: 0,
-          scale: 0.9,
-          duration: 1,
-          ease: "power2.out",
-          onComplete: () => {
-            setIsVisible(false);
-            onLoadComplete?.();
-          }
-        });
+        // אחר כך התחל את אנימציית ה-L
+        setTimeout(() => {
+          console.log('מתחיל אנימציית L');
+          // אנימציה להפוך את הסרגל לאות L
+          gsap.to(progressFillRef.current, {
+            width: "100%",
+            duration: 0.2,
+            ease: "power2.out",
+            onComplete: () => {
+              console.log('הסרגל מלא, מתחיל להפוך ל-L');
+              // הפוך את הסרגל לאות L
+              gsap.to(progressFillRef.current, {
+                height: "100%",
+                width: "20%",
+                duration: 0.3,
+                ease: "power2.out",
+                onComplete: () => {
+                  console.log('ה-L האנכי מוכן, מוסיף את החלק האופקי');
+                  // הוסף את החלק האופקי של ה-L
+                  gsap.to(progressFillRef.current, {
+                    width: "100%",
+                    height: "20%",
+                    top: "80%",
+                    position: "absolute",
+                    duration: 0.3,
+                    ease: "power2.out",
+                    onComplete: () => {
+                      // היעלם עם אפקט יפה
+                      setTimeout(() => {
+                        gsap.to(progressBarRef.current, {
+                          opacity: 0,
+                          scale: 0.8,
+                          duration: 0.5,
+                          ease: "power2.out",
+                          onComplete: () => {
+                            // סיים את הטעינה
+                            gsap.to(preloaderRef.current, {
+                              opacity: 0,
+                              scale: 0.9,
+                              duration: 0.8,
+                              ease: "power2.out",
+                              onComplete: () => {
+                                setIsVisible(false);
+                                onLoadComplete?.();
+                              }
+                            });
+                          }
+                        });
+                      }, 200);
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }, 100);
       }
     };
 
@@ -147,10 +190,11 @@ export default function LoadPage({ onLoadComplete, duration = 8000 }: LoadPagePr
       {/* סרגל הטעינה העבה באמצע */}
       <div 
         ref={progressBarRef}
-        className="w-96 h-4 bg-[#9acdbe] rounded-full overflow-hidden shadow-2xl"
+        className="w-80 h-4 bg-[#9acdbe] overflow-hidden shadow-2xl sm:w-96"
       >
         <div 
-          className="h-full bg-[#fdf6ed] transition-all duration-300 ease-out rounded-full shadow-lg"
+          ref={progressFillRef}
+          className="h-full bg-[#fdf6ed] transition-all duration-300 ease-out shadow-lg relative"
           style={{ width: `${progress}%` }}
         />
       </div>

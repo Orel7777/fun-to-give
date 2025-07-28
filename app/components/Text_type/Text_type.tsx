@@ -176,6 +176,8 @@ const TextType = ({
     hideCursorWhileTyping &&
     (currentCharIndex < textArray[currentTextIndex].length || isDeleting);
 
+
+  
   return createElement(
     Component,
     {
@@ -187,7 +189,7 @@ const TextType = ({
       className="text-type__content"
       style={{ color: getCurrentTextColor() }}
     >
-      {displayedText}
+      {displayedText || textArray[0]}
     </span>,
     showCursor && (
       <span
