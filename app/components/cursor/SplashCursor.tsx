@@ -98,15 +98,16 @@ export default function SplashCursor({
     };
 
     const { gl, ext } = getWebGLContext(canvas);
-    if (!gl || !ext) return;
-    
-    // הגדרת gl כ non-null עבור השימוש בקוד
-    const glContext = gl;
+          if (!gl || !ext) return;
+      
+      // הגדרת gl ו-ext כ non-null עבור השימוש בקוד
+      const glContext = gl;
+      const extContext = ext;
 
-    if (!ext.supportLinearFiltering) {
-      config.DYE_RESOLUTION = 256;
-      config.SHADING = false;
-    }
+          if (!extContext.supportLinearFiltering) {
+        config.DYE_RESOLUTION = 256;
+        config.SHADING = false;
+      }
 
     function getWebGLContext(canvas: HTMLCanvasElement) {
       const params = {
@@ -891,14 +892,14 @@ export default function SplashCursor({
       const simRes = getResolution(config.SIM_RESOLUTION!);
       const dyeRes = getResolution(config.DYE_RESOLUTION!);
 
-      const texType = ext.halfFloatTexType;
-      const rgba = ext.formatRGBA;
-      const rg = ext.formatRG;
-      const r = ext.formatR;
-      const filtering = ext.supportLinearFiltering ? glContext.LINEAR : glContext.NEAREST;
+      const texType = extContext.halfFloatTexType;
+      const rgba = extContext.formatRGBA;
+      const rg = extContext.formatRG;
+      const r = extContext.formatR;
+      const filtering = extContext.supportLinearFiltering ? glContext.LINEAR : glContext.NEAREST;
       glContext.disable(glContext.BLEND);
 
-      if (!dye) {
+      if (!dye && rgba) {
         dye = createDoubleFBO(
           dyeRes.width,
           dyeRes.height,
@@ -907,7 +908,7 @@ export default function SplashCursor({
           texType,
           filtering
         );
-      } else {
+      } else if (dye && rgba) {
         dye = resizeDoubleFBO(
           dye,
           dyeRes.width,
@@ -919,7 +920,7 @@ export default function SplashCursor({
         );
       }
 
-      if (!velocity) {
+      if (!velocity && rg) {
         velocity = createDoubleFBO(
           simRes.width,
           simRes.height,
@@ -928,7 +929,7 @@ export default function SplashCursor({
           texType,
           filtering
         );
-      } else {
+      } else if (velocity && rg) {
         velocity = resizeDoubleFBO(
           velocity,
           simRes.width,
@@ -940,30 +941,32 @@ export default function SplashCursor({
         );
       }
 
-      divergence = createFBO(
-        simRes.width,
-        simRes.height,
-        r.internalFormat,
-        r.format,
-        texType,
-        glContext.NEAREST
-      );
-      curl = createFBO(
-        simRes.width,
-        simRes.height,
-        r.internalFormat,
-        r.format,
-        texType,
-        glContext.NEAREST
-      );
-      pressure = createDoubleFBO(
-        simRes.width,
-        simRes.height,
-        r.internalFormat,
-        r.format,
-        texType,
-        glContext.NEAREST
-      );
+      if (r) {
+        divergence = createFBO(
+          simRes.width,
+          simRes.height,
+          r.internalFormat,
+          r.format,
+          texType,
+          glContext.NEAREST
+        );
+        curl = createFBO(
+          simRes.width,
+          simRes.height,
+          r.internalFormat,
+          r.format,
+          texType,
+          glContext.NEAREST
+        );
+        pressure = createDoubleFBO(
+          simRes.width,
+          simRes.height,
+          r.internalFormat,
+          r.format,
+          texType,
+          glContext.NEAREST
+        );
+      }
     }
 
     function updateKeywords() {
@@ -1169,7 +1172,7 @@ export default function SplashCursor({
         );
       }
       if (
-        !ext.supportLinearFiltering &&
+        !extContext.supportLinearFiltering &&
         advectionProgram.uniforms.dyeTexelSize
       ) {
         glContext.uniform2f(
@@ -1198,7 +1201,7 @@ export default function SplashCursor({
       velocity.swap();
 
       if (
-        !ext.supportLinearFiltering &&
+        !extContext.supportLinearFiltering &&
         advectionProgram.uniforms.dyeTexelSize
       ) {
         glContext.uniform2f(
