@@ -100,8 +100,8 @@ export default function SplashCursor({
     const { gl, ext } = getWebGLContext(canvas);
     if (!gl || !ext) return;
     
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const glContext = gl!;
+    // הגדרת gl כ non-null עבור השימוש בקוד
+    const glContext = gl;
 
     if (!ext.supportLinearFiltering) {
       config.DYE_RESOLUTION = 256;
@@ -287,14 +287,13 @@ export default function SplashCursor({
       source: string,
       keywords: string[] | null = null
     ): WebGLShader | null {
-      if (!gl) return null;
       const shaderSource = addKeywords(source, keywords);
-      const shader = gl.createShader(type);
+      const shader = glContext.createShader(type);
       if (!shader) return null;
-      gl.shaderSource(shader, shaderSource);
-      gl.compileShader(shader);
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.trace(gl.getShaderInfoLog(shader));
+      glContext.shaderSource(shader, shaderSource);
+      glContext.compileShader(shader);
+      if (!glContext.getShaderParameter(shader, glContext.COMPILE_STATUS)) {
+        console.trace(glContext.getShaderInfoLog(shader));
       }
       return shader;
     }
@@ -303,26 +302,25 @@ export default function SplashCursor({
       vertexShader: WebGLShader | null,
       fragmentShader: WebGLShader | null
     ): WebGLProgram | null {
-      if (!gl || !vertexShader || !fragmentShader) return null;
-      const program = gl.createProgram();
+      if (!vertexShader || !fragmentShader) return null;
+      const program = glContext.createProgram();
       if (!program) return null;
-      gl.attachShader(program, vertexShader);
-      gl.attachShader(program, fragmentShader);
-      gl.linkProgram(program);
-      if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
-        console.trace(gl.getProgramInfoLog(program));
+      glContext.attachShader(program, vertexShader);
+      glContext.attachShader(program, fragmentShader);
+      glContext.linkProgram(program);
+      if (!glContext.getProgramParameter(program, glContext.LINK_STATUS)) {
+        console.trace(glContext.getProgramInfoLog(program));
       }
       return program;
     }
 
     function getUniforms(program: WebGLProgram) {
-      if (!gl) return {};
       const uniforms: Record<string, WebGLUniformLocation | null> = {};
-      const uniformCount = gl.getProgramParameter(program, gl.ACTIVE_UNIFORMS);
+      const uniformCount = glContext.getProgramParameter(program, glContext.ACTIVE_UNIFORMS);
       for (let i = 0; i < uniformCount; i++) {
-        const uniformInfo = gl.getActiveUniform(program, i);
+        const uniformInfo = glContext.getActiveUniform(program, i);
         if (uniformInfo) {
-          uniforms[uniformInfo.name] = gl.getUniformLocation(
+          uniforms[uniformInfo.name] = glContext.getUniformLocation(
             program,
             uniformInfo.name
           );
@@ -344,7 +342,7 @@ export default function SplashCursor({
       }
 
       bind() {
-        if (this.program) gl.useProgram(this.program);
+        if (this.program) glContext.useProgram(this.program);
       }
     }
 
@@ -374,7 +372,7 @@ export default function SplashCursor({
         let program = this.programs[hash];
         if (program == null) {
           const fragmentShader = compileShader(
-            gl.FRAGMENT_SHADER,
+            glContext.FRAGMENT_SHADER,
             this.fragmentShaderSource,
             keywords
           );
@@ -390,13 +388,13 @@ export default function SplashCursor({
 
       bind() {
         if (this.activeProgram) {
-          gl.useProgram(this.activeProgram);
+          glContext.useProgram(this.activeProgram);
         }
       }
     }
 
     const baseVertexShader = compileShader(
-      gl.VERTEX_SHADER,
+      glContext.VERTEX_SHADER,
       `
       precision highp float;
       attribute vec2 aPosition;
@@ -419,7 +417,7 @@ export default function SplashCursor({
     );
 
     const copyShader = compileShader(
-      gl.FRAGMENT_SHADER,
+      glContext.FRAGMENT_SHADER,
       `
       precision mediump float;
       precision mediump sampler2D;
@@ -433,7 +431,7 @@ export default function SplashCursor({
     );
 
     const clearShader = compileShader(
-      gl.FRAGMENT_SHADER,
+      glContext.FRAGMENT_SHADER,
       `
       precision mediump float;
       precision mediump sampler2D;
@@ -489,7 +487,7 @@ export default function SplashCursor({
     `;
 
     const splatShader = compileShader(
-      gl.FRAGMENT_SHADER,
+      glContext.FRAGMENT_SHADER,
       `
       precision highp float;
       precision highp sampler2D;
@@ -511,7 +509,7 @@ export default function SplashCursor({
     );
 
     const advectionShader = compileShader(
-      gl.FRAGMENT_SHADER,
+      glContext.FRAGMENT_SHADER,
       `
       precision highp float;
       precision highp sampler2D;
@@ -552,7 +550,7 @@ export default function SplashCursor({
     );
 
     const divergenceShader = compileShader(
-      gl.FRAGMENT_SHADER,
+      glContext.FRAGMENT_SHADER,
       `
       precision mediump float;
       precision mediump sampler2D;
@@ -582,7 +580,7 @@ export default function SplashCursor({
     );
 
     const curlShader = compileShader(
-      gl.FRAGMENT_SHADER,
+      glContext.FRAGMENT_SHADER,
       `
       precision mediump float;
       precision mediump sampler2D;
@@ -605,7 +603,7 @@ export default function SplashCursor({
     );
 
     const vorticityShader = compileShader(
-      gl.FRAGMENT_SHADER,
+      glContext.FRAGMENT_SHADER,
       `
       precision highp float;
       precision highp sampler2D;
@@ -640,7 +638,7 @@ export default function SplashCursor({
     );
 
     const pressureShader = compileShader(
-      gl.FRAGMENT_SHADER,
+      glContext.FRAGMENT_SHADER,
       `
       precision mediump float;
       precision mediump sampler2D;
@@ -666,7 +664,7 @@ export default function SplashCursor({
     );
 
     const gradientSubtractShader = compileShader(
-      gl.FRAGMENT_SHADER,
+      glContext.FRAGMENT_SHADER,
       `
       precision mediump float;
       precision mediump sampler2D;
@@ -691,37 +689,36 @@ export default function SplashCursor({
     );
 
     const blit = (() => {
-      const buffer = gl.createBuffer()!;
-      gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-      gl.bufferData(
-        gl.ARRAY_BUFFER,
+      const buffer = glContext.createBuffer()!;
+      glContext.bindBuffer(glContext.ARRAY_BUFFER, buffer);
+      glContext.bufferData(
+        glContext.ARRAY_BUFFER,
         new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]),
-        gl.STATIC_DRAW
+        glContext.STATIC_DRAW
       );
-      const elemBuffer = gl.createBuffer()!;
-      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, elemBuffer);
-      gl.bufferData(
-        gl.ELEMENT_ARRAY_BUFFER,
+      const elemBuffer = glContext.createBuffer()!;
+      glContext.bindBuffer(glContext.ELEMENT_ARRAY_BUFFER, elemBuffer);
+      glContext.bufferData(
+        glContext.ELEMENT_ARRAY_BUFFER,
         new Uint16Array([0, 1, 2, 0, 2, 3]),
-        gl.STATIC_DRAW
+        glContext.STATIC_DRAW
       );
-      gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-      gl.enableVertexAttribArray(0);
+      glContext.vertexAttribPointer(0, 2, glContext.FLOAT, false, 0, 0);
+      glContext.enableVertexAttribArray(0);
 
       return (target: FBO | null, doClear = false) => {
-        if (!gl) return;
         if (!target) {
-          gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
-          gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+          glContext.viewport(0, 0, glContext.drawingBufferWidth, glContext.drawingBufferHeight);
+          glContext.bindFramebuffer(glContext.FRAMEBUFFER, null);
         } else {
-          gl.viewport(0, 0, target.width, target.height);
-          gl.bindFramebuffer(gl.FRAMEBUFFER, target.fbo);
+          glContext.viewport(0, 0, target.width, target.height);
+          glContext.bindFramebuffer(glContext.FRAMEBUFFER, target.fbo);
         }
         if (doClear) {
-          gl.clearColor(0, 0, 0, 1);
-          gl.clear(gl.COLOR_BUFFER_BIT);
+          glContext.clearColor(0, 0, 0, 1);
+          glContext.clear(glContext.COLOR_BUFFER_BIT);
         }
-        gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+        glContext.drawElements(glContext.TRIANGLES, 6, glContext.UNSIGNED_SHORT, 0);
       };
     })();
 
@@ -773,15 +770,15 @@ export default function SplashCursor({
       type: number,
       param: number
     ): FBO {
-      gl.activeTexture(gl.TEXTURE0);
-      const texture = gl.createTexture()!;
-      gl.bindTexture(gl.TEXTURE_2D, texture);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, param);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, param);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
-      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-      gl.texImage2D(
-        gl.TEXTURE_2D,
+      glContext.activeTexture(glContext.TEXTURE0);
+      const texture = glContext.createTexture()!;
+      glContext.bindTexture(glContext.TEXTURE_2D, texture);
+      glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MIN_FILTER, param);
+      glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_MAG_FILTER, param);
+      glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_S, glContext.CLAMP_TO_EDGE);
+      glContext.texParameteri(glContext.TEXTURE_2D, glContext.TEXTURE_WRAP_T, glContext.CLAMP_TO_EDGE);
+      glContext.texImage2D(
+        glContext.TEXTURE_2D,
         0,
         internalFormat,
         w,
@@ -791,17 +788,17 @@ export default function SplashCursor({
         type,
         null
       );
-      const fbo = gl.createFramebuffer()!;
-      gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
-      gl.framebufferTexture2D(
-        gl.FRAMEBUFFER,
-        gl.COLOR_ATTACHMENT0,
-        gl.TEXTURE_2D,
+      const fbo = glContext.createFramebuffer()!;
+      glContext.bindFramebuffer(glContext.FRAMEBUFFER, fbo);
+      glContext.framebufferTexture2D(
+        glContext.FRAMEBUFFER,
+        glContext.COLOR_ATTACHMENT0,
+        glContext.TEXTURE_2D,
         texture,
         0
       );
-      gl.viewport(0, 0, w, h);
-      gl.clear(gl.COLOR_BUFFER_BIT);
+      glContext.viewport(0, 0, w, h);
+      glContext.clear(glContext.COLOR_BUFFER_BIT);
 
       const texelSizeX = 1 / w;
       const texelSizeY = 1 / h;
@@ -814,8 +811,8 @@ export default function SplashCursor({
         texelSizeX,
         texelSizeY,
         attach(id: number) {
-          gl.activeTexture(gl.TEXTURE0 + id);
-          gl.bindTexture(gl.TEXTURE_2D, texture);
+          glContext.activeTexture(glContext.TEXTURE0 + id);
+          glContext.bindTexture(glContext.TEXTURE_2D, texture);
           return id;
         },
       };
@@ -858,7 +855,7 @@ export default function SplashCursor({
       const newFBO = createFBO(w, h, internalFormat, format, type, param);
       copyProgram.bind();
       if (copyProgram.uniforms.uTexture)
-        gl.uniform1i(copyProgram.uniforms.uTexture, target.attach(0));
+        glContext.uniform1i(copyProgram.uniforms.uTexture, target.attach(0));
       blit(newFBO, false);
       return newFBO;
     }
@@ -898,8 +895,8 @@ export default function SplashCursor({
       const rgba = ext.formatRGBA;
       const rg = ext.formatRG;
       const r = ext.formatR;
-      const filtering = ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST;
-      gl.disable(gl.BLEND);
+      const filtering = ext.supportLinearFiltering ? glContext.LINEAR : glContext.NEAREST;
+      glContext.disable(glContext.BLEND);
 
       if (!dye) {
         dye = createDoubleFBO(
@@ -949,7 +946,7 @@ export default function SplashCursor({
         r.internalFormat,
         r.format,
         texType,
-        gl.NEAREST
+        glContext.NEAREST
       );
       curl = createFBO(
         simRes.width,
@@ -957,7 +954,7 @@ export default function SplashCursor({
         r.internalFormat,
         r.format,
         texType,
-        gl.NEAREST
+        glContext.NEAREST
       );
       pressure = createDoubleFBO(
         simRes.width,
@@ -965,7 +962,7 @@ export default function SplashCursor({
         r.internalFormat,
         r.format,
         texType,
-        gl.NEAREST
+        glContext.NEAREST
       );
     }
 
@@ -976,8 +973,8 @@ export default function SplashCursor({
     }
 
     function getResolution(resolution: number) {
-      const w = gl.drawingBufferWidth;
-      const h = gl.drawingBufferHeight;
+      const w = glContext.drawingBufferWidth;
+      const h = glContext.drawingBufferHeight;
       const aspectRatio = w / h;
       const aspect = aspectRatio < 1 ? 1 / aspectRatio : aspectRatio;
       const min = Math.round(resolution);
@@ -1048,57 +1045,57 @@ export default function SplashCursor({
     }
 
     function step(dt: number) {
-      gl.disable(gl.BLEND);
+      glContext.disable(glContext.BLEND);
 
       curlProgram.bind();
       if (curlProgram.uniforms.texelSize) {
-        gl.uniform2f(
+        glContext.uniform2f(
           curlProgram.uniforms.texelSize,
           velocity.texelSizeX,
           velocity.texelSizeY
         );
       }
       if (curlProgram.uniforms.uVelocity) {
-        gl.uniform1i(curlProgram.uniforms.uVelocity, velocity.read.attach(0));
+        glContext.uniform1i(curlProgram.uniforms.uVelocity, velocity.read.attach(0));
       }
       blit(curl);
 
       vorticityProgram.bind();
       if (vorticityProgram.uniforms.texelSize) {
-        gl.uniform2f(
+        glContext.uniform2f(
           vorticityProgram.uniforms.texelSize,
           velocity.texelSizeX,
           velocity.texelSizeY
         );
       }
       if (vorticityProgram.uniforms.uVelocity) {
-        gl.uniform1i(
+        glContext.uniform1i(
           vorticityProgram.uniforms.uVelocity,
           velocity.read.attach(0)
         );
       }
       if (vorticityProgram.uniforms.uCurl) {
-        gl.uniform1i(vorticityProgram.uniforms.uCurl, curl.attach(1));
+        glContext.uniform1i(vorticityProgram.uniforms.uCurl, curl.attach(1));
       }
       if (vorticityProgram.uniforms.curl) {
-        gl.uniform1f(vorticityProgram.uniforms.curl, config.CURL);
+        glContext.uniform1f(vorticityProgram.uniforms.curl, config.CURL);
       }
       if (vorticityProgram.uniforms.dt) {
-        gl.uniform1f(vorticityProgram.uniforms.dt, dt);
+        glContext.uniform1f(vorticityProgram.uniforms.dt, dt);
       }
       blit(velocity.write);
       velocity.swap();
 
       divergenceProgram.bind();
       if (divergenceProgram.uniforms.texelSize) {
-        gl.uniform2f(
+        glContext.uniform2f(
           divergenceProgram.uniforms.texelSize,
           velocity.texelSizeX,
           velocity.texelSizeY
         );
       }
       if (divergenceProgram.uniforms.uVelocity) {
-        gl.uniform1i(
+        glContext.uniform1i(
           divergenceProgram.uniforms.uVelocity,
           velocity.read.attach(0)
         );
@@ -1107,31 +1104,31 @@ export default function SplashCursor({
 
       clearProgram.bind();
       if (clearProgram.uniforms.uTexture) {
-        gl.uniform1i(clearProgram.uniforms.uTexture, pressure.read.attach(0));
+        glContext.uniform1i(clearProgram.uniforms.uTexture, pressure.read.attach(0));
       }
       if (clearProgram.uniforms.value) {
-        gl.uniform1f(clearProgram.uniforms.value, config.PRESSURE);
+        glContext.uniform1f(clearProgram.uniforms.value, config.PRESSURE);
       }
       blit(pressure.write);
       pressure.swap();
 
       pressureProgram.bind();
       if (pressureProgram.uniforms.texelSize) {
-        gl.uniform2f(
+        glContext.uniform2f(
           pressureProgram.uniforms.texelSize,
           velocity.texelSizeX,
           velocity.texelSizeY
         );
       }
       if (pressureProgram.uniforms.uDivergence) {
-        gl.uniform1i(
+        glContext.uniform1i(
           pressureProgram.uniforms.uDivergence,
           divergence.attach(0)
         );
       }
       for (let i = 0; i < config.PRESSURE_ITERATIONS; i++) {
         if (pressureProgram.uniforms.uPressure) {
-          gl.uniform1i(
+          glContext.uniform1i(
             pressureProgram.uniforms.uPressure,
             pressure.read.attach(1)
           );
@@ -1142,20 +1139,20 @@ export default function SplashCursor({
 
       gradienSubtractProgram.bind();
       if (gradienSubtractProgram.uniforms.texelSize) {
-        gl.uniform2f(
+        glContext.uniform2f(
           gradienSubtractProgram.uniforms.texelSize,
           velocity.texelSizeX,
           velocity.texelSizeY
         );
       }
       if (gradienSubtractProgram.uniforms.uPressure) {
-        gl.uniform1i(
+        glContext.uniform1i(
           gradienSubtractProgram.uniforms.uPressure,
           pressure.read.attach(0)
         );
       }
       if (gradienSubtractProgram.uniforms.uVelocity) {
-        gl.uniform1i(
+        glContext.uniform1i(
           gradienSubtractProgram.uniforms.uVelocity,
           velocity.read.attach(1)
         );
@@ -1165,7 +1162,7 @@ export default function SplashCursor({
 
       advectionProgram.bind();
       if (advectionProgram.uniforms.texelSize) {
-        gl.uniform2f(
+        glContext.uniform2f(
           advectionProgram.uniforms.texelSize,
           velocity.texelSizeX,
           velocity.texelSizeY
@@ -1175,7 +1172,7 @@ export default function SplashCursor({
         !ext.supportLinearFiltering &&
         advectionProgram.uniforms.dyeTexelSize
       ) {
-        gl.uniform2f(
+        glContext.uniform2f(
           advectionProgram.uniforms.dyeTexelSize,
           velocity.texelSizeX,
           velocity.texelSizeY
@@ -1183,16 +1180,16 @@ export default function SplashCursor({
       }
       const velocityId = velocity.read.attach(0);
       if (advectionProgram.uniforms.uVelocity) {
-        gl.uniform1i(advectionProgram.uniforms.uVelocity, velocityId);
+        glContext.uniform1i(advectionProgram.uniforms.uVelocity, velocityId);
       }
       if (advectionProgram.uniforms.uSource) {
-        gl.uniform1i(advectionProgram.uniforms.uSource, velocityId);
+        glContext.uniform1i(advectionProgram.uniforms.uSource, velocityId);
       }
       if (advectionProgram.uniforms.dt) {
-        gl.uniform1f(advectionProgram.uniforms.dt, dt);
+        glContext.uniform1f(advectionProgram.uniforms.dt, dt);
       }
       if (advectionProgram.uniforms.dissipation) {
-        gl.uniform1f(
+        glContext.uniform1f(
           advectionProgram.uniforms.dissipation,
           config.VELOCITY_DISSIPATION
         );
@@ -1204,23 +1201,23 @@ export default function SplashCursor({
         !ext.supportLinearFiltering &&
         advectionProgram.uniforms.dyeTexelSize
       ) {
-        gl.uniform2f(
+        glContext.uniform2f(
           advectionProgram.uniforms.dyeTexelSize,
           dye.texelSizeX,
           dye.texelSizeY
         );
       }
       if (advectionProgram.uniforms.uVelocity) {
-        gl.uniform1i(
+        glContext.uniform1i(
           advectionProgram.uniforms.uVelocity,
           velocity.read.attach(0)
         );
       }
       if (advectionProgram.uniforms.uSource) {
-        gl.uniform1i(advectionProgram.uniforms.uSource, dye.read.attach(1));
+        glContext.uniform1i(advectionProgram.uniforms.uSource, dye.read.attach(1));
       }
       if (advectionProgram.uniforms.dissipation) {
-        gl.uniform1f(
+        glContext.uniform1f(
           advectionProgram.uniforms.dissipation,
           config.DENSITY_DISSIPATION
         );
@@ -1230,20 +1227,20 @@ export default function SplashCursor({
     }
 
     function render(target: FBO | null) {
-      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
-      gl.enable(gl.BLEND);
+      glContext.blendFunc(glContext.ONE, glContext.ONE_MINUS_SRC_ALPHA);
+      glContext.enable(glContext.BLEND);
       drawDisplay(target);
     }
 
     function drawDisplay(target: FBO | null) {
-      const width = target ? target.width : gl.drawingBufferWidth;
-      const height = target ? target.height : gl.drawingBufferHeight;
+      const width = target ? target.width : glContext.drawingBufferWidth;
+      const height = target ? target.height : glContext.drawingBufferHeight;
       displayMaterial.bind();
       if (config.SHADING && displayMaterial.uniforms.texelSize) {
-        gl.uniform2f(displayMaterial.uniforms.texelSize, 1 / width, 1 / height);
+        glContext.uniform2f(displayMaterial.uniforms.texelSize, 1 / width, 1 / height);
       }
       if (displayMaterial.uniforms.uTexture) {
-        gl.uniform1i(displayMaterial.uniforms.uTexture, dye.read.attach(0));
+        glContext.uniform1i(displayMaterial.uniforms.uTexture, dye.read.attach(0));
       }
       blit(target, false);
     }
@@ -1273,22 +1270,22 @@ export default function SplashCursor({
     ) {
       splatProgram.bind();
       if (splatProgram.uniforms.uTarget) {
-        gl.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0));
+        glContext.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0));
       }
       if (splatProgram.uniforms.aspectRatio) {
-        gl.uniform1f(
+        glContext.uniform1f(
           splatProgram.uniforms.aspectRatio,
           canvas!.width / canvas!.height
         );
       }
       if (splatProgram.uniforms.point) {
-        gl.uniform2f(splatProgram.uniforms.point, x, y);
+        glContext.uniform2f(splatProgram.uniforms.point, x, y);
       }
       if (splatProgram.uniforms.color) {
-        gl.uniform3f(splatProgram.uniforms.color, dx, dy, 0);
+        glContext.uniform3f(splatProgram.uniforms.color, dx, dy, 0);
       }
       if (splatProgram.uniforms.radius) {
-        gl.uniform1f(
+        glContext.uniform1f(
           splatProgram.uniforms.radius,
           correctRadius(config.SPLAT_RADIUS / 100)!
         );
@@ -1297,10 +1294,10 @@ export default function SplashCursor({
       velocity.swap();
 
       if (splatProgram.uniforms.uTarget) {
-        gl.uniform1i(splatProgram.uniforms.uTarget, dye.read.attach(0));
+        glContext.uniform1i(splatProgram.uniforms.uTarget, dye.read.attach(0));
       }
       if (splatProgram.uniforms.color) {
-        gl.uniform3f(splatProgram.uniforms.color, color.r, color.g, color.b);
+        glContext.uniform3f(splatProgram.uniforms.color, color.r, color.g, color.b);
       }
       blit(dye.write);
       dye.swap();
@@ -1525,7 +1522,7 @@ export default function SplashCursor({
 
   return (
     <div className="fixed top-0 left-0 z-[10000] pointer-events-none w-full h-full">
-      <canvas ref={canvasRef} id="fluid" className="w-screen h-screen block" />
+      <canvas ref={canvasRef} id="fluid" className="block w-screen h-screen" />
     </div>
   );
-} 
+}
