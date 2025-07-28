@@ -1,7 +1,6 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-// import Particles from '../Particles/Particles'; // מושבת זמנית
 
 interface LoadPageProps {
   onLoadComplete?: () => void;
@@ -14,6 +13,7 @@ export default function LoadPage({ onLoadComplete, duration = 8000 }: LoadPagePr
   const preloaderRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const progressFillRef = useRef<HTMLDivElement>(null);
+  const circleRef = useRef<HTMLDivElement>(null);
   const numberRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const logoBgRef = useRef<HTMLDivElement>(null);
@@ -31,84 +31,69 @@ export default function LoadPage({ onLoadComplete, duration = 8000 }: LoadPagePr
       if (newProgress < 100) {
         requestAnimationFrame(updateProgress);
       } else {
+        console.log('הטעינה הסתיימה, מתחיל אנימציות');
         // הטעינה הסתיימה - אפקטי GSAP
         
-        // קודם כל, הסתר את המספרים והלוגו
-        gsap.to(numberRef.current, {
+        // התחל את אנימציית העיגול והפיזור
+        console.log('מתחיל אנימציית עיגול ופיזור');
+        
+        // הסתר את כל האלמנטים
+        gsap.to([numberRef.current, logoRef.current, logoBgRef.current, progressBarRef.current], {
           opacity: 0,
-          duration: 0.1,
+          duration: 0.2,
           ease: "power2.out"
         });
 
-        gsap.to(logoRef.current, {
-          opacity: 0,
-          duration: 0.1,
-          ease: "power2.out"
-        });
-
-        gsap.to(logoBgRef.current, {
-          opacity: 0,
-          scale: 0.8,
-          duration: 0.1,
-          ease: "power2.out"
-        });
-
-        // אחר כך התחל את אנימציית ה-L
+        // המתן רגע ואז צור עיגול חדש במרכז
         setTimeout(() => {
-          console.log('מתחיל אנימציית L');
-          // אנימציה להפוך את הסרגל לאות L
-          gsap.to(progressFillRef.current, {
-            width: "100%",
-            duration: 0.2,
-            ease: "power2.out",
+          // הראה את העיגול החדש
+          gsap.set(circleRef.current, {
+            width: "50px",
+            height: "50px",
+            left: "50%",
+            top: "50%",
+            xPercent: -50,
+            yPercent: -50,
+            scale: 0,
+            opacity: 1,
+            borderRadius: "50%",
+            backgroundColor: "#fdf6ed",
+            position: "fixed",
+            zIndex: 9999,
+            display: "block"
+          });
+
+          // אנימציה 1: הראה את העיגול
+          gsap.to(circleRef.current, {
+            scale: 1,
+            duration: 0.3,
+            ease: "back.out(1.7)",
             onComplete: () => {
-              console.log('הסרגל מלא, מתחיל להפוך ל-L');
-              // הפוך את הסרגל לאות L
-              gsap.to(progressFillRef.current, {
-                height: "100%",
-                width: "20%",
-                duration: 0.3,
+              console.log('העיגול הופיע, מתחיל פיזור');
+              
+              // אנימציה 2: הרחב את העיגול לכל המסך
+              gsap.to(circleRef.current, {
+                scale: 50,
+                duration: 0.8,
                 ease: "power2.out",
                 onComplete: () => {
-                  console.log('ה-L האנכי מוכן, מוסיף את החלק האופקי');
-                  // הוסף את החלק האופקי של ה-L
-                  gsap.to(progressFillRef.current, {
-                    width: "100%",
-                    height: "20%",
-                    top: "80%",
-                    position: "absolute",
+                  console.log('הפיזור הושלם');
+                  
+                  // אנימציה 3: היעלם
+                  gsap.to(preloaderRef.current, {
+                    opacity: 0,
                     duration: 0.3,
                     ease: "power2.out",
                     onComplete: () => {
-                      // היעלם עם אפקט יפה
-                      setTimeout(() => {
-                        gsap.to(progressBarRef.current, {
-                          opacity: 0,
-                          scale: 0.8,
-                          duration: 0.5,
-                          ease: "power2.out",
-                          onComplete: () => {
-                            // סיים את הטעינה
-                            gsap.to(preloaderRef.current, {
-                              opacity: 0,
-                              scale: 0.9,
-                              duration: 0.8,
-                              ease: "power2.out",
-                              onComplete: () => {
-                                setIsVisible(false);
-                                onLoadComplete?.();
-                              }
-                            });
-                          }
-                        });
-                      }, 200);
+                      setIsVisible(false);
+                      onLoadComplete?.();
                     }
                   });
                 }
               });
             }
           });
-        }, 100);
+        }, 300);
       }
     };
 
@@ -160,30 +145,24 @@ export default function LoadPage({ onLoadComplete, duration = 8000 }: LoadPagePr
       ref={preloaderRef}
       className="fixed inset-0 z-[9999] bg-[#f5a383] flex flex-col items-center justify-center"
     >
-      {/* אפקט חלקיקים ברקע - מושבת זמנית */}
-      {/* <div className="absolute inset-0 z-0">
-        <Particles
-          particleColors={['#fdf6ed', '#ffffff', '#f5a383']}
-          particleCount={30}
-          particleSpread={15}
-          speed={0.0005}
-          particleBaseSize={6}
-          moveParticlesOnHover={false}
-          alphaParticles={true}
-          disableRotation={false}
-        />
-      </div> */}
-                        {/* מספר הטעינה בפינה שמאלית תחתונה */}
-                  <div 
-                    ref={numberRef}
-                    className="absolute bottom-6 left-6 text-[#fdf6ed] text-8xl font-bold z-20"
-                    style={{ fontFamily: 'Aeonik, sans-serif' }}
-                  >
-                    {Math.round(progress).toString().padStart(3, '0')}
-                  </div>
+      {/* עיגול הפיזור */}
+      <div 
+        ref={circleRef}
+        className="fixed"
+        style={{ display: 'none' }}
+      />
 
-                  {/* לוגו מעל הסרגל עם רקע מונפש */}
-                  <div className="flex relative z-20 justify-center items-center mb-16">
+      {/* מספר הטעינה בפינה שמאלית תחתונה */}
+      <div 
+        ref={numberRef}
+        className="absolute bottom-6 left-6 text-[#fdf6ed] text-8xl font-bold"
+        style={{ fontFamily: 'Aeonik, sans-serif' }}
+      >
+        {Math.round(progress).toString().padStart(3, '0')}
+      </div>
+
+      {/* לוגו מעל הסרגל עם רקע מונפש */}
+      <div className="flex relative justify-center items-center mb-16">
         {/* רקע מונפש מסביב ללוגו */}
         <div 
           ref={logoBgRef}
@@ -204,11 +183,11 @@ export default function LoadPage({ onLoadComplete, duration = 8000 }: LoadPagePr
       {/* סרגל הטעינה העבה באמצע */}
       <div 
         ref={progressBarRef}
-        className="w-80 h-4 bg-[#9acdbe] overflow-hidden shadow-2xl sm:w-96 z-20"
+        className="w-80 h-4 bg-[#9acdbe] overflow-hidden shadow-2xl sm:w-96 relative"
       >
         <div 
           ref={progressFillRef}
-          className="h-full bg-[#fdf6ed] transition-all duration-300 ease-out shadow-lg relative"
+          className="h-full bg-[#fdf6ed] transition-all duration-300 ease-out shadow-lg absolute top-0 left-0 z-10"
           style={{ width: `${progress}%` }}
         />
       </div>
