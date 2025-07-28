@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+// import Particles from '../Particles/Particles'; // מושבת זמנית
 
 interface LoadPageProps {
   onLoadComplete?: () => void;
@@ -159,17 +160,30 @@ export default function LoadPage({ onLoadComplete, duration = 8000 }: LoadPagePr
       ref={preloaderRef}
       className="fixed inset-0 z-[9999] bg-[#f5a383] flex flex-col items-center justify-center"
     >
-      {/* מספר הטעינה בפינה שמאלית תחתונה */}
-      <div 
-        ref={numberRef}
-        className="absolute bottom-6 left-6 text-[#fdf6ed] text-8xl font-bold"
-        style={{ fontFamily: 'Aeonik, sans-serif' }}
-      >
-        {Math.round(progress).toString().padStart(3, '0')}
-      </div>
+      {/* אפקט חלקיקים ברקע - מושבת זמנית */}
+      {/* <div className="absolute inset-0 z-0">
+        <Particles
+          particleColors={['#fdf6ed', '#ffffff', '#f5a383']}
+          particleCount={30}
+          particleSpread={15}
+          speed={0.0005}
+          particleBaseSize={6}
+          moveParticlesOnHover={false}
+          alphaParticles={true}
+          disableRotation={false}
+        />
+      </div> */}
+                        {/* מספר הטעינה בפינה שמאלית תחתונה */}
+                  <div 
+                    ref={numberRef}
+                    className="absolute bottom-6 left-6 text-[#fdf6ed] text-8xl font-bold z-20"
+                    style={{ fontFamily: 'Aeonik, sans-serif' }}
+                  >
+                    {Math.round(progress).toString().padStart(3, '0')}
+                  </div>
 
-      {/* לוגו מעל הסרגל עם רקע מונפש */}
-      <div className="flex relative justify-center items-center mb-16">
+                  {/* לוגו מעל הסרגל עם רקע מונפש */}
+                  <div className="flex relative z-20 justify-center items-center mb-16">
         {/* רקע מונפש מסביב ללוגו */}
         <div 
           ref={logoBgRef}
@@ -190,7 +204,7 @@ export default function LoadPage({ onLoadComplete, duration = 8000 }: LoadPagePr
       {/* סרגל הטעינה העבה באמצע */}
       <div 
         ref={progressBarRef}
-        className="w-80 h-4 bg-[#9acdbe] overflow-hidden shadow-2xl sm:w-96"
+        className="w-80 h-4 bg-[#9acdbe] overflow-hidden shadow-2xl sm:w-96 z-20"
       >
         <div 
           ref={progressFillRef}
