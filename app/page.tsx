@@ -1,6 +1,6 @@
 
 "use client";
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { gsap } from 'gsap';
 import { TextType, SplashCursor } from './components';
 import NavigationBar from './pages/Navbar';

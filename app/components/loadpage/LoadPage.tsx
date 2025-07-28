@@ -140,6 +140,7 @@ export default function LoadPage({ onLoadComplete, duration = 8000 }: LoadPagePr
           src="/logo.png" 
           alt="כיף לתת" 
           className="w-32 h-32 object-contain relative z-10"
+          loading="eager"
         />
       </div>
 

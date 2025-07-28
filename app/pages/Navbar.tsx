@@ -47,11 +47,12 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
 
           {/* Logo */}
           <div className="flex-shrink-0">
-            <img 
-              src="/logo.png" 
-              alt="כיף לתת" 
-              className="w-auto h-16"
-            />
+                          <img
+                src="/logo.png"
+                alt="כיף לתת"
+                className="w-auto h-16"
+                loading="eager"
+              />
           </div>
 
           {/* Mobile menu button */}
