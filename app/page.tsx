@@ -16,8 +16,8 @@ export default function Home() {
     
     // אפקטי GSAP לתוכן הראשי
     gsap.fromTo(navbarRef.current,
-      { opacity: 0, y: -50 },
-      { opacity: 1, y: 0, duration: 1, ease: "power2.out" }
+      { y: -50 },
+      { y: 0, duration: 1, ease: "power2.out" }
     );
 
     gsap.fromTo(mainContentRef.current,
@@ -32,9 +32,12 @@ export default function Home() {
       <SplashCursor />
       
       {isLoading && <LoadPage onLoadComplete={handleLoadComplete} duration={8000} />}
-      <div ref={navbarRef} style={{ opacity: 0 }}>
-        <NavigationBar />
-      </div>
+      {!isLoading && (
+        <div ref={navbarRef}>
+          <NavigationBar />
+        </div>
+      )}
+
       <main ref={mainContentRef} className="pt-16" style={{ opacity: 0 }}>
         <div className="flex flex-col justify-center items-center px-4 min-h-screen sm:px-6 lg:px-8">
           <div className="mx-auto max-w-4xl text-center">

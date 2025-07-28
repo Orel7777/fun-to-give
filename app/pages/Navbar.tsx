@@ -26,10 +26,22 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     setIsMenuOpen(false);
   };
 
+
+
   return (
-    <nav className={`fixed top-0 right-0 left-0 z-50 border-b shadow-lg backdrop-blur-xl bg-white/30 border-gray-200/40 ${className}`} dir="rtl">
+    <nav className={`fixed top-0 right-0 left-0 z-[999999] border-b shadow-lg backdrop-blur-xl bg-white/30 border-gray-200/40 ${className}`} dir="rtl">
       <div className="px-6 mx-auto max-w-7xl sm:px-8 lg:px-12">
         <div className="flex justify-between items-center h-20">
+          {/* Logo */}
+          <div className="flex-shrink-0">
+            <img
+              src="/logo.png"
+              alt="כיף לתת"
+              className="w-auto h-16"
+              loading="eager"
+            />
+          </div>
+
           {/* Desktop Menu */}
           <div className="hidden md:block">
             <div className="flex items-baseline space-x-6 space-x-reverse">
@@ -45,21 +57,11 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
             </div>
           </div>
 
-          {/* Logo */}
-          <div className="flex-shrink-0">
-                          <img
-                src="/logo.png"
-                alt="כיף לתת"
-                className="w-auto h-16"
-                loading="eager"
-              />
-          </div>
-
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden pointer-events-auto">
             <button
               onClick={toggleMenu}
-              className="text-gray-800 transition-colors duration-200 hover:text-blue-600 focus:outline-none focus:text-blue-600"
+              className="text-gray-800 transition-colors duration-200 hover:text-blue-600 focus:outline-none focus:text-blue-600 pointer-events-auto"
               aria-label={isMenuOpen ? "סגור תפריט" : "פתח תפריט"}
             >
               <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -76,7 +78,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
 
       {/* Mobile Menu */}
       {isMenuOpen && (
-        <div className="border-t backdrop-blur-xl bg-white/40 border-gray-200/30 md:hidden">
+        <div className="border-t backdrop-blur-xl bg-white/40 border-gray-200/30 md:hidden relative z-[99999]">
           <div className="px-4 pt-4 pb-6 space-y-2 sm:px-6">
             {menuItems.map((item, index) => (
               <a

@@ -126,11 +126,11 @@ export default function LoadPage({ onLoadComplete, duration = 8000 }: LoadPagePr
       </div>
 
       {/* לוגו מעל הסרגל עם רקע מונפש */}
-      <div className="mb-16 relative flex justify-center items-center">
+      <div className="flex relative justify-center items-center mb-16">
         {/* רקע מונפש מסביב ללוגו */}
         <div 
           ref={logoBgRef}
-          className="absolute w-40 h-40 rounded-full bg-gradient-to-r from-white via-gray-100 to-gray-200 opacity-30 blur-sm"
+          className="absolute w-40 h-40 bg-gradient-to-r from-white via-gray-100 to-gray-200 rounded-full opacity-30 blur-sm"
           style={{ 
             background: 'conic-gradient(from 0deg, #ffffff, #f8fafc, #e2e8f0, #ffffff)'
           }}
@@ -139,7 +139,7 @@ export default function LoadPage({ onLoadComplete, duration = 8000 }: LoadPagePr
           ref={logoRef}
           src="/logo.png" 
           alt="כיף לתת" 
-          className="w-32 h-32 object-contain relative z-10"
+          className="object-contain relative z-10 w-32 h-32"
           loading="eager"
         />
       </div>
