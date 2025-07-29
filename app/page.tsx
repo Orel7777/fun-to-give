@@ -38,7 +38,7 @@ export default function Home() {
       {/* SplashCursor פעיל תמיד */}
       <SplashCursor />
       
-      {isLoading && <LoadPage onLoadComplete={handleLoadComplete} duration={8000} />}
+      {isLoading && <LoadPage onLoadComplete={handleLoadComplete} duration={2500} />}
       {!isLoading && (
         <div ref={navbarRef}>
           <NavigationBar />

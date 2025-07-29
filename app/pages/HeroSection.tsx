@@ -7,7 +7,7 @@ interface HeroSectionProps {
 
 const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
   return (
-    <div className="flex flex-col justify-center items-center px-4 min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 sm:px-6 lg:px-8">
+    <div className="flex flex-col justify-center items-center px-4 min-h-screen bg-[#fdf6ed] sm:px-6 lg:px-8">
       <div className="relative mx-auto max-w-7xl text-center">
         {/* טקסט ראשי גדול */}
         <div className="mb-8">
