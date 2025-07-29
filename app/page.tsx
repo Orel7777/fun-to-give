@@ -2,8 +2,9 @@
 "use client";
 import { useState, useRef } from 'react';
 import { gsap } from 'gsap';
-import { TextType, SplashCursor } from './components';
+import { SplashCursor } from './components';
 import NavigationBar from './pages/Navbar';
+import HeroSection from './pages/HeroSection';
 import LoadPage from './components/loadpage/LoadPage';
 
 export default function Home() {
@@ -44,25 +45,9 @@ export default function Home() {
         </div>
       )}
 
-                        <main ref={mainContentRef} className="pt-16">
-                    <div className="flex flex-col justify-center items-center px-4 min-h-screen sm:px-6 lg:px-8">
-                      <div className="mx-auto max-w-4xl text-center">
-                        {showTextAnimation && (
-                          <TextType 
-                            text={["או הפונט הזה ששניהם הם דוגמאות משני האתרים ששלחת לנו"]}
-                            className="text-lg leading-relaxed sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl"
-                            textColors={["#000000"]}
-                            typingSpeed={100}
-                            showCursor={false}
-                            loop={false}
-                            initialDelay={0}
-                            startOnVisible={false}
-                            onSentenceComplete={() => console.log('Text completed')}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  </main>
+      <main ref={mainContentRef} className="pt-16">
+        <HeroSection showTextAnimation={showTextAnimation} />
+      </main>
     </>
   );
 }
