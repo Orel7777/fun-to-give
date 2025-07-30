@@ -79,3 +79,14 @@ p {
 .menu-item:hover span {
   color: #f5a383 !important;
 }
+
+/* WhatsApp icon hover styles */
+.whatsapp-icon:hover path:first-child,
+.whatsapp-icon:hover path:nth-child(2) {
+  fill: #9acdbe !important;
+}
+
+/* Email icon hover styles */
+.email-icon:hover path {
+  fill: #9acdbe !important;
+}
