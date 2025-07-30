@@ -228,18 +228,35 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
             
             <button className="px-6 py-2 font-semibold text-[#2b2e3a] bg-[#f5a383] rounded-lg transition-all duration-300 hover:scale-105 flex items-center gap-2 relative overflow-hidden group cursor-pointer">
               <span className="relative z-10">תרום עכשיו</span>
-                              <div className="relative z-10 w-2 h-2 bg-[#2b2e3a] rounded-full transition-all duration-300 group-hover:translate-x-1 group-hover:w-4 group-hover:h-4 group-hover:rounded-none group-hover:bg-transparent">
+              <div className="relative z-10 w-4 h-4 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110">
+                {/* Default icon (click icon) */}
                 <svg 
-                  className="w-full h-full opacity-0 transition-opacity duration-300 group-hover:opacity-100" 
-                    fill="#2b2e3a" 
-                  fillRule="evenodd"
+                  className="w-full h-full group-hover:hidden" 
+                  fill="none"
+                  stroke="#2b2e3a"
+                  strokeWidth="1.91"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M17.07,20.61H9.79a2,2,0,0,1-2-2,2,2,0,0,1,2-2h1.87L5,9.86a2,2,0,0,1-.19-2.65,1.88,1.88,0,0,1,1.47-.68,1.84,1.84,0,0,1,1.35.55l4.06,4.06,4.08-3.06a1.91,1.91,0,0,1,2.5.18h0A17.18,17.18,0,0,1,22.42,15l.06.19"/>
+                  <path d="M10.63,10.12A4.73,4.73,0,0,0,11,8.17,4.78,4.78,0,1,0,6.26,13a4.67,4.67,0,0,0,1.55-.26"/>
+                </svg>
+                {/* Hover icon (arrow) */}
+                <svg 
+                  className="w-full h-full hidden group-hover:block" 
+                  fill="#2b2e3a"
                   viewBox="0 0 198.204 198.204"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
                   <path d="M114.799,168.906c-1.582,0-5.261-0.716-5.261-7.383v-30.624H8.181
-					c-0.279,0.043-0.655,0.082-1.102,0.082c-1.8,0-3.464-0.68-4.688-1.933C0.805,127.427,0,124.947,0,121.686V74.614
-					c0-6.51,4.617-8.231,7.057-8.231h100.34V38.317c0-7.848,3.736-9.019,5.962-9.019c3.572,0,7.129,3.396,7.805,4.08
-					c2.441,1.8,66.982,50.455,74.075,57.541c2.577,2.58,3.028,5.175,2.956,6.893c-0.172,4.134-3.357,6.947-3.715,7.258
-					l-71.792,59.413C121.91,165.334,118.267,168.906,114.799,168.906z"/>
+				c-0.279,0.043-0.655,0.082-1.102,0.082c-1.8,0-3.464-0.68-4.688-1.933C0.805,127.427,0,124.947,0,121.686V74.614
+				c0-6.51,4.617-8.231,7.057-8.231h100.34V38.317c0-7.848,3.736-9.019,5.962-9.019c3.572,0,7.129,3.396,7.805,4.08
+				c2.441,1.8,66.982,50.455,74.075,57.541c2.577,2.58,3.028,5.175,2.956,6.893c-0.172,4.134-3.357,6.947-3.715,7.258
+				l-71.792,59.413C121.91,165.334,118.267,168.906,114.799,168.906z M7.437,125.215l0.476,0.004h107.301v36.3
+				c0,0.716,0.057,1.21,0.118,1.535c0.916-0.437,2.426-1.585,3.493-2.716l72.01-59.624c0.426-0.372,1.646-1.75,1.7-3.16
+				c0.025-0.859-0.401-1.718-1.299-2.623c-6.811-6.803-73.116-56.778-73.782-57.283c-1.492-1.449-3.26-2.595-4.008-2.666
+				c0.032,0.14-0.361,0.981-0.361,3.335v33.741H7.086C6.152,72.094,5.68,72.957,5.68,74.61v47.076c0,2.412,0.591,3.203,0.769,3.389
+				c0.068,0.068,0.225,0.229,0.63,0.229L7.437,125.215z"/>
                 </svg>
               </div>
               <div className="absolute inset-0 bg-[#9acdbe] transform -translate-x-full transition-transform duration-300 group-hover:translate-x-0"></div>
@@ -348,8 +365,8 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                   key={index}
                       href={item.url}
                                              className="block px-4 py-4 text-base font-medium text-gray-700 rounded-lg transition-all duration-300 cursor-pointer hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:shadow-md hover:scale-105 hover:translate-x-1 active:scale-95 menu-item"
-                                              style={{
-                         animationDelay: `${index * 100}ms`,
+                      style={{
+                        animationDelay: `${index * 100}ms`,
                          transform: 'translateX(0)'
                        }}
                        onMouseEnter={(e) => {
@@ -357,9 +374,9 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                        }}
                        onMouseLeave={(e) => {
                          e.currentTarget.style.removeProperty('color');
-                       }}
-                                             >
-                        <div className="flex justify-between items-center">
+                      }}
+                    >
+                      <div className="flex justify-between items-center">
                         <span className="font-bold text-gray-800 transition-all duration-300">{item.title}</span>
                         <div className="flex gap-2 items-center">
                           {item.icon && (
@@ -541,7 +558,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                 key={index}
                       href={item.url}
                                              className="block px-4 py-3 text-base text-gray-600 rounded-lg transition-all duration-300 cursor-pointer hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:shadow-sm hover:scale-105 active:scale-95 menu-item"
-                                         onClick={closeMenu}
+                onClick={closeMenu}
                       style={{
                         animationDelay: `${index * 100}ms`,
                       }}
@@ -621,18 +638,35 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                 }}
               >
                 <span className="relative z-10">תרום עכשיו</span>
-                <div className="relative z-10 w-2 h-2 bg-[#2b2e3a] rounded-full transition-all duration-300 group-hover:translate-x-1 group-hover:w-4 group-hover:h-4 group-hover:rounded-none group-hover:bg-transparent">
+                <div className="relative z-10 w-4 h-4 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110">
+                  {/* Default icon (click icon) */}
                   <svg 
-                    className="w-full h-full opacity-0 transition-opacity duration-300 group-hover:opacity-100" 
-                    fill="#2b2e3a" 
-                    fillRule="evenodd"
+                    className="w-full h-full group-hover:hidden" 
+                    fill="none"
+                    stroke="#2b2e3a"
+                    strokeWidth="1.91"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M17.07,20.61H9.79a2,2,0,0,1-2-2,2,2,0,0,1,2-2h1.87L5,9.86a2,2,0,0,1-.19-2.65,1.88,1.88,0,0,1,1.47-.68,1.84,1.84,0,0,1,1.35.55l4.06,4.06,4.08-3.06a1.91,1.91,0,0,1,2.5.18h0A17.18,17.18,0,0,1,22.42,15l.06.19"/>
+                    <path d="M10.63,10.12A4.73,4.73,0,0,0,11,8.17,4.78,4.78,0,1,0,6.26,13a4.67,4.67,0,0,0,1.55-.26"/>
+                  </svg>
+                  {/* Hover icon (arrow) */}
+                  <svg 
+                    className="w-full h-full hidden group-hover:block" 
+                    fill="#2b2e3a"
                     viewBox="0 0 198.204 198.204"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
                     <path d="M114.799,168.906c-1.582,0-5.261-0.716-5.261-7.383v-30.624H8.181
-					c-0.279,0.043-0.655,0.082-1.102,0.082c-1.8,0-3.464-0.68-4.688-1.933C0.805,127.427,0,124.947,0,121.686V74.614
-					c0-6.51,4.617-8.231,7.057-8.231h100.34V38.317c0-7.848,3.736-9.019,5.962-9.019c3.572,0,7.129,3.396,7.805,4.08
-					c2.441,1.8,66.982,50.455,74.075,57.541c2.577,2.58,3.028,5.175,2.956,6.893c-0.172,4.134-3.357,6.947-3.715,7.258
-					l-71.792,59.413C121.91,165.334,118.267,168.906,114.799,168.906z"/>
+				c-0.279,0.043-0.655,0.082-1.102,0.082c-1.8,0-3.464-0.68-4.688-1.933C0.805,127.427,0,124.947,0,121.686V74.614
+				c0-6.51,4.617-8.231,7.057-8.231h100.34V38.317c0-7.848,3.736-9.019,5.962-9.019c3.572,0,7.129,3.396,7.805,4.08
+				c2.441,1.8,66.982,50.455,74.075,57.541c2.577,2.58,3.028,5.175,2.956,6.893c-0.172,4.134-3.357,6.947-3.715,7.258
+				l-71.792,59.413C121.91,165.334,118.267,168.906,114.799,168.906z M7.437,125.215l0.476,0.004h107.301v36.3
+				c0,0.716,0.057,1.21,0.118,1.535c0.916-0.437,2.426-1.585,3.493-2.716l72.01-59.624c0.426-0.372,1.646-1.75,1.7-3.16
+				c0.025-0.859-0.401-1.718-1.299-2.623c-6.811-6.803-73.116-56.778-73.782-57.283c-1.492-1.449-3.26-2.595-4.008-2.666
+				c0.032,0.14-0.361,0.981-0.361,3.335v33.741H7.086C6.152,72.094,5.68,72.957,5.68,74.61v47.076c0,2.412,0.591,3.203,0.769,3.389
+				c0.068,0.068,0.225,0.229,0.63,0.229L7.437,125.215z"/>
                   </svg>
                 </div>
                 <div className="absolute inset-0 bg-[#9acdbe] transform -translate-x-full transition-transform duration-300 group-hover:translate-x-0"></div>
