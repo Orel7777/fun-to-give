@@ -232,12 +232,12 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               </Link>
             </div>
             
-            <button className="px-6 py-2 font-semibold text-white bg-[#2b2e3a] rounded-lg transition-all duration-300 hover:scale-105 flex items-center gap-2 relative overflow-hidden group cursor-pointer">
+            <button className="px-6 py-2 font-semibold text-[#2b2e3a] bg-[#f5a383] rounded-lg transition-all duration-300 hover:scale-105 flex items-center gap-2 relative overflow-hidden group cursor-pointer">
               <span className="relative z-10">תרום עכשיו</span>
-              <div className="relative z-10 w-2 h-2 bg-white rounded-full transition-all duration-300 group-hover:translate-x-1 group-hover:w-4 group-hover:h-4 group-hover:rounded-none group-hover:bg-transparent">
+                              <div className="relative z-10 w-2 h-2 bg-[#2b2e3a] rounded-full transition-all duration-300 group-hover:translate-x-1 group-hover:w-4 group-hover:h-4 group-hover:rounded-none group-hover:bg-transparent">
                 <svg 
                   className="w-full h-full opacity-0 transition-opacity duration-300 group-hover:opacity-100" 
-                  fill="white" 
+                    fill="#2b2e3a" 
                   fillRule="evenodd"
                   viewBox="0 0 198.204 198.204"
                 >
@@ -252,57 +252,57 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
             </button>
           </div>
 
-          {/* Music Icon - במרכז */}
-          <div className="hidden absolute left-1/2 justify-center items-center transform -translate-x-1/2 lg:flex">
-            <motion.button
-              onClick={() => setIsSoundOn(!isSoundOn)}
-              className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <motion.svg
-                width="24"
-                height="24"
-                viewBox="0 0 512 512"
-                className="shrink-0"
-                xmlns="http://www.w3.org/2000/svg"
-                animate={{ 
-                  rotateY: isSoundOn ? 0 : 180,
-                  scale: isSoundOn ? 1 : 1.1
-                }}
-                transition={{ 
-                  duration: 0.6, 
-                  ease: "easeInOut",
-                  type: "spring",
-                  stiffness: 200
-                }}
+                      {/* Music Icon - במרכז */}
+            <div className="hidden absolute left-1/2 justify-center items-center transform -translate-x-1/2 lg:flex">
+              <motion.button
+                onClick={() => setIsSoundOn(!isSoundOn)}
+                className="p-2 rounded-full transition-colors duration-200 hover:bg-gray-100"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.95 }}
               >
-                {isSoundOn ? (
-                  // Sound ON Icon
-                  <g fill="#000000">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256
-                      S397.391,0,256,0z M256,472c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"/>
-                    <path d="M331.141,148.297L232.156,208H168c-4.422,0-8,3.578-8,8v80c0,4.422,3.578,8,8,8h67.5l95.641,59.719
-                      c17.031,9.969,20.859,1.938,20.859-17.844V166.109C352,146.359,348.172,138.312,331.141,148.297z"/>
-                  </g>
-                ) : (
-                  // Sound OFF Icon
-                  <g fill="#000000">
-                    <path d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472
-                      c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"/>
-                    <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594l233.938,233.938
-                      c4.312,4.312,11.297,4.312,15.594,0C385.078,376.469,385.078,369.484,380.766,365.172z"/>
-                    <g>
-                      <path d="M352,325.094V166.109c0-19.75-3.828-27.797-20.859-17.812l-97.266,58.672L352,325.094z"/>
-                      <path d="M181.094,208H168c-4.422,0-8,3.578-8,8v80c0,4.422,3.578,8,8,8h67.5l95.641,59.719c3.891,2.281,7.031,3.5,9.656,3.984
-                        L181.094,208z"/>
+                <motion.svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 512 512"
+                  className="shrink-0"
+                  xmlns="http://www.w3.org/2000/svg"
+                  animate={{ 
+                    rotateY: isSoundOn ? 0 : 180,
+                    scale: isSoundOn ? 1 : 1.1
+                  }}
+                  transition={{ 
+                    duration: 0.6, 
+                    ease: "easeInOut",
+                    type: "spring",
+                    stiffness: 200
+                  }}
+                >
+                  {isSoundOn ? (
+                    // Sound ON Icon
+                    <g fill="#f5a383">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256
+                        S397.391,0,256,0z M256,472c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"/>
+                      <path d="M331.141,148.297L232.156,208H168c-4.422,0-8,3.578-8,8v80c0,4.422,3.578,8,8,8h67.5l95.641,59.719
+                        c17.031,9.969,20.859,1.938,20.859-17.844V166.109C352,146.359,348.172,138.312,331.141,148.297z"/>
                     </g>
-                    <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594l233.938,233.938
-                      c4.312,4.312,11.297,4.312,15.594,0C385.078,376.469,385.078,369.484,380.766,365.172z"/>
-                  </g>
-                )}
-              </motion.svg>
-            </motion.button>
+                  ) : (
+                    // Sound OFF Icon
+                    <g fill="#f5a383">
+                      <path d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472
+                        c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"/>
+                      <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594l233.938,233.938
+                        c4.312,4.312,11.297,4.312,15.594,0C385.078,376.469,385.078,369.484,380.766,365.172z"/>
+                      <g>
+                        <path d="M352,325.094V166.109c0-19.75-3.828-27.797-20.859-17.812l-97.266,58.672L352,325.094z"/>
+                        <path d="M181.094,208H168c-4.422,0-8,3.578-8,8v80c0,4.422,3.578,8,8,8h67.5l95.641,59.719c3.891,2.281,7.031,3.5,9.656,3.984
+                          L181.094,208z"/>
+                      </g>
+                      <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594l233.938,233.938
+                        c4.312,4.312,11.297,4.312,15.594,0C385.078,376.469,385.078,369.484,380.766,365.172z"/>
+                    </g>
+                  )}
+                </motion.svg>
+              </motion.button>
           </div>
 
           {/* Auth Buttons - בצד ימין */}
@@ -353,13 +353,25 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                 <a
                   key={index}
                       href={item.url}
-                      className="block px-4 py-4 text-base font-medium text-gray-700 rounded-lg transition-all duration-300 cursor-pointer hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:text-[#9acdbe] hover:shadow-md hover:scale-105 hover:translate-x-1 active:scale-95"
-                      style={{
-                        animationDelay: `${index * 100}ms`,
-                        transform: 'translateX(0)',
-                      }}
-                    >
-                      <div className="flex justify-between items-center">
+                                             className="block px-4 py-4 text-base font-medium text-gray-700 rounded-lg transition-all duration-300 cursor-pointer hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:shadow-md hover:scale-105 hover:translate-x-1 active:scale-95 menu-item"
+                                              style={{
+                         animationDelay: `${index * 100}ms`,
+                         transform: 'translateX(0)'
+                       }}
+                       onMouseEnter={(e) => {
+                         e.currentTarget.style.setProperty('color', '#f5a383', 'important');
+                       }}
+                       onMouseLeave={(e) => {
+                         e.currentTarget.style.removeProperty('color');
+                       }}
+                       onMouseEnter={(e) => {
+                         e.currentTarget.style.setProperty('color', '#f5a383', 'important');
+                       }}
+                       onMouseLeave={(e) => {
+                         e.currentTarget.style.removeProperty('color');
+                       }}
+                                             >
+                        <div className="flex justify-between items-center">
                         <span className="font-bold text-gray-800 transition-all duration-300">{item.title}</span>
                         <div className="flex gap-2 items-center">
                           {item.icon && (
@@ -376,7 +388,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               ))}
                 </div>
                 {/* Decorative bottom border */}
-                <div className="h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-b-xl"></div>
+                <div className="h-1 bg-[#f5a383] rounded-b-xl"></div>
               </div>
             </div>
             <motion.button 
@@ -427,7 +439,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
           <div className="flex gap-2 items-center lg:hidden">
             <motion.button
               onClick={() => setIsSoundOn(!isSoundOn)}
-              className="p-1 rounded-full hover:bg-gray-100 transition-colors duration-200"
+              className="p-1 rounded-full transition-colors duration-200 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
             >
@@ -450,7 +462,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               >
                 {isSoundOn ? (
                   // Sound ON Icon
-                  <g fill="#000000">
+                  <g fill="#f5a383">
                     <path fillRule="evenodd" clipRule="evenodd" d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256
                       S397.391,0,256,0z M256,472c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"/>
                     <path d="M331.141,148.297L232.156,208H168c-4.422,0-8,3.578-8,8v80c0,4.422,3.578,8,8,8h67.5l95.641,59.719
@@ -458,7 +470,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                   </g>
                 ) : (
                   // Sound OFF Icon
-                  <g fill="#000000">
+                  <g fill="#f5a383">
                     <path d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472
                       c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"/>
                     <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594l233.938,233.938
@@ -540,8 +552,8 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               <a
                 key={index}
                       href={item.url}
-                      className="block px-4 py-3 text-base text-gray-600 rounded-lg transition-all duration-300 cursor-pointer hover:text-[#9acdbe] hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:shadow-sm hover:scale-105 active:scale-95"
-                onClick={closeMenu}
+                                             className="block px-4 py-3 text-base text-gray-600 rounded-lg transition-all duration-300 cursor-pointer hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:shadow-sm hover:scale-105 active:scale-95 menu-item"
+                                         onClick={closeMenu}
                       style={{
                         animationDelay: `${index * 100}ms`,
                       }}
@@ -611,7 +623,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                 צור קשר
               </motion.button>
               <motion.button 
-                className="px-4 py-3 w-full font-semibold text-white bg-[#2b2e3a] rounded-lg hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group cursor-pointer"
+                className="px-4 py-3 w-full font-semibold text-[#2b2e3a] bg-[#f5a383] rounded-lg hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group cursor-pointer"
                 whileHover={{
                   scale: 1.05,
                   transition: { 
@@ -621,10 +633,10 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                 }}
               >
                 <span className="relative z-10">תרום עכשיו</span>
-                <div className="relative z-10 w-2 h-2 bg-white rounded-full transition-all duration-300 group-hover:translate-x-1 group-hover:w-4 group-hover:h-4 group-hover:rounded-none group-hover:bg-transparent">
+                <div className="relative z-10 w-2 h-2 bg-[#2b2e3a] rounded-full transition-all duration-300 group-hover:translate-x-1 group-hover:w-4 group-hover:h-4 group-hover:rounded-none group-hover:bg-transparent">
                   <svg 
                     className="w-full h-full opacity-0 transition-opacity duration-300 group-hover:opacity-100" 
-                    fill="white" 
+                    fill="#2b2e3a" 
                     fillRule="evenodd"
                     viewBox="0 0 198.204 198.204"
                   >

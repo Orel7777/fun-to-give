@@ -69,3 +69,13 @@ p {
     font-size: 18px;
   }
 }
+
+/* Menu hover styles */
+.menu-item:hover {
+  color: #f5a383 !important;
+}
+
+/* Force hover color for menu items */
+.menu-item:hover span {
+  color: #f5a383 !important;
+}
