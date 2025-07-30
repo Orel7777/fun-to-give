@@ -1,20 +1,14 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Book, Menu, Heart, Users, Camera, Gift, FileText } from "lucide-react";
+import { Menu } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface NavigationBarProps {
   className?: string;
 }
 
-interface MenuItem {
-  title: string;
-  url: string;
-  description?: string;
-  icon?: React.JSX.Element;
-  items?: MenuItem[];
-}
+
 
 export default function NavigationBar({ className = "" }: NavigationBarProps) {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
@@ -357,12 +351,6 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                                               style={{
                          animationDelay: `${index * 100}ms`,
                          transform: 'translateX(0)'
-                       }}
-                       onMouseEnter={(e) => {
-                         e.currentTarget.style.setProperty('color', '#f5a383', 'important');
-                       }}
-                       onMouseLeave={(e) => {
-                         e.currentTarget.style.removeProperty('color');
                        }}
                        onMouseEnter={(e) => {
                          e.currentTarget.style.setProperty('color', '#f5a383', 'important');
