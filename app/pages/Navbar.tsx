@@ -393,7 +393,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               ))}
                 </div>
                 {/* Decorative bottom border */}
-                <div className="h-1 bg-[#f5a383] rounded-b-xl"></div>
+                <div className="h-1 bg-[#9acdbe] rounded-b-xl"></div>
               </div>
             </div>
             <motion.button 
