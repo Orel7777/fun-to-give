@@ -1,12 +1,17 @@
 import React from 'react';
 import Image from 'next/image';
-import { VideoScrollExpand } from '../components';
+import { VideoScrollExpand, HorizontalScrollCarousel } from '../components';
+import FamiliesTestimonials from './Testimonials';
+import { useFirebaseVideo } from '../hooks/useFirebaseVideo';
 
 interface HeroSectionProps {
   showTextAnimation: boolean;
 }
 
 const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
+  // טעינת הוידאו מ-Firebase Storage
+  const { videoUrl, loading, error } = useFirebaseVideo('כיף לתת מקוצר.mp4');
+  
   // Only show the futuristic hero when text animation should be visible
   if (!showTextAnimation) {
     return (
@@ -45,7 +50,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         {/* Text Content */}
         <div className="flex relative z-20 flex-col justify-center items-center px-10 h-full text-center">
           <div 
-            className="transition-all duration-2000 opacity-100 transform translate-y-0"
+            className="opacity-100 transition-all transform translate-y-0 duration-2000"
             style={{ transform: 'translateY(-120px)' }}
           >
             {/* Content Wrapper - עטיפה חדשה */}
@@ -135,11 +140,26 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       </div>
 
       {/* הוידאו מתחת לטקסט */}
-      <VideoScrollExpand
-        videoSrc="/כיף לתת מקוצר.mp4"
-        title="הפעילות שלנו"
-      >
-        <div className="max-w-4xl mx-auto text-center px-8">
+      {loading && (
+        <div className="flex justify-center items-center py-16 bg-[#fdf6ed]">
+          <div className="text-[#2a2b26] font-staff text-xl">טוען וידאו...</div>
+        </div>
+      )}
+      
+      {error && (
+        <div className="flex justify-center items-center py-16 bg-[#fdf6ed]">
+          <div className="text-xl text-center text-red-600 font-staff">
+            {error}
+          </div>
+        </div>
+      )}
+      
+      {!loading && !error && videoUrl && (
+        <VideoScrollExpand
+          videoSrc={videoUrl}
+          title="הפעילות שלנו"
+        >
+        <div className="px-8 mx-auto max-w-4xl text-center">
           <h2 className="text-3xl font-bold mb-6 text-[#2a2b26] font-staff">
             עמותת &ldquo;כיף לתת&rdquo;
           </h2>
@@ -156,7 +176,38 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
             כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
           </p>
         </div>
-      </VideoScrollExpand>
+        </VideoScrollExpand>
+      )}
+
+      {/* גלריה של תמונות פעילות העמותה */}
+      <div className="bg-[#fdf6ed] py-16 text-center">
+        <h2 className="text-4xl md:text-5xl font-bold text-[#2a2b26] font-staff mb-8">
+          תמונות מפעילות העמותה
+        </h2>
+
+      </div>
+      
+      <HorizontalScrollCarousel
+        images={[
+          "/pictures/1.JPG",
+          "/pictures/2.JPG",
+          "/pictures/3.jpeg",
+          "/pictures/4.JPG",
+          "/pictures/5.JPG",
+          "/pictures/6.JPG",
+          "/pictures/7.JPG",
+          "/pictures/8.png",
+          "/pictures/9.png",
+          "/pictures/10.png",
+          "/pictures/11.jpeg",
+          "/pictures/12.jpeg",
+          "/pictures/13.jpeg",
+          "/pictures/14.jpeg"
+        ]}
+      />
+
+      {/* סיפורי משפחות עם עדויות אודיו */}
+      <FamiliesTestimonials />
     </div>
   );
 };

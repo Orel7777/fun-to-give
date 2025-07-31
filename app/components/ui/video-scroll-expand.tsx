@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause } from 'lucide-react';
+import { useFirebaseVideo } from '../../hooks/useFirebaseVideo';
 
 interface VideoScrollExpandProps {
   videoSrc: string;
@@ -14,7 +15,7 @@ interface VideoScrollExpandProps {
 const VideoScrollExpand = ({ 
   videoSrc, 
   title = "צפה בוידאו", 
-  subtitle = "גלול למטה להרחבה",
+  subtitle,
   children 
 }: VideoScrollExpandProps) => {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -23,6 +24,10 @@ const VideoScrollExpand = ({
   const [isHovering, setIsHovering] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  
+  // Get video URL from Firebase Storage or use local video
+  const { videoUrl, loading, error } = useFirebaseVideo(videoSrc.startsWith('/') ? '' : videoSrc);
+  const finalVideoUrl = videoSrc.startsWith('/') ? videoSrc : videoUrl;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,26 +119,28 @@ const VideoScrollExpand = ({
              >
                {title}
              </motion.h2>
-             <motion.p 
-               className="text-xl md:text-2xl text-[#2a2b26]/80 font-staff"
-               initial={{ opacity: 0, x: -20 }}
-               animate={{ 
-                 opacity: 1, 
-                 x: 0,
-                 color: scrollProgress > 0.5 ? "rgba(42, 43, 38, 0.9)" : "rgba(42, 43, 38, 0.8)"
-               }}
-               transition={{ 
-                 duration: 0.6, 
-                 ease: "easeOut",
-                 delay: 0.4
-               }}
-               whileHover={{ 
-                 color: "rgba(42, 43, 38, 1)",
-                 x: 5
-               }}
-             >
-               {subtitle}
-             </motion.p>
+                           {subtitle && (
+                <motion.p 
+                  className="text-xl md:text-2xl text-[#2a2b26]/80 font-staff"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ 
+                    opacity: 1, 
+                    x: 0,
+                    color: scrollProgress > 0.5 ? "rgba(42, 43, 38, 0.9)" : "rgba(42, 43, 38, 0.8)"
+                  }}
+                  transition={{ 
+                    duration: 0.6, 
+                    ease: "easeOut",
+                    delay: 0.4
+                  }}
+                  whileHover={{ 
+                    color: "rgba(42, 43, 38, 1)",
+                    x: 5
+                  }}
+                >
+                  {subtitle}
+                </motion.p>
+              )}
            </motion.div>
 
           {/* הוידאו */}
@@ -156,13 +163,29 @@ const VideoScrollExpand = ({
             onMouseLeave={() => setIsHovering(false)}
             onClick={togglePlay}
           >
-            <video
-              ref={videoRef}
-              src={videoSrc}
-              loop
-              playsInline
-              className="w-full h-full object-cover"
-            />
+            {(loading && !videoSrc.startsWith('/')) ? (
+              <div className="w-full h-full flex items-center justify-center bg-gray-200">
+                <div className="text-center">
+                  <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2a2b26] mx-auto mb-4"></div>
+                  <p className="text-[#2a2b26] font-staff">טוען וידאו...</p>
+                </div>
+              </div>
+            ) : (error && !videoSrc.startsWith('/')) ? (
+              <div className="w-full h-full flex items-center justify-center bg-red-100">
+                <div className="text-center">
+                  <p className="text-red-600 font-staff mb-2">שגיאה בטעינת הוידאו</p>
+                  <p className="text-sm text-red-500 font-staff">{error}</p>
+                </div>
+              </div>
+            ) : (
+              <video
+                ref={videoRef}
+                src={finalVideoUrl}
+                loop
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            )}
 
             {/* כפתור Play/Pause במרכז */}
             <AnimatePresence>
