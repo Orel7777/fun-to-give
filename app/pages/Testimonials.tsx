@@ -130,9 +130,9 @@ const FamiliesTestimonials = () => {
             setAnimationsPaused(false);
           }
         }
-      } else {
-        console.error('אלמנט אודיו לא נמצא:', audioPath);
       }
+    } else {
+      console.error('אלמנט אודיו לא נמצא:', audioPath);
     }
   };
 
