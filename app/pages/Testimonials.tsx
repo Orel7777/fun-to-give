@@ -107,9 +107,11 @@ const FamiliesTestimonials = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [animationsPaused]);
 
+  // הוסר useEffect לבדיקת קבצי אודיו - לא נחוץ ויוצר שגיאות מיותרות
+
   return (
     <section className="bg-[#fdf6ed] py-20 relative">
-      <div className="container z-10 mx-auto px-4">
+      <div className="container z-10 px-4 mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -138,7 +140,7 @@ const FamiliesTestimonials = () => {
           </div>
         </motion.div>
 
-        <div className="flex justify-center gap-6 mt-16 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
+        <div className="flex justify-center gap-6 mt-16 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden flex-col md:flex-row">
           <TestimonialsColumn 
             testimonials={firstColumn} 
             duration={15} 
@@ -148,7 +150,7 @@ const FamiliesTestimonials = () => {
           />
           <TestimonialsColumn 
             testimonials={secondColumn} 
-            className="hidden md:block" 
+            className="md:block" 
             duration={19} 
             onAudioPlay={handleAudioPlay}
             playingAudio={playingAudio}
@@ -156,7 +158,7 @@ const FamiliesTestimonials = () => {
           />
           <TestimonialsColumn 
             testimonials={thirdColumn} 
-            className="hidden lg:block" 
+            className="lg:block" 
             duration={17} 
             onAudioPlay={handleAudioPlay}
             playingAudio={playingAudio}
@@ -165,7 +167,7 @@ const FamiliesTestimonials = () => {
         </div>
         
         {/* רקע דקורטיבי */}
-        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="overflow-hidden absolute inset-0 pointer-events-none">
           <div className="absolute top-10 left-10 w-20 h-20 bg-[#f5a383]/10 rounded-full blur-xl"></div>
           <div className="absolute bottom-10 right-10 w-32 h-32 bg-[#9acdbe]/10 rounded-full blur-xl"></div>
           <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-[#f5a383]/5 rounded-full blur-lg"></div>
