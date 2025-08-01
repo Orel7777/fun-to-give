@@ -17,6 +17,9 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
   const [isContactButtonHovered, setIsContactButtonHovered] = useState<boolean>(false);
   const [isMobileMenuButtonHovered, setIsMobileMenuButtonHovered] = useState<boolean>(false);
   const [isMobileContactButtonHovered, setIsMobileContactButtonHovered] = useState<boolean>(false);
+  
+  // בדיקה אם זה מובייל
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
   const [isSoundOn, setIsSoundOn] = useState<boolean>(true);
 
   const menuItems = [
@@ -321,10 +324,10 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
             <div className="relative group">
               <motion.button 
                 className="flex gap-2 items-center px-4 py-2 font-semibold text-gray-800 rounded-lg transition-all duration-300 cursor-pointer hover:text-[#f5a383] hover:bg-[#f5a383]/10"
-                whileHover={{ scale: 1.05 }}
+                whileHover={!isMobile ? { scale: 1.05 } : {}}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
-                onMouseEnter={() => setIsMenuButtonHovered(true)}
-                onMouseLeave={() => setIsMenuButtonHovered(false)}
+                onMouseEnter={() => !isMobile && setIsMenuButtonHovered(true)}
+                onMouseLeave={() => !isMobile && setIsMenuButtonHovered(false)}
               >
                 תפריט
                 <motion.svg 
@@ -370,10 +373,14 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                          transform: 'translateX(0)'
                        }}
                        onMouseEnter={(e) => {
-                         e.currentTarget.style.setProperty('color', '#f5a383', 'important');
+                         if (!isMobile) {
+                           e.currentTarget.style.setProperty('color', '#f5a383', 'important');
+                         }
                        }}
                        onMouseLeave={(e) => {
-                         e.currentTarget.style.removeProperty('color');
+                         if (!isMobile) {
+                           e.currentTarget.style.removeProperty('color');
+                         }
                       }}
                     >
                       <div className="flex justify-between items-center">
@@ -398,10 +405,10 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
             </div>
             <motion.button 
               className="flex gap-2 items-center px-4 py-2 font-semibold text-gray-800 rounded-lg transition-all duration-300 cursor-pointer hover:text-[#f5a383] hover:bg-[#f5a383]/10"
-              whileHover={{ scale: 1.05 }}
+              whileHover={!isMobile ? { scale: 1.05 } : {}}
               transition={{ duration: 0.3, ease: "easeInOut" }}
-              onMouseEnter={() => setIsContactButtonHovered(true)}
-              onMouseLeave={() => setIsContactButtonHovered(false)}
+              onMouseEnter={() => !isMobile && setIsContactButtonHovered(true)}
+              onMouseLeave={() => !isMobile && setIsContactButtonHovered(false)}
             >
               צור קשר
               <motion.svg 
@@ -512,10 +519,10 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                 <motion.button 
                   className="flex gap-1 justify-center items-center px-4 py-3 w-full font-semibold text-gray-800 rounded-lg border border-gray-300 cursor-pointer hover:bg-[#f5a383]/10 hover:text-[#f5a383]"
                   onClick={toggleMobileMenuDropdown}
-                  whileHover={{ scale: 1.02 }}
+                                      whileHover={!isMobile ? { scale: 1.02 } : {}}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
-                  onMouseEnter={() => setIsMobileMenuButtonHovered(true)}
-                  onMouseLeave={() => setIsMobileMenuButtonHovered(false)}
+                                  onMouseEnter={() => !isMobile && setIsMobileMenuButtonHovered(true)}
+                onMouseLeave={() => !isMobile && setIsMobileMenuButtonHovered(false)}
                 >
                   <motion.svg 
                     width="20" 
@@ -589,8 +596,8 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                     ease: "easeInOut"
                   }
                 }}
-                onMouseEnter={() => setIsMobileContactButtonHovered(true)}
-                onMouseLeave={() => setIsMobileContactButtonHovered(false)}
+                onMouseEnter={() => !isMobile && setIsMobileContactButtonHovered(true)}
+                onMouseLeave={() => !isMobile && setIsMobileContactButtonHovered(false)}
               >
                 <motion.svg 
                   width="20" 

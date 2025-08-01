@@ -1523,6 +1523,17 @@ export default function SplashCursor({
     TRANSPARENT,
   ]);
 
+  // בדיקה אם זה מובייל - אם כן, לא מציג את האפקט
+  const isMobile = typeof window !== 'undefined' && (
+    window.innerWidth <= 768 || 
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  );
+
+  // אם זה מובייל, לא מציג את האפקט
+  if (isMobile) {
+    return null;
+  }
+
   return (
     <div className="fixed top-0 left-0 z-[10000] pointer-events-none w-full h-full">
       <canvas ref={canvasRef} id="fluid" className="block w-screen h-screen" />
