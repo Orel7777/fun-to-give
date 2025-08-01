@@ -54,7 +54,7 @@ export const TestimonialsColumn = (props: {
                         {name}
                       </div>
                     </div>
-                    
+                    {/*  */}
                     {/* כפתור האודיו */}
                     <button
                       onClick={() => props.onAudioPlay(audioPath)}
@@ -84,6 +84,7 @@ export const TestimonialsColumn = (props: {
                   >
                     <source src={audioPath} type="audio/mpeg" />
                   </audio>
+                  
                 </div>
               ))}
             </React.Fragment>
