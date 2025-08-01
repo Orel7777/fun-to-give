@@ -68,6 +68,7 @@ const FamiliesTestimonials = () => {
 
     // חפש את האלמנט הנוכחי
     const audio = document.getElementById(audioPath) as HTMLAudioElement;
+    
     if (audio) {
       if (playingAudio === audioPath) {
         // אם לוחצים על אותו אודיו, עצור אותו
@@ -77,7 +78,9 @@ const FamiliesTestimonials = () => {
         setAnimationsPaused(false);
       } else {
         // נגן אודיו חדש ועצור אנימציות
-        audio.play().catch(console.error);
+        audio.play().catch((error) => {
+          console.error('שגיאה בהשמעת האודיו:', error);
+        });
         setPlayingAudio(audioPath);
         setAnimationsPaused(true);
         
@@ -109,6 +112,17 @@ const FamiliesTestimonials = () => {
 
     return () => clearInterval(interval);
   }, [playingAudio]);
+
+  // בדיקת קיום קבצי האודיו
+  useEffect(() => {
+    testimonials.forEach(testimonial => {
+      const audio = new Audio();
+      audio.src = testimonial.audioPath;
+      audio.addEventListener('error', (e) => {
+        console.error('שגיאה בקובץ אודיו:', testimonial.audioPath, e);
+      });
+    });
+  }, []);
 
   // event listener לגלילה - חזור לאנימציות
   useEffect(() => {
@@ -158,6 +172,20 @@ const FamiliesTestimonials = () => {
         </motion.div>
 
         <div className="mt-16">
+          {/* כל אלמנטי האודיו - נסתרים אבל קיימים מחוץ ל-AnimatePresence */}
+          <div className="hidden">
+            {testimonials.map((testimonial, index) => (
+              <audio
+                key={index}
+                id={testimonial.audioPath}
+                preload="metadata"
+                onError={(e) => console.error('שגיאה בטעינת אודיו:', testimonial.audioPath, e)}
+              >
+                <source src={testimonial.audioPath} type="audio/mpeg" />
+              </audio>
+            ))}
+          </div>
+
           {/* תצוגת מובייל - קרוסלה */}
           <div className="md:hidden">
             <div className="mx-auto max-w-sm">
@@ -208,19 +236,6 @@ const FamiliesTestimonials = () => {
               {/* מחוון מספר העדות */}
               <div className="text-center mt-3 text-sm text-[#2a2b26]/60 font-staff">
                 {currentTestimonial + 1} מתוך {testimonials.length}
-              </div>
-              
-              {/* כל אלמנטי האודיו - נסתרים אבל קיימים */}
-              <div className="hidden">
-                {testimonials.map((testimonial, index) => (
-                  <audio
-                    key={index}
-                    id={testimonial.audioPath}
-                    preload="metadata"
-                  >
-                    <source src={testimonial.audioPath} type="audio/mpeg" />
-                  </audio>
-                ))}
               </div>
             </div>
           </div>
