@@ -287,19 +287,31 @@ const VideoScrollExpand = ({
               </div>
             ) : finalVideoUrl ? (
               <div className="relative w-full h-full">
-                {/* Background image למובייל כשהוידאו לא נטען */}
-                {isMobile && !videoLoaded && (
+                {/* Background image למובייל עד שמתחילים לנגן */}
+                {isMobile && !isPlaying && (
                   <div 
                     className="flex absolute inset-0 justify-center items-center bg-center bg-no-repeat bg-cover"
                     style={{
-                      backgroundColor: '#f5a383',
-                      backgroundImage: 'linear-gradient(135deg, #f5a383 0%, #e09068 100%)'
+                      backgroundImage: 'url(/tumbil.png)',
+                      backgroundColor: '#f5a383'
                     }}
                   >
-                    <div className="p-6 text-center text-white rounded-xl backdrop-blur-sm bg-black/20">
-                      <div className="mb-3 text-4xl">🎬</div>
-                      <div className="mb-2 text-xl font-bold font-staff">הפעילות שלנו</div>
-                      <div className="text-sm opacity-90 font-staff">לחץ כדי לצפות בוידאו</div>
+                    {/* אוברליי עם כפתור play */}
+                    <div className="flex justify-center items-center w-full h-full bg-black/30">
+                      <div className="p-4 rounded-full shadow-2xl backdrop-blur-sm bg-white/90">
+                        <svg
+                          width="60"
+                          height="60"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          className="text-[#2a2b26]"
+                        >
+                          <path
+                            d="M8 5v14l11-7z"
+                            fill="currentColor"
+                          />
+                        </svg>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -314,7 +326,7 @@ const VideoScrollExpand = ({
                   controls={false}
                   disablePictureInPicture={true}
                   className={`object-cover w-full h-full ${
-                    isMobile && !videoLoaded ? 'opacity-0' : 'opacity-100'
+                    isMobile && !isPlaying ? 'opacity-0' : 'opacity-100'
                   }`}
                   style={{
                     minHeight: '100%',
