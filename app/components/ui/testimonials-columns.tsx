@@ -38,6 +38,7 @@ export const TestimonialsColumn = (props: {
                 <div 
                   className="p-6 rounded-3xl border border-[#f5a383]/20 shadow-lg bg-[#fdf6ed] max-w-xs w-full relative" 
                   key={`${index}-${i}`}
+                  style={{ pointerEvents: 'auto' }}
                 >
                   <div className="text-[#2a2b26] font-staff leading-relaxed mb-4">
                     &ldquo;{text}&rdquo;
@@ -57,13 +58,37 @@ export const TestimonialsColumn = (props: {
                     {/*  */}
                     {/* כפתור האודיו */}
                     <button
-                      onClick={() => props.onAudioPlay(audioPath)}
-                      className={`p-2 rounded-full transition-all duration-200 ${
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        props.onAudioPlay(audioPath);
+                      }}
+                      onTouchStart={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        props.onAudioPlay(audioPath);
+                      }}
+                      onTouchEnd={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                      }}
+                      onPointerDown={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        props.onAudioPlay(audioPath);
+                      }}
+                      className={`p-2 rounded-full transition-all duration-200 relative z-10 touch-manipulation cursor-pointer select-none ${
                         props.playingAudio === audioPath 
                           ? 'bg-[#98c5b1] text-white scale-110' 
-                          : 'bg-[#f5a383]/20 text-[#f5a383] hover:bg-[#98c5b1] hover:text-white'
+                          : 'bg-[#f5a383]/20 text-[#f5a383] hover:bg-[#98c5b1] hover:text-white active:bg-[#98c5b1] active:text-white'
                       }`}
                       title="השמע עדות"
+                      style={{ 
+                        touchAction: 'manipulation',
+                        WebkitTapHighlightColor: 'transparent',
+                        WebkitUserSelect: 'none',
+                        userSelect: 'none'
+                      }}
                     >
                       <svg 
                         width="16" 
