@@ -3,6 +3,7 @@ import { Playfair_Display } from "next/font/google";
 import "./globals.css";
 import "./fonts/almoni.css";
 import "./fonts/quicksand.css";
+import { VideoProvider } from "./contexts/VideoContext";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -80,9 +81,11 @@ export default function RootLayout({
       <body
         className={`${playfair.className} antialiased`}
       >
-        {children}
-        <WhatsAppIcon />
-        <EmailIcon />
+        <VideoProvider>
+          {children}
+          <WhatsAppIcon />
+          <EmailIcon />
+        </VideoProvider>
       </body>
     </html>
   );

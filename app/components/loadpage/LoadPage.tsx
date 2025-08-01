@@ -1,15 +1,21 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import { useVideo } from '../../contexts/VideoContext';
 
 interface LoadPageProps {
   onLoadComplete?: () => void;
   duration?: number; // משך הטעינה במילישניות
+  videoPath?: string; // נתיב הוידאו לטעינה מוקדמת
 }
 
-export default function LoadPage({ onLoadComplete, duration = 2500 }: LoadPageProps) {
+export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 'כיף לתת מקוצר.mp4' }: LoadPageProps) {
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const [videoProgress, setVideoProgress] = useState(0);
+  const { mainVideo, preloadVideo } = useVideo();
+  const videoStatusRef = useRef({ isReady: false, loading: false });
+  const videoLoadedRef = useRef(false);
   const preloaderRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const progressFillRef = useRef<HTMLDivElement>(null);
@@ -18,20 +24,45 @@ export default function LoadPage({ onLoadComplete, duration = 2500 }: LoadPagePr
   const logoRef = useRef<HTMLImageElement>(null);
   const logoBgRef = useRef<HTMLDivElement>(null);
 
+  // עדכון סטטוס הוידאו ב-ref
+  useEffect(() => {
+    videoStatusRef.current = { isReady: mainVideo.isReady, loading: mainVideo.loading };
+  }, [mainVideo.isReady, mainVideo.loading]);
+
+  // טעינת הוידאו (רק פעם אחת)
+  useEffect(() => {
+    if (!videoLoadedRef.current) {
+      videoLoadedRef.current = true;
+      preloadVideo(videoPath);
+    }
+  }, [preloadVideo, videoPath]);
+
+  // ניהול הטיימר וההתקדמות
   useEffect(() => {
     const startTime = Date.now();
+    let animationFrameId: number;
 
     const updateProgress = () => {
       const currentTime = Date.now();
       const elapsed = currentTime - startTime;
-      const newProgress = Math.min((elapsed / duration) * 100, 100);
       
-      setProgress(newProgress);
+      // חישוב התקדמות הזמן (70% מהטעינה)
+      const timeProgress = Math.min((elapsed / duration) * 70, 70);
+      
+      // חישוב התקדמות הוידאו (30% מהטעינה)
+      const videoLoadProgress = videoStatusRef.current.isReady ? 30 : (videoStatusRef.current.loading ? 15 : 0);
+      
+      const totalProgress = timeProgress + videoLoadProgress;
+      setProgress(totalProgress);
+      setVideoProgress(videoLoadProgress);
 
-      if (newProgress < 100) {
-        requestAnimationFrame(updateProgress);
+      // הטעינה מסתיימת רק כשגם הזמן וגם הוידאו מוכנים
+      const isComplete = elapsed >= duration && videoStatusRef.current.isReady;
+      
+      if (!isComplete) {
+        animationFrameId = requestAnimationFrame(updateProgress);
       } else {
-        console.log('הטעינה הסתיימה, מתחיל אנימציות');
+        console.log('הטעינה הסתיימה (זמן + וידאו), מתחיל אנימציות');
         // הטעינה הסתיימה - אפקטי GSAP
         
         // התחל את אנימציית העיגול והפיזור
@@ -133,8 +164,15 @@ export default function LoadPage({ onLoadComplete, duration = 2500 }: LoadPagePr
       delay: 1.2
     });
 
-    requestAnimationFrame(updateProgress);
-  }, [duration, onLoadComplete]);
+    animationFrameId = requestAnimationFrame(updateProgress);
+    
+    // cleanup function
+    return () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+      }
+    };
+  }, [duration, onLoadComplete]); // הסרת התלות ב-mainVideo
 
   if (!isVisible) {
     return null;
@@ -160,6 +198,8 @@ export default function LoadPage({ onLoadComplete, duration = 2500 }: LoadPagePr
       >
         {Math.round(progress).toString().padStart(3, '0')}
       </div>
+
+
 
       {/* לוגו מעל הסרגל עם רקע מונפש */}
       <div className="flex relative justify-center items-center mb-16">

@@ -2,15 +2,16 @@ import React from 'react';
 import Image from 'next/image';
 import { VideoScrollExpand, HorizontalScrollCarousel } from '../components';
 import FamiliesTestimonials from './Testimonials';
-import { useFirebaseVideo } from '../hooks/useFirebaseVideo';
+import { useVideo } from '../contexts/VideoContext';
 
 interface HeroSectionProps {
   showTextAnimation: boolean;
 }
 
 const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
-  // טעינת הוידאו מ-Firebase Storage
-  const { videoUrl, loading, error } = useFirebaseVideo('כיף לתת מקוצר.mp4');
+  // קבלת הוידאו מהקונטקסט (הוא נטען מראש בLoadPage)
+  const { mainVideo } = useVideo();
+  const { loading, error, isReady } = mainVideo;
   
   // Only show the futuristic hero when text animation should be visible
   if (!showTextAnimation) {
@@ -154,9 +155,9 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         </div>
       )}
       
-      {!loading && !error && videoUrl && (
+      {!loading && !error && isReady && (
         <VideoScrollExpand
-          videoSrc={videoUrl}
+          usePreloadedVideo={true}
           title="הפעילות שלנו"
         >
         <div className="px-8 mx-auto max-w-4xl text-center">

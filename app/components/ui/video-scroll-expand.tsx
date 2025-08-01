@@ -3,20 +3,22 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause } from 'lucide-react';
-import { useFirebaseVideo } from '../../hooks/useFirebaseVideo';
+import { useVideo } from '../../contexts/VideoContext';
 
 interface VideoScrollExpandProps {
-  videoSrc: string;
+  videoSrc?: string; // אופציונלי - אם לא מועבר ישתמש בוידאו מהקונטקסט
   title?: string;
   subtitle?: string;
   children?: React.ReactNode;
+  usePreloadedVideo?: boolean; // האם להשתמש בוידאו הטעון מראש
 }
 
 const VideoScrollExpand = ({ 
   videoSrc, 
   title = "צפה בוידאו", 
   subtitle,
-  children 
+  children,
+  usePreloadedVideo = true
 }: VideoScrollExpandProps) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -24,10 +26,13 @@ const VideoScrollExpand = ({
   const [isHovering, setIsHovering] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const { mainVideo } = useVideo();
   
-  // Get video URL from Firebase Storage or use local video
-  const { videoUrl, loading, error } = useFirebaseVideo(videoSrc.startsWith('/') ? '' : videoSrc);
-  const finalVideoUrl = videoSrc.startsWith('/') ? videoSrc : videoUrl;
+  // בחירה בין וידאו מוקדם לוידאו רגיל
+  const shouldUsePreloaded = usePreloadedVideo && mainVideo.isReady;
+  const finalVideoUrl = shouldUsePreloaded ? mainVideo.videoUrl : (videoSrc?.startsWith('/') ? videoSrc : '');
+  const loading = usePreloadedVideo ? mainVideo.loading : false;
+  const error = usePreloadedVideo ? mainVideo.error : null;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -42,7 +47,6 @@ const VideoScrollExpand = ({
       if (rect.top <= windowHeight && rect.bottom >= 0) {
         // כאשר הקומפוננטה נראית על המסך
         const visibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
-        const totalHeight = rect.height;
         progress = Math.min(visibleHeight / (windowHeight * 0.8), 1);
       }
       
@@ -89,7 +93,7 @@ const VideoScrollExpand = ({
       className="relative min-h-[200vh] bg-gradient-to-b from-[#fdf6ed] via-[#f5a383] to-[#9acdbe]"
     >
       {/* סקציית הוידאו הראשונה */}
-      <div className="sticky top-0 h-screen flex items-center justify-center overflow-hidden">
+      <div className="flex overflow-hidden sticky top-0 justify-center items-center h-screen">
         <div className="text-center">
                      {/* כותרות */}
            <motion.div
@@ -145,7 +149,7 @@ const VideoScrollExpand = ({
 
           {/* הוידאו */}
           <motion.div
-            className="relative mx-auto rounded-2xl overflow-hidden shadow-2xl cursor-pointer"
+            className="overflow-hidden relative mx-auto rounded-2xl shadow-2xl cursor-pointer"
             style={{
               width: `${videoScale * 80}vw`,
               height: `${videoScale * 45}vw`,
@@ -163,35 +167,39 @@ const VideoScrollExpand = ({
             onMouseLeave={() => setIsHovering(false)}
             onClick={togglePlay}
           >
-            {(loading && !videoSrc.startsWith('/')) ? (
-              <div className="w-full h-full flex items-center justify-center bg-gray-200">
+            {loading ? (
+              <div className="flex justify-center items-center w-full h-full bg-gray-200">
                 <div className="text-center">
                   <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2a2b26] mx-auto mb-4"></div>
                   <p className="text-[#2a2b26] font-staff">טוען וידאו...</p>
                 </div>
               </div>
-            ) : (error && !videoSrc.startsWith('/')) ? (
-              <div className="w-full h-full flex items-center justify-center bg-red-100">
+            ) : error ? (
+              <div className="flex justify-center items-center w-full h-full bg-red-100">
                 <div className="text-center">
-                  <p className="text-red-600 font-staff mb-2">שגיאה בטעינת הוידאו</p>
+                  <p className="mb-2 text-red-600 font-staff">שגיאה בטעינת הוידאו</p>
                   <p className="text-sm text-red-500 font-staff">{error}</p>
                 </div>
               </div>
-            ) : (
+            ) : finalVideoUrl ? (
               <video
                 ref={videoRef}
                 src={finalVideoUrl}
                 loop
                 playsInline
-                className="w-full h-full object-cover"
+                className="object-cover w-full h-full"
               />
+            ) : (
+              <div className="flex justify-center items-center w-full h-full bg-gray-300">
+                <p className="text-[#2a2b26] font-staff">אין וידאו זמין</p>
+              </div>
             )}
 
             {/* כפתור Play/Pause במרכז */}
             <AnimatePresence>
               {showControls && (
                 <motion.div
-                  className="absolute inset-0 flex items-center justify-center"
+                  className="flex absolute inset-0 justify-center items-center"
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ 
                     opacity: 1, 
@@ -208,7 +216,7 @@ const VideoScrollExpand = ({
                   }}
                 >
                   <motion.div
-                    className="bg-white/90 backdrop-blur-sm rounded-full p-6 shadow-2xl"
+                    className="p-6 rounded-full shadow-2xl backdrop-blur-sm bg-white/90"
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ 
                       scale: isPlaying ? 0.6 : 1, 
@@ -250,7 +258,7 @@ const VideoScrollExpand = ({
                         ease: "easeInOut"
                       }}
                     >
-                      <div className="bg-white/90 backdrop-blur-sm px-6 py-3 rounded-full shadow-lg">
+                      <div className="px-6 py-3 rounded-full shadow-lg backdrop-blur-sm bg-white/90">
                         <span className="text-[#2a2b26] font-bold text-lg font-staff tracking-wider">
                           PLAY VIDEO
                         </span>
@@ -263,7 +271,7 @@ const VideoScrollExpand = ({
             
             {/* אוברליי עם גרדיאנט */}
             <div 
-              className="absolute inset-0 bg-black/20 pointer-events-none"
+              className="absolute inset-0 pointer-events-none bg-black/20"
               style={{ opacity: 1 - scrollProgress * 0.5 }}
             />
           </motion.div>
