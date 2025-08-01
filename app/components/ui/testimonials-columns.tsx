@@ -12,7 +12,7 @@ export const TestimonialsColumn = (props: {
   className?: string;
   testimonials: Testimonial[];
   duration?: number;
-  onAudioPlay: (audioPath: string) => void;
+  onAudioPlay: (audioPath: string) => Promise<void>;
   playingAudio: string | null;
   animationsPaused: boolean;
 }) => {
@@ -57,7 +57,14 @@ export const TestimonialsColumn = (props: {
                     
                     {/* כפתור האודיו */}
                     <button
-                      onClick={() => props.onAudioPlay(audioPath)}
+                      onClick={async () => {
+                        try {
+                          console.log('לוחץ על כפתור אודיו:', audioPath);
+                          await props.onAudioPlay(audioPath);
+                        } catch (error) {
+                          console.error('שגיאה בלחיצה על כפתור אודיו:', error);
+                        }
+                      }}
                       className={`p-2 rounded-full transition-all duration-200 active:scale-95 ${
                         props.playingAudio === audioPath 
                           ? 'bg-[#98c5b1] text-white scale-110' 

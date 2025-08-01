@@ -52,6 +52,8 @@ const FamiliesTestimonials = () => {
 
   // פונקציה לטיפול בהשמעת אודיו - משופר למובייל
   const handleAudioPlay = async (audioPath: string) => {
+    console.log('handleAudioPlay נקרא עם:', audioPath);
+    
     // עצור כל אודיו אחר
     if (playingAudio) {
       const currentAudio = document.getElementById(playingAudio) as HTMLAudioElement;
@@ -62,6 +64,7 @@ const FamiliesTestimonials = () => {
     }
 
     const audio = document.getElementById(audioPath) as HTMLAudioElement;
+    console.log('אלמנט אודיו נמצא:', !!audio);
     if (audio) {
       if (playingAudio === audioPath) {
         // אם לוחצים על אותו אודיו, עצור אותו
@@ -71,12 +74,24 @@ const FamiliesTestimonials = () => {
         setAnimationsPaused(false);
       } else {
         try {
+          console.log('מנסה לנגן אודיו:', audioPath);
+          
           // הגדרת אטריבוטים למובייל
           audio.setAttribute('playsinline', 'true');
           audio.setAttribute('webkit-playsinline', 'true');
           
+          // בדיקה שהאודיו מוכן
+          if (audio.readyState < 2) {
+            console.log('מחכה לאודיו להיטען...');
+            await new Promise((resolve) => {
+              audio.addEventListener('canplay', resolve, { once: true });
+              audio.load();
+            });
+          }
+          
           // נסה לנגן את האודיו
           await audio.play();
+          console.log('אודיו מתנגן בהצלחה!');
           setPlayingAudio(audioPath);
           setAnimationsPaused(true);
           
@@ -95,10 +110,18 @@ const FamiliesTestimonials = () => {
           
         } catch (error) {
           console.error('שגיאה בניגון האודיו:', error);
+          
           // אם נכשל, ננסה עם preload
           try {
+            console.log('מנסה ניסיון שני עם preload...');
             audio.preload = 'auto';
+            audio.load();
+            
+            // מחכה קצת לטעינה
+            await new Promise(resolve => setTimeout(resolve, 500));
+            
             await audio.play();
+            console.log('ניסיון שני הצליח!');
             setPlayingAudio(audioPath);
             setAnimationsPaused(true);
           } catch (secondError) {
@@ -107,6 +130,8 @@ const FamiliesTestimonials = () => {
             setAnimationsPaused(false);
           }
         }
+      } else {
+        console.error('אלמנט אודיו לא נמצא:', audioPath);
       }
     }
   };
