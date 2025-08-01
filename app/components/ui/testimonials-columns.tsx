@@ -38,16 +38,15 @@ export const TestimonialsColumn = (props: {
                 <div 
                   className="p-6 rounded-3xl border border-[#f5a383]/20 shadow-lg bg-[#fdf6ed] max-w-xs w-full relative" 
                   key={`${index}-${i}`}
-                  style={{ pointerEvents: 'auto' }}
                 >
                   <div className="text-[#2a2b26] font-staff leading-relaxed mb-4">
                     &ldquo;{text}&rdquo;
                   </div>
                   
-                  <div className="flex justify-between items-center">
-                    <div className="flex gap-3 items-center">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-[#f5a383] flex items-center justify-center">
-                        <span className="text-sm font-bold text-white font-staff">
+                        <span className="text-white font-bold font-staff text-sm">
                           {name.charAt(0)}
                         </span>
                       </div>
@@ -55,40 +54,16 @@ export const TestimonialsColumn = (props: {
                         {name}
                       </div>
                     </div>
-                    {/*  */}
+                    
                     {/* כפתור האודיו */}
                     <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        props.onAudioPlay(audioPath);
-                      }}
-                      onTouchStart={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        props.onAudioPlay(audioPath);
-                      }}
-                      onTouchEnd={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                      onPointerDown={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        props.onAudioPlay(audioPath);
-                      }}
-                      className={`p-2 rounded-full transition-all duration-200 relative z-10 touch-manipulation cursor-pointer select-none ${
+                      onClick={() => props.onAudioPlay(audioPath)}
+                      className={`p-2 rounded-full transition-all duration-200 ${
                         props.playingAudio === audioPath 
                           ? 'bg-[#98c5b1] text-white scale-110' 
-                          : 'bg-[#f5a383]/20 text-[#f5a383] hover:bg-[#98c5b1] hover:text-white active:bg-[#98c5b1] active:text-white'
+                          : 'bg-[#f5a383]/20 text-[#f5a383] hover:bg-[#98c5b1] hover:text-white'
                       }`}
                       title="השמע עדות"
-                      style={{ 
-                        touchAction: 'manipulation',
-                        WebkitTapHighlightColor: 'transparent',
-                        WebkitUserSelect: 'none',
-                        userSelect: 'none'
-                      }}
                     >
                       <svg 
                         width="16" 
@@ -107,9 +82,8 @@ export const TestimonialsColumn = (props: {
                     id={audioPath}
                     preload="none"
                   >
-                    <source src={audioPath} type="audio/mpeg" />
+                    <source src={audioPath} type="video/mp4" />
                   </audio>
-                  
                 </div>
               ))}
             </React.Fragment>

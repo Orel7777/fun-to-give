@@ -9,37 +9,37 @@ const testimonials = [
   {
     text: "כמות הדגים הייתה גדולה ובאיכות מאד טובה",
     name: "משפחה א'",
-    audioPath: "/Families_tell_stories/1.mp3"
+    audioPath: "/Families_tell_stories/1 - כמות הדגים הייתה גדולה ובאיכות מאד טובה.mp4"
   },
   {
     text: "תודה רבה על כל רגע שאתם חושבים ומתכננים איך לתת לנו",
     name: "משפחה ב'",
-    audioPath: "/Families_tell_stories/2.mp3"
+    audioPath: "/Families_tell_stories/2 - תודה רבה על כל רגע שאתם חושבים ומתכננים איך לתת לנו.mp4"
   },
   {
     text: "זה הציל אותנו ממש בישלנו עם זה את החג",
     name: "משפחה ג'",
-    audioPath: "/Families_tell_stories/3.mp3"
+    audioPath: "/Families_tell_stories/3 - זה הציל אותנו ממש בישלנו עם זה את החג .mp4"
   },
   {
     text: "זה מאד עזר!",
     name: "משפחה ד'",
-    audioPath: "/Families_tell_stories/4.mp3"
+    audioPath: "/Families_tell_stories/4 - זה מאד עזר!.mp4"
   },
   {
     text: "זה עשה לנו ממש שמחה גדולה",
     name: "משפחה ה'",
-    audioPath: "/Families_tell_stories/5.mp3"
+    audioPath: "/Families_tell_stories/5 - זה עשה לנו ממש שמחה גדולה.mp4"
   },
   {
     text: "זה ממש הצלת נפשות",
     name: "משפחה ו'",
-    audioPath: "/Families_tell_stories/6.mp3"
+    audioPath: "/Families_tell_stories/6 - זה ממש הצלת נפשות.mp4"
   },
   {
     text: "בזכות זה יכלנו להכניס אורחים בפורים",
     name: "משפחה ז'",
-    audioPath: "/Families_tell_stories/7.mp3"
+    audioPath: "/Families_tell_stories/7 - בזכות זה יכלנו להכניס אורחים בפורים.mp4"
   }
 ];
 
@@ -52,48 +52,18 @@ const FamiliesTestimonials = () => {
   const [animationsPaused, setAnimationsPaused] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
-  // פונקציה מתוקנת לטיפול בהשמעת אודיו
+  // פונקציה לטיפול בהשמעת אודיו
   const handleAudioPlay = (audioPath: string) => {
-    console.log('🔄 מנסה להשמיע:', audioPath);
-    
-    // מצא את האינדקס של העדות לפי הנתיב
-    const index = testimonials.findIndex(t => t.audioPath === audioPath);
-    if (index === -1) {
-      console.error('❌ לא נמצאה עדות עם הנתיב:', audioPath);
-      return;
-    }
-    console.log('✅ נמצא אינדקס:', index);
-
     // עצור כל אודיו אחר
     if (playingAudio) {
-      const currentIndex = testimonials.findIndex(t => t.audioPath === playingAudio);
-      if (currentIndex !== -1) {
-        // עצור את כל האלמנטים האפשריים
-        const possibleIds = [`audio-${currentIndex}`, `mobile-audio-${currentIndex}`];
-        possibleIds.forEach(id => {
-          const audioElement = document.getElementById(id) as HTMLAudioElement;
-          if (audioElement) {
-            audioElement.pause();
-            audioElement.currentTime = 0;
-            console.log('⏸️ עצר אודיו:', id);
-          }
-        });
+      const currentAudio = document.getElementById(playingAudio) as HTMLAudioElement;
+      if (currentAudio) {
+        currentAudio.pause();
+        currentAudio.currentTime = 0;
       }
     }
 
-    // זיהוי סוג המכשיר ובחירת האלמנט המתאים
-    const isMobile = window.innerWidth < 768;
-    const primaryAudioId = isMobile ? `mobile-audio-${index}` : `audio-${index}`;
-    const fallbackAudioId = isMobile ? `audio-${index}` : `mobile-audio-${index}`;
-    
-    let audio = document.getElementById(primaryAudioId) as HTMLAudioElement;
-    
-    // אם לא מצא, נסה את האלמנט החלופי
-    if (!audio) {
-      audio = document.getElementById(fallbackAudioId) as HTMLAudioElement;
-      console.log(`🔄 לא נמצא ${primaryAudioId}, מנסה ${fallbackAudioId}:`, !!audio);
-    }
-    
+    const audio = document.getElementById(audioPath) as HTMLAudioElement;
     if (audio) {
       if (playingAudio === audioPath) {
         // אם לוחצים על אותו אודיו, עצור אותו
@@ -101,73 +71,18 @@ const FamiliesTestimonials = () => {
         audio.currentTime = 0;
         setPlayingAudio(null);
         setAnimationsPaused(false);
-        console.log('⏸️ עצר אותו אודיו');
       } else {
-        // פונקציה להשמעת האודיו עם טיפול משופר בשגיאות
-        const playAudio = () => {
-          // וודא שהאודיו תקין לפני השמעה
-          if (audio.error) {
-            console.error('❌ האודיו כבר בשגיאה, מנסה לטעון מחדש...');
-            audio.load();
-            return;
-          }
-          
-          const playPromise = audio.play();
-          
-          if (playPromise !== undefined) {
-            playPromise.then(() => {
-              console.log('✅ האודיו התחיל להתנגן בהצלחה');
-              setPlayingAudio(audioPath);
-              setAnimationsPaused(true);
-            }).catch((error) => {
-              console.error('❌ שגיאה בהשמעת האודיו:', error);
-              console.error('פרטי השגיאה:', {
-                name: error.name,
-                message: error.message,
-                code: error.code,
-                audioError: audio.error,
-                networkState: audio.networkState,
-                readyState: audio.readyState,
-                src: audio.src,
-                currentSrc: audio.currentSrc
-              });
-              
-              // נסה לטעון מחדש ולהשמיע שוב
-              console.log('🔄 מנסה לטעון מחדש...');
-              audio.load();
-              setTimeout(() => {
-                if (audio.readyState >= 3) {
-                  audio.play().catch(retryError => {
-                    console.error('❌ שגיאה גם בניסיון החוזר:', retryError);
-                  });
-                }
-              }, 500);
-            });
-          }
-        };
-
-        // בדוק אם האודיו מוכן להשמעה
-        if (audio.readyState >= 3) { // HAVE_FUTURE_DATA
-          playAudio();
-        } else {
-          // אם האודיו לא מוכן, חכה שיטען
-          console.log('⏳ ממתין לטעינת האודיו...');
-          audio.addEventListener('canplay', playAudio, { once: true });
-          audio.load(); // אלץ טעינה מחדש
-        }
+        // נגן אודיו חדש ועצור אנימציות
+        audio.play();
+        setPlayingAudio(audioPath);
+        setAnimationsPaused(true);
         
         // חזור לאנימציות כשהאודיו נגמר
         audio.onended = () => {
           setPlayingAudio(null);
           setAnimationsPaused(false);
-          console.log('🏁 האודיו הסתיים');
         };
       }
-    } else {
-      console.error('❌ לא נמצא אלמנט אודיו עבור אינדקס:', index);
-      // בדוק אילו אלמנטי אודיו קיימים
-      const allAudios = document.querySelectorAll('audio');
-      console.log('📋 כל אלמנטי האודיו הקיימים:', Array.from(allAudios).map(a => ({ id: a.id, src: a.src })));
     }
   };
 
@@ -180,76 +95,16 @@ const FamiliesTestimonials = () => {
     setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
-  // מעבר אוטומטי כל 5 שניות (רק אם לא משמיעים אודיו)
+  // מעבר אוטומטי כל 5 שניות (אופציונלי)
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!playingAudio) {
+      if (!playingAudio) { // רק אם לא משמיעים אודיו
         nextTestimonial();
       }
     }, 5000);
 
     return () => clearInterval(interval);
   }, [playingAudio]);
-
-  // בדיקת קיום קבצי האודיו עם טיפול משופר בשגיאות
-  useEffect(() => {
-    console.log('🔍 בודק קבצי אודיו...');
-    
-    const fileSizes = {
-      '1.mp3': '280KB',
-      '2.mp3': '2.0MB',
-      '3.mp3': '423KB',
-      '4.mp3': '549KB',
-      '5.mp3': '258KB',
-      '6.mp3': '154KB',
-      '7.mp3': '317KB'
-    };
-    
-    testimonials.forEach((testimonial, index) => {
-      const fileName = testimonial.audioPath.split('/').pop() || 'unknown.mp3';
-      const fileSize = fileSizes[fileName as keyof typeof fileSizes] || 'לא ידוע';
-      console.log(`📁 בודק קובץ ${index + 1}: ${fileName} (${fileSize}) - ${testimonial.text.length} תווים`);
-      
-      // בדיקה באמצעות fetch API
-      fetch(testimonial.audioPath, { method: 'HEAD' })
-        .then(response => {
-          if (response.ok) {
-            console.log(`✅ קובץ קיים: ${fileName} (${response.headers.get('content-length')} bytes)`);
-          } else {
-            console.error(`❌ קובץ לא נמצא: ${fileName} - סטטוס: ${response.status}`);
-          }
-        })
-        .catch(error => {
-          console.error(`❌ שגיאה בבדיקת קובץ: ${fileName}`, error);
-        });
-      
-      // בדיקה נוספת עם Audio object
-      const audio = new Audio();
-      audio.preload = 'metadata';
-      
-      audio.addEventListener('loadstart', () => {
-        console.log(`🔄 מתחיל לטעון: ${testimonial.audioPath}`);
-      });
-      
-      audio.addEventListener('canplaythrough', () => {
-        console.log(`✅ Audio object מוכן: ${testimonial.audioPath}`);
-      });
-      
-      audio.addEventListener('error', (e) => {
-        const errorDetails = {
-          code: audio.error?.code,
-          message: audio.error?.message,
-          networkState: audio.networkState,
-          readyState: audio.readyState,
-          src: audio.src
-        };
-        console.error(`❌ שגיאה ב-Audio object: ${testimonial.audioPath}`, errorDetails);
-      });
-      
-      // הגדר את המקור רק אחרי הגדרת ה-listeners
-      audio.src = testimonial.audioPath;
-    });
-  }, []);
 
   // event listener לגלילה - חזור לאנימציות
   useEffect(() => {
@@ -299,39 +154,16 @@ const FamiliesTestimonials = () => {
         </motion.div>
 
         <div className="mt-16">
-          {/* תצוגת מובייל - קרוסלה מתוקנת */}
+          {/* תצוגת מובייל - קרוסלה */}
           <div className="md:hidden">
-            {/* כל אלמנטי האודיو למובייל - תמיד קיימים */}
-            {testimonials.map((testimonial, index) => (
-              <audio
-                key={`mobile-audio-${index}`}
-                id={`mobile-audio-${index}`}
-                preload="metadata"
-                className="hidden"
-                onLoadStart={() => console.log(`🔄 מובייל מתחיל לטעון: ${testimonial.audioPath}`)}
-                onCanPlay={() => console.log(`✅ מובייל מוכן: ${testimonial.audioPath}`)}
-                onError={(e) => console.error(`❌ שגיאה במובייל: ${testimonial.audioPath}`, e)}
-              >
-                <source src={testimonial.audioPath} type="audio/mpeg" />
-              </audio>
-            ))}
-
             <div className="mx-auto max-w-sm">
               <AnimatePresence mode="wait">
-                <motion.div
+                <TestimonialCard 
                   key={currentTestimonial}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className="w-full"
-                >
-                  <TestimonialCard 
-                    testimonial={testimonials[currentTestimonial]}
-                    onAudioPlay={handleAudioPlay}
-                    playingAudio={playingAudio}
-                  />
-                </motion.div>
+                  testimonial={testimonials[currentTestimonial]}
+                  onAudioPlay={handleAudioPlay}
+                  playingAudio={playingAudio}
+                />
               </AnimatePresence>
               
               {/* כפתורי ניווט */}
@@ -378,77 +210,29 @@ const FamiliesTestimonials = () => {
 
           {/* תצוגת דסקטופ - עמודות */}
           <div className="hidden md:flex justify-center gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
-            {/* אלמנטי אודיו לדסקטופ - עם טיפול משופר בשגיאות */}
-            <div className="hidden">
-              {testimonials.map((testimonial, index) => (
-                <audio
-                  key={`desktop-audio-${index}`}
-                  id={`audio-${index}`}
-                  preload="metadata"
-                  onLoadStart={(_e) => {
-                    console.log(`🔄 דסקטופ מתחיל לטעון: ${testimonial.audioPath}`);
-                  }}
-                  onCanPlay={(_e) => {
-                    console.log(`✅ דסקטופ מוכן: ${testimonial.audioPath}`);
-                  }}
-                  onError={(e) => {
-                    const audio = e.target as HTMLAudioElement;
-                    const errorDetails = {
-                      code: audio.error?.code,
-                      message: audio.error?.message,
-                      networkState: audio.networkState,
-                      readyState: audio.readyState,
-                      src: audio.src,
-                      currentSrc: audio.currentSrc
-                    };
-                    console.error(`❌ שגיאה בדסקטופ: ${testimonial.audioPath}`, errorDetails);
-                    
-                    // נסה לטעון שוב אחרי 1 שנייה
-                    setTimeout(() => {
-                      console.log(`🔄 מנסה לטעון שוב: ${testimonial.audioPath}`);
-                      audio.load();
-                    }, 1000);
-                  }}
-                  onLoadedData={(_e) => {
-                    console.log(`📊 נתונים נטענו לדסקטופ: ${testimonial.audioPath}`);
-                  }}
-                  onStalled={(_e) => {
-                    console.warn(`⚠️ טעינה תקועה לדסקטופ: ${testimonial.audioPath}`);
-                  }}
-                  onSuspend={(_e) => {
-                    console.warn(`⏸️ טעינה הושעתה לדסקטופ: ${testimonial.audioPath}`);
-                  }}
-                >
-                  <source src={testimonial.audioPath} type="audio/mpeg" />
-                  <source src={testimonial.audioPath} type="audio/mp3" />
-                  <source src={testimonial.audioPath} type="audio/wav" />
-                </audio>
-              ))}
-            </div>
-
-            <TestimonialsColumn 
-              testimonials={firstColumn} 
-              duration={15} 
-              onAudioPlay={handleAudioPlay}
-              playingAudio={playingAudio}
-              animationsPaused={animationsPaused}
-            />
-            <TestimonialsColumn 
-              testimonials={secondColumn} 
-              className="hidden md:block" 
-              duration={19} 
-              onAudioPlay={handleAudioPlay}
-              playingAudio={playingAudio}
-              animationsPaused={animationsPaused}
-            />
-            <TestimonialsColumn 
-              testimonials={thirdColumn} 
-              className="hidden lg:block" 
-              duration={17} 
-              onAudioPlay={handleAudioPlay}
-              playingAudio={playingAudio}
-              animationsPaused={animationsPaused}
-            />
+          <TestimonialsColumn 
+            testimonials={firstColumn} 
+            duration={15} 
+            onAudioPlay={handleAudioPlay}
+            playingAudio={playingAudio}
+            animationsPaused={animationsPaused}
+          />
+          <TestimonialsColumn 
+            testimonials={secondColumn} 
+            className="hidden md:block" 
+            duration={19} 
+            onAudioPlay={handleAudioPlay}
+            playingAudio={playingAudio}
+            animationsPaused={animationsPaused}
+          />
+          <TestimonialsColumn 
+            testimonials={thirdColumn} 
+            className="hidden lg:block" 
+            duration={17} 
+            onAudioPlay={handleAudioPlay}
+            playingAudio={playingAudio}
+            animationsPaused={animationsPaused}
+          />
           </div>
         </div>
         
