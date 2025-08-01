@@ -76,14 +76,6 @@ export const TestimonialsColumn = (props: {
                       </svg>
                     </button>
                   </div>
-                  
-                  {/* קובץ האודיו הנסתר */}
-                  <audio
-                    id={audioPath}
-                    preload="none"
-                  >
-                    <source src={audioPath} type="audio/mpeg" />
-                  </audio>
                 </div>
               ))}
             </React.Fragment>

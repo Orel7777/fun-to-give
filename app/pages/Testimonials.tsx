@@ -54,20 +54,27 @@ const FamiliesTestimonials = () => {
 
   // פונקציה לטיפול בהשמעת אודיו
   const handleAudioPlay = (audioPath: string) => {
-    // עצור כל אודיו אחר
-    if (playingAudio) {
-      // חפש בכל האודיו אלמנטים שיכולים להיות בדף
-      const allAudios = document.querySelectorAll('audio');
-      allAudios.forEach(audio => {
-        if (audio.id === playingAudio) {
-          audio.pause();
-          audio.currentTime = 0;
-        }
-      });
+    // מצא את האינדקס של העדות לפי הנתיב
+    const index = testimonials.findIndex(t => t.audioPath === audioPath);
+    if (index === -1) {
+      console.error('לא נמצאה עדות עם הנתיב:', audioPath);
+      return;
     }
 
-    // חפש את האלמנט הנוכחי
-    const audio = document.getElementById(audioPath) as HTMLAudioElement;
+    // עצור כל אודיו אחר
+    if (playingAudio) {
+      const currentIndex = testimonials.findIndex(t => t.audioPath === playingAudio);
+      if (currentIndex !== -1) {
+        const currentAudio = document.getElementById(`audio-${currentIndex}`) as HTMLAudioElement;
+        if (currentAudio) {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+        }
+      }
+    }
+
+    // חפש את האלמנט הנוכחי לפי האינדקס
+    const audio = document.getElementById(`audio-${index}`) as HTMLAudioElement;
     
     if (audio) {
       if (playingAudio === audioPath) {
@@ -90,6 +97,8 @@ const FamiliesTestimonials = () => {
           setAnimationsPaused(false);
         };
       }
+    } else {
+      console.error('לא נמצא אלמנט אודיו עבור אינדקס:', index);
     }
   };
 
@@ -177,7 +186,7 @@ const FamiliesTestimonials = () => {
             {testimonials.map((testimonial, index) => (
               <audio
                 key={index}
-                id={testimonial.audioPath}
+                id={`audio-${index}`}
                 preload="metadata"
                 onError={(e) => console.error('שגיאה בטעינת אודיו:', testimonial.audioPath, e)}
               >
