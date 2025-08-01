@@ -58,10 +58,10 @@ export const TestimonialsColumn = (props: {
                     {/* כפתור האודיו */}
                     <button
                       onClick={() => props.onAudioPlay(audioPath)}
-                      className={`p-2 rounded-full transition-all duration-200 ${
+                      className={`p-2 rounded-full transition-all duration-200 active:scale-95 ${
                         props.playingAudio === audioPath 
-                          ? 'bg-[#f5a383] text-white scale-110' 
-                          : 'bg-[#f5a383]/20 text-[#f5a383] hover:bg-[#f5a383] hover:text-white'
+                          ? 'bg-[#98c5b1] text-white scale-110' 
+                          : 'bg-[#f5a383]/20 text-[#f5a383] hover:bg-[#98c5b1] hover:text-white'
                       }`}
                       title="השמע עדות"
                     >
@@ -81,6 +81,8 @@ export const TestimonialsColumn = (props: {
                   <audio
                     id={audioPath}
                     preload="none"
+                    playsInline
+                    webkit-playsinline="true"
                   >
                     <source src={audioPath} type="audio/mpeg" />
                   </audio>

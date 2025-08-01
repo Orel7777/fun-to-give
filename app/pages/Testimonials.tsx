@@ -50,8 +50,8 @@ const FamiliesTestimonials = () => {
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const [animationsPaused, setAnimationsPaused] = useState(false);
 
-  // פונקציה לטיפול בהשמעת אודיו
-  const handleAudioPlay = (audioPath: string) => {
+  // פונקציה לטיפול בהשמעת אודיו - משופר למובייל
+  const handleAudioPlay = async (audioPath: string) => {
     // עצור כל אודיו אחר
     if (playingAudio) {
       const currentAudio = document.getElementById(playingAudio) as HTMLAudioElement;
@@ -70,16 +70,43 @@ const FamiliesTestimonials = () => {
         setPlayingAudio(null);
         setAnimationsPaused(false);
       } else {
-        // נגן אודיו חדש ועצור אנימציות
-        audio.play();
-        setPlayingAudio(audioPath);
-        setAnimationsPaused(true);
-        
-        // חזור לאנימציות כשהאודיו נגמר
-        audio.onended = () => {
-          setPlayingAudio(null);
-          setAnimationsPaused(false);
-        };
+        try {
+          // הגדרת אטריבוטים למובייל
+          audio.setAttribute('playsinline', 'true');
+          audio.setAttribute('webkit-playsinline', 'true');
+          
+          // נסה לנגן את האודיו
+          await audio.play();
+          setPlayingAudio(audioPath);
+          setAnimationsPaused(true);
+          
+          // חזור לאנימציות כשהאודיו נגמר
+          audio.onended = () => {
+            setPlayingAudio(null);
+            setAnimationsPaused(false);
+          };
+          
+          // טיפול בשגיאות
+          audio.onerror = (e) => {
+            console.error('שגיאה בניגון האודיו:', e);
+            setPlayingAudio(null);
+            setAnimationsPaused(false);
+          };
+          
+        } catch (error) {
+          console.error('שגיאה בניגון האודיו:', error);
+          // אם נכשל, ננסה עם preload
+          try {
+            audio.preload = 'auto';
+            await audio.play();
+            setPlayingAudio(audioPath);
+            setAnimationsPaused(true);
+          } catch (secondError) {
+            console.error('נכשל גם בניסיון השני:', secondError);
+            setPlayingAudio(null);
+            setAnimationsPaused(false);
+          }
+        }
       }
     }
   };
