@@ -59,33 +59,118 @@ const VideoScrollExpand = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // חישוב גודל הוידאו בהתאם לגלילה
-  const videoScale = 0.3 + (scrollProgress * 0.7); // מתחיל ב-30% ומגיע ל-100%
-  const videoOpacity = 0.7 + (scrollProgress * 0.3); // מתחיל ב-70% ומגיע ל-100%
+  // חישוב גודל הוידאו בהתאם לגלילה - שיפור למובייל
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+  const baseScale = isMobile ? 0.6 : 0.3; // התחלה גדולה יותר במובייל
+  const videoScale = baseScale + (scrollProgress * (1 - baseScale)); 
+  const videoOpacity = 0.7 + (scrollProgress * 0.3);
 
-  // פונקציות לניהול הוידאו
-  const togglePlay = () => {
-    if (videoRef.current) {
+  // פונקציות לניהול הוידאו - משופר למובייל
+  const togglePlay = async () => {
+    if (!videoRef.current) return;
+    
+    try {
               if (isPlaying) {
           videoRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        // במובייל, אנחנו מתחילים עם muted ואז מורידים את הקול
+        if (isMobile) {
+          videoRef.current.muted = true;
+          await videoRef.current.play();
+          // מנסים להוריד mute אחרי התחלת הניגון
+          setTimeout(() => {
+            if (videoRef.current) {
+              videoRef.current.muted = false;
+            }
+          }, 100);
         } else {
-          videoRef.current.muted = false; // Unmute when playing
-          videoRef.current.play();
+          videoRef.current.muted = false;
+          await videoRef.current.play();
         }
-        setIsPlaying(!isPlaying);
+        setIsPlaying(true);
+      }
+    } catch (error) {
+      console.warn('שגיאה בניגון הוידאו:', error);
+      // אם נכשל, ננסה עם muted
+      if (videoRef.current && !isPlaying) {
+        try {
+          videoRef.current.muted = true;
+          await videoRef.current.play();
+          setIsPlaying(true);
+        } catch (mutedError) {
+          console.error('נכשל בניגון גם עם muted:', mutedError);
+        }
+      }
     }
   };
 
+  // טיפול בטעינת הוידאו ושיפור למובייל
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video && finalVideoUrl) {
+      const handleCanPlay = () => {
+        console.log('וידאו מוכן לניגון');
+        // הבטחה שהוידאו יציג את הפריים הראשון
+        if (video.currentTime !== 0) {
+          video.currentTime = 0;
+        }
+      };
+      
+      const handleLoadedData = () => {
+        console.log('נתוני הוידאו נטענו');
+        // הבטחה שהוידאו יתחיל מהפריים הראשון
+        if (video.currentTime !== 0) {
+          video.currentTime = 0;
+        }
+      };
+      
+      const handleError = (e: Event) => {
+        console.error('שגיאה בטעינת הוידאו:', e);
+      };
+      
+      const handleLoadStart = () => {
+        console.log('התחלת טעינת הוידאו');
+      };
+      
+      const handleLoadedMetadata = () => {
+        console.log('מטאדטה נטענה - מציג פריים ראשון');
+        // הבטחה שהוידאו יציג את הפריים הראשון מיד
+        video.currentTime = 0;
+      };
+      
+      video.addEventListener('canplay', handleCanPlay);
+      video.addEventListener('loadeddata', handleLoadedData);
+      video.addEventListener('loadedmetadata', handleLoadedMetadata);
+      video.addEventListener('error', handleError);
+      video.addEventListener('loadstart', handleLoadStart);
+      
+      // שיפור למובייל - הגדרת אטריבוטים דינמית
+      if (isMobile) {
+        video.setAttribute('webkit-playsinline', 'true');
+        video.setAttribute('playsinline', 'true');
+      }
+      
+      return () => {
+        video.removeEventListener('canplay', handleCanPlay);
+        video.removeEventListener('loadeddata', handleLoadedData);
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+        video.removeEventListener('error', handleError);
+        video.removeEventListener('loadstart', handleLoadStart);
+      };
+    }
+  }, [finalVideoUrl, isMobile]);
+
   // הצגת כפתורי בקרה כשמרחפים או כשהוידאו מושהה
   useEffect(() => {
-    if (isPlaying && !isHovering) {
-      // אם מנגן ולא מרחפים, הסתר מיד
+    if (isPlaying && !isHovering && !isMobile) {
+      // בדסקטופ: אם מנגן ולא מרחפים, הסתר מיד
       setShowControls(false);
     } else {
-      // אם מושהה או מרחפים, הצג את הכפתורים
+      // במובייל או אם מושהה/מרחפים, הצג את הכפתורים
       setShowControls(true);
     }
-  }, [isPlaying, isHovering]);
+  }, [isPlaying, isHovering, isMobile]);
 
   return (
     <div 
@@ -103,7 +188,7 @@ const VideoScrollExpand = ({
              transition={{ duration: 0.1 }}
            >
              <motion.h2 
-               className="text-4xl md:text-6xl font-bold text-[#2a2b26] font-staff mb-4"
+               className="text-3xl sm:text-4xl md:text-6xl font-bold text-[#2a2b26] font-staff mb-4"
                initial={{ opacity: 0, scale: 0.8, y: 30 }}
                animate={{ 
                  opacity: 1, 
@@ -125,7 +210,7 @@ const VideoScrollExpand = ({
              </motion.h2>
                            {subtitle && (
                 <motion.p 
-                  className="text-xl md:text-2xl text-[#2a2b26]/80 font-staff"
+                  className="text-lg sm:text-xl md:text-2xl text-[#2a2b26]/80 font-staff"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ 
                     opacity: 1, 
@@ -151,21 +236,27 @@ const VideoScrollExpand = ({
           <motion.div
             className="overflow-hidden relative mx-auto rounded-2xl shadow-2xl cursor-pointer"
             style={{
-              width: `${videoScale * 80}vw`,
-              height: `${videoScale * 45}vw`,
-              maxWidth: '1200px',
-              maxHeight: '675px',
-              minWidth: '300px',
-              minHeight: '169px',
+              width: isMobile 
+                ? `${Math.max(videoScale * 90, 85)}vw` // 85-90vw במובייל
+                : `${videoScale * 80}vw`, // 24-80vw בדסקטופ
+              height: isMobile 
+                ? `${Math.max(videoScale * 50, 48)}vw` // aspect ratio 16:9 במובייל
+                : `${videoScale * 45}vw`,
+              maxWidth: isMobile ? '95vw' : '1200px',
+              maxHeight: isMobile ? '53vw' : '675px',
+              minWidth: isMobile ? '320px' : '300px',
+              minHeight: isMobile ? '180px' : '169px',
             }}
             animate={{
               scale: videoScale,
               opacity: videoOpacity,
             }}
             transition={{ duration: 0.1, ease: "easeOut" }}
-            onMouseEnter={() => setIsHovering(true)}
-            onMouseLeave={() => setIsHovering(false)}
+            onMouseEnter={() => !isMobile && setIsHovering(true)}
+            onMouseLeave={() => !isMobile && setIsHovering(false)}
             onClick={togglePlay}
+            onTouchStart={() => isMobile && setIsHovering(true)}
+            onTouchEnd={() => isMobile && setTimeout(() => setIsHovering(false), 3000)}
           >
             {loading ? (
               <div className="flex justify-center items-center w-full h-full bg-gray-200">
@@ -187,7 +278,15 @@ const VideoScrollExpand = ({
                 src={finalVideoUrl}
                 loop
                 playsInline
+                muted
+                preload="auto"
+                controls={false}
+                disablePictureInPicture={true}
                 className="object-cover w-full h-full"
+                style={{
+                  minHeight: '100%',
+                  width: '100%'
+                }}
               />
             ) : (
               <div className="flex justify-center items-center w-full h-full bg-gray-300">
@@ -216,29 +315,35 @@ const VideoScrollExpand = ({
                   }}
                 >
                   <motion.div
-                    className="p-6 rounded-full shadow-2xl backdrop-blur-sm bg-white/90"
+                    className={`rounded-full shadow-2xl backdrop-blur-sm bg-white/90 ${
+                      isMobile ? 'p-8' : 'p-6'
+                    }`}
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ 
                       scale: isPlaying ? 0.6 : 1, 
                       opacity: isPlaying ? 0 : 1 
                     }}
-                    whileHover={{ scale: 1.1 }}
+                    whileHover={{ scale: isMobile ? 1 : 1.1 }}
                     whileTap={{ scale: 0.95 }}
                     transition={{ 
                       type: "spring", 
                       stiffness: 400, 
                       damping: 25 
                     }}
+                    style={{
+                      minWidth: isMobile ? '80px' : '60px',
+                      minHeight: isMobile ? '80px' : '60px'
+                    }}
                   >
                     {isPlaying ? (
-                      <Pause size={48} className="text-[#2a2b26] ml-1" />
+                      <Pause size={isMobile ? 56 : 48} className="text-[#2a2b26] ml-1" />
                     ) : (
-                      <Play size={48} className="text-[#2a2b26] ml-2" />
+                      <Play size={isMobile ? 56 : 48} className="text-[#2a2b26] ml-2" />
                     )}
                   </motion.div>
 
-                  {/* טקסט "PLAY VIDEO" */}
-                  {!isPlaying && (
+                  {/* טקסט "PLAY VIDEO" - מוסתר במובייל לחיסכון במקום */}
+                  {!isPlaying && !isMobile && (
                     <motion.div
                       className="absolute bottom-[-80px] flex items-center gap-4"
                       initial={{ opacity: 0, y: 20 }}

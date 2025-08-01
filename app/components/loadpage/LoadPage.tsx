@@ -193,7 +193,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       {/* מספר הטעינה בפינה שמאלית תחתונה */}
       <div 
         ref={numberRef}
-        className="absolute bottom-6 left-6 text-[#fdf6ed] text-8xl font-bold"
+        className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 text-[#fdf6ed] text-6xl sm:text-8xl font-bold"
         style={{ fontFamily: 'Aeonik, sans-serif' }}
       >
         {Math.round(progress).toString().padStart(3, '0')}
@@ -202,11 +202,11 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
 
 
       {/* לוגו מעל הסרגל עם רקע מונפש */}
-      <div className="flex relative justify-center items-center mb-16">
+      <div className="flex relative justify-center items-center mb-8 sm:mb-16">
         {/* רקע מונפש מסביב ללוגו */}
         <div 
           ref={logoBgRef}
-          className="absolute w-56 h-56 bg-gradient-to-r from-white via-gray-100 to-gray-200 rounded-full opacity-30 blur-sm"
+          className="absolute w-40 h-40 sm:w-56 sm:h-56 bg-gradient-to-r from-white via-gray-100 to-gray-200 rounded-full opacity-30 blur-sm"
           style={{ 
             background: 'conic-gradient(from 0deg, #ffffff, #f8fafc, #e2e8f0, #ffffff)'
           }}
@@ -215,7 +215,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
           ref={logoRef}
           src="/logo.png" 
           alt="כיף לתת" 
-          className="object-contain relative z-10 w-44 h-44"
+          className="object-contain relative z-10 w-32 h-32 sm:w-44 sm:h-44"
           loading="eager"
         />
       </div>
@@ -223,7 +223,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       {/* סרגל הטעינה העבה באמצע */}
       <div 
         ref={progressBarRef}
-        className="w-80 h-4 bg-[#9acdbe] overflow-hidden shadow-2xl sm:w-96 relative"
+        className="w-64 h-3 sm:w-80 sm:h-4 md:w-96 bg-[#9acdbe] overflow-hidden shadow-2xl relative"
       >
         <div 
           ref={progressFillRef}
