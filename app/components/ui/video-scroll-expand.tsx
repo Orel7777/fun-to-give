@@ -24,6 +24,7 @@ const VideoScrollExpand = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [showControls, setShowControls] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { mainVideo } = useVideo();
@@ -76,6 +77,8 @@ const VideoScrollExpand = ({
       } else {
         // במובייל, אנחנו מתחילים עם muted ואז מורידים את הקול
         if (isMobile) {
+          // הגדרת preload לטעינה מהירה כשמתחילים לנגן
+          videoRef.current.preload = 'auto';
           videoRef.current.muted = true;
           await videoRef.current.play();
           // מנסים להוריד mute אחרי התחלת הניגון
@@ -89,6 +92,10 @@ const VideoScrollExpand = ({
           await videoRef.current.play();
         }
         setIsPlaying(true);
+        // במובייל, כשמתחילים לנגן - הוידאו נטען
+        if (isMobile) {
+          setVideoLoaded(true);
+        }
       }
     } catch (error) {
       console.warn('שגיאה בניגון הוידאו:', error);
@@ -98,6 +105,10 @@ const VideoScrollExpand = ({
           videoRef.current.muted = true;
           await videoRef.current.play();
           setIsPlaying(true);
+          // במובייל, כשמתחילים לנגן - הוידאו נטען
+          if (isMobile) {
+            setVideoLoaded(true);
+          }
         } catch (mutedError) {
           console.error('נכשל בניגון גם עם muted:', mutedError);
         }
@@ -119,6 +130,7 @@ const VideoScrollExpand = ({
       
       const handleLoadedData = () => {
         console.log('נתוני הוידאו נטענו');
+        setVideoLoaded(true);
         // הבטחה שהוידאו יתחיל מהפריים הראשון
         if (video.currentTime !== 0) {
           video.currentTime = 0;
@@ -135,6 +147,7 @@ const VideoScrollExpand = ({
       
       const handleLoadedMetadata = () => {
         console.log('מטאדטה נטענה - מציג פריים ראשון');
+        setVideoLoaded(true);
         // הבטחה שהוידאו יציג את הפריים הראשון מיד
         video.currentTime = 0;
       };
@@ -273,21 +286,43 @@ const VideoScrollExpand = ({
                 </div>
               </div>
             ) : finalVideoUrl ? (
-              <video
-                ref={videoRef}
-                src={finalVideoUrl}
-                loop
-                playsInline
-                muted
-                preload="auto"
-                controls={false}
-                disablePictureInPicture={true}
-                className="object-cover w-full h-full"
-                style={{
-                  minHeight: '100%',
-                  width: '100%'
-                }}
-              />
+              <div className="relative w-full h-full">
+                {/* Background image למובייל כשהוידאו לא נטען */}
+                {isMobile && !videoLoaded && (
+                  <div 
+                    className="flex absolute inset-0 justify-center items-center bg-center bg-no-repeat bg-cover"
+                    style={{
+                      backgroundColor: '#f5a383',
+                      backgroundImage: 'linear-gradient(135deg, #f5a383 0%, #e09068 100%)'
+                    }}
+                  >
+                    <div className="p-6 text-center text-white rounded-xl backdrop-blur-sm bg-black/20">
+                      <div className="mb-3 text-4xl">🎬</div>
+                      <div className="mb-2 text-xl font-bold font-staff">הפעילות שלנו</div>
+                      <div className="text-sm opacity-90 font-staff">לחץ כדי לצפות בוידאו</div>
+                    </div>
+                  </div>
+                )}
+                
+                <video
+                  ref={videoRef}
+                  src={finalVideoUrl}
+                  loop
+                  playsInline
+                  muted
+                  preload={isMobile ? "none" : "auto"}
+                  controls={false}
+                  disablePictureInPicture={true}
+                  className={`object-cover w-full h-full ${
+                    isMobile && !videoLoaded ? 'opacity-0' : 'opacity-100'
+                  }`}
+                  style={{
+                    minHeight: '100%',
+                    width: '100%',
+                    transition: 'opacity 0.3s ease'
+                  }}
+                />
+              </div>
             ) : (
               <div className="flex justify-center items-center w-full h-full bg-gray-300">
                 <p className="text-[#2a2b26] font-staff">אין וידאו זמין</p>
