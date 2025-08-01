@@ -206,8 +206,8 @@ const FamiliesTestimonials = () => {
     };
     
     testimonials.forEach((testimonial, index) => {
-      const fileName = testimonial.audioPath.split('/').pop();
-      const fileSize = fileSizes[fileName] || 'לא ידוע';
+      const fileName = testimonial.audioPath.split('/').pop() || 'unknown.mp3';
+      const fileSize = fileSizes[fileName as keyof typeof fileSizes] || 'לא ידוע';
       console.log(`📁 בודק קובץ ${index + 1}: ${fileName} (${fileSize}) - ${testimonial.text.length} תווים`);
       
       // בדיקה באמצעות fetch API
@@ -385,10 +385,10 @@ const FamiliesTestimonials = () => {
                   key={`desktop-audio-${index}`}
                   id={`audio-${index}`}
                   preload="metadata"
-                  onLoadStart={(e) => {
+                  onLoadStart={(_e) => {
                     console.log(`🔄 דסקטופ מתחיל לטעון: ${testimonial.audioPath}`);
                   }}
-                  onCanPlay={(e) => {
+                  onCanPlay={(_e) => {
                     console.log(`✅ דסקטופ מוכן: ${testimonial.audioPath}`);
                   }}
                   onError={(e) => {
@@ -409,13 +409,13 @@ const FamiliesTestimonials = () => {
                       audio.load();
                     }, 1000);
                   }}
-                  onLoadedData={() => {
+                  onLoadedData={(_e) => {
                     console.log(`📊 נתונים נטענו לדסקטופ: ${testimonial.audioPath}`);
                   }}
-                  onStalled={() => {
+                  onStalled={(_e) => {
                     console.warn(`⚠️ טעינה תקועה לדסקטופ: ${testimonial.audioPath}`);
                   }}
-                  onSuspend={() => {
+                  onSuspend={(_e) => {
                     console.warn(`⏸️ טעינה הושעתה לדסקטופ: ${testimonial.audioPath}`);
                   }}
                 >
