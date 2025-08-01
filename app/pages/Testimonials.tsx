@@ -50,12 +50,9 @@ const FamiliesTestimonials = () => {
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const [animationsPaused, setAnimationsPaused] = useState(false);
 
-  // פונקציה לטיפול בהשמעת אודיו - משופר למובייל
-  const handleAudioPlay = async (audioPath: string) => {
-    console.log('handleAudioPlay נקרא עם:', audioPath);
-    
-    // עצור כל אודיו אחר
-    if (playingAudio) {
+  // פונקציה לטיפול בהשמעת אודיו
+  const handleAudioPlay = (audioPath: string) => {
+    if (playingAudio && playingAudio !== audioPath) {
       const currentAudio = document.getElementById(playingAudio) as HTMLAudioElement;
       if (currentAudio) {
         currentAudio.pause();
@@ -64,75 +61,32 @@ const FamiliesTestimonials = () => {
     }
 
     const audio = document.getElementById(audioPath) as HTMLAudioElement;
-    console.log('אלמנט אודיו נמצא:', !!audio);
     if (audio) {
       if (playingAudio === audioPath) {
-        // אם לוחצים על אותו אודיו, עצור אותו
         audio.pause();
         audio.currentTime = 0;
         setPlayingAudio(null);
         setAnimationsPaused(false);
       } else {
-        try {
-          console.log('מנסה לנגן אודיו:', audioPath);
-          
-          // הגדרת אטריבוטים למובייל
-          audio.setAttribute('playsinline', 'true');
-          audio.setAttribute('webkit-playsinline', 'true');
-          
-          // בדיקה שהאודיו מוכן
-          if (audio.readyState < 2) {
-            console.log('מחכה לאודיו להיטען...');
-            await new Promise((resolve) => {
-              audio.addEventListener('canplay', resolve, { once: true });
-              audio.load();
+        setPlayingAudio(audioPath);
+        setAnimationsPaused(true);
+        audio.play().catch(error => {
+          console.error('שגיאה בניגון האודיו:', error);
+          if ('mediaSession' in navigator) {  // בדיקה למובייל
+            audio.muted = true;
+            audio.play().then(() => {
+              audio.muted = false;
+            }).catch(mutedError => {
+              console.error('נכשל בניגון:', mutedError);
+              alert('האודיו לא נטען. בדוק את החיבור או את הקבצים.');
             });
           }
-          
-          // נסה לנגן את האודיו
-          await audio.play();
-          console.log('אודיו מתנגן בהצלחה!');
-          setPlayingAudio(audioPath);
-          setAnimationsPaused(true);
-          
-          // חזור לאנימציות כשהאודיו נגמר
-          audio.onended = () => {
-            setPlayingAudio(null);
-            setAnimationsPaused(false);
-          };
-          
-          // טיפול בשגיאות
-          audio.onerror = (e) => {
-            console.error('שגיאה בניגון האודיו:', e);
-            setPlayingAudio(null);
-            setAnimationsPaused(false);
-          };
-          
-        } catch (error) {
-          console.error('שגיאה בניגון האודיו:', error);
-          
-          // אם נכשל, ננסה עם preload
-          try {
-            console.log('מנסה ניסיון שני עם preload...');
-            audio.preload = 'auto';
-            audio.load();
-            
-            // מחכה קצת לטעינה
-            await new Promise(resolve => setTimeout(resolve, 500));
-            
-            await audio.play();
-            console.log('ניסיון שני הצליח!');
-            setPlayingAudio(audioPath);
-            setAnimationsPaused(true);
-          } catch (secondError) {
-            console.error('נכשל גם בניסיון השני:', secondError);
-            setPlayingAudio(null);
-            setAnimationsPaused(false);
-          }
-        }
+        });
+        audio.onended = () => {
+          setPlayingAudio(null);
+          setAnimationsPaused(false);
+        };
       }
-    } else {
-      console.error('אלמנט אודיו לא נמצא:', audioPath);
     }
   };
 
