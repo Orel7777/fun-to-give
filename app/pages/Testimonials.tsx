@@ -9,37 +9,37 @@ const testimonials = [
   {
     text: "כמות הדגים הייתה גדולה ובאיכות מאד טובה",
     name: "משפחה א'",
-    audioPath: "/Families_tell_stories/1 - כמות הדגים הייתה גדולה ובאיכות מאד טובה.mp3"
+    audioPath: "/Families_tell_stories/1.mp3"
   },
   {
     text: "תודה רבה על כל רגע שאתם חושבים ומתכננים איך לתת לנו",
     name: "משפחה ב'",
-    audioPath: "/Families_tell_stories/2 - תודה רבה על כל רגע שאתם חושבים ומתכננים איך לתת לנו.mp3"
+    audioPath: "/Families_tell_stories/2.mp3"
   },
   {
     text: "זה הציל אותנו ממש בישלנו עם זה את החג",
     name: "משפחה ג'",
-    audioPath: "/Families_tell_stories/3 - זה הציל אותנו ממש בישלנו עם זה את החג .mp3"
+    audioPath: "/Families_tell_stories/3.mp3"
   },
   {
     text: "זה מאד עזר!",
     name: "משפחה ד'",
-    audioPath: "/Families_tell_stories/4 - זה מאד עזר!.mp3"
+    audioPath: "/Families_tell_stories/4.mp3"
   },
   {
     text: "זה עשה לנו ממש שמחה גדולה",
     name: "משפחה ה'",
-    audioPath: "/Families_tell_stories/5 - זה עשה לנו ממש שמחה גדולה.mp3"
+    audioPath: "/Families_tell_stories/5.mp3"
   },
   {
     text: "זה ממש הצלת נפשות",
     name: "משפחה ו'",
-    audioPath: "/Families_tell_stories/6 - זה ממש הצלת נפשות.mp3"
+    audioPath: "/Families_tell_stories/6.mp3"
   },
   {
     text: "בזכות זה יכלנו להכניס אורחים בפורים",
     name: "משפחה ז'",
-    audioPath: "/Families_tell_stories/7 - בזכות זה יכלנו להכניס אורחים בפורים.mp3"
+    audioPath: "/Families_tell_stories/7.mp3"
   }
 ];
 

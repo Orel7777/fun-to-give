@@ -43,10 +43,10 @@ export const TestimonialsColumn = (props: {
                     &ldquo;{text}&rdquo;
                   </div>
                   
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                  <div className="flex justify-between items-center">
+                    <div className="flex gap-3 items-center">
                       <div className="w-10 h-10 rounded-full bg-[#f5a383] flex items-center justify-center">
-                        <span className="text-white font-bold font-staff text-sm">
+                        <span className="text-sm font-bold text-white font-staff">
                           {name.charAt(0)}
                         </span>
                       </div>
