@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { TestimonialsColumn } from "../components/ui/testimonials-columns";
+import TestimonialCard from "../components/ui/testimonial-card";
 
 const testimonials = [
   {
@@ -49,10 +50,12 @@ const thirdColumn = testimonials.slice(5, 7);
 const FamiliesTestimonials = () => {
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const [animationsPaused, setAnimationsPaused] = useState(false);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   // פונקציה לטיפול בהשמעת אודיו
   const handleAudioPlay = (audioPath: string) => {
-    if (playingAudio && playingAudio !== audioPath) {
+    // עצור כל אודיו אחר
+    if (playingAudio) {
       const currentAudio = document.getElementById(playingAudio) as HTMLAudioElement;
       if (currentAudio) {
         currentAudio.pause();
@@ -63,25 +66,18 @@ const FamiliesTestimonials = () => {
     const audio = document.getElementById(audioPath) as HTMLAudioElement;
     if (audio) {
       if (playingAudio === audioPath) {
+        // אם לוחצים על אותו אודיו, עצור אותו
         audio.pause();
         audio.currentTime = 0;
         setPlayingAudio(null);
         setAnimationsPaused(false);
       } else {
+        // נגן אודיו חדש ועצור אנימציות
+        audio.play();
         setPlayingAudio(audioPath);
         setAnimationsPaused(true);
-        audio.play().catch(error => {
-          console.error('שגיאה בניגון האודיו:', error);
-          if ('mediaSession' in navigator) {  // בדיקה למובייל
-            audio.muted = true;
-            audio.play().then(() => {
-              audio.muted = false;
-            }).catch(mutedError => {
-              console.error('נכשל בניגון:', mutedError);
-              alert('האודיו לא נטען. בדוק את החיבור או את הקבצים.');
-            });
-          }
-        });
+        
+        // חזור לאנימציות כשהאודיו נגמר
         audio.onended = () => {
           setPlayingAudio(null);
           setAnimationsPaused(false);
@@ -90,13 +86,32 @@ const FamiliesTestimonials = () => {
     }
   };
 
+  // פונקציות לניווט בקרוסלה
+  const nextTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  // מעבר אוטומטי כל 5 שניות (אופציונלי)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!playingAudio) { // רק אם לא משמיעים אודיו
+        nextTestimonial();
+      }
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [playingAudio]);
+
   // event listener לגלילה - חזור לאנימציות
   useEffect(() => {
     let lastScrollY = window.scrollY;
     
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      // אם יש גלילה משמעותית (יותר מ-50px) - חזור לאנימציות
       if (Math.abs(currentScrollY - lastScrollY) > 50 && animationsPaused) {
         setAnimationsPaused(false);
       }
@@ -106,8 +121,6 @@ const FamiliesTestimonials = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [animationsPaused]);
-
-  // הוסר useEffect לבדיקת קבצי אודיו - לא נחוץ ויוצר שגיאות מיותרות
 
   return (
     <section className="bg-[#fdf6ed] py-20 relative">
@@ -140,30 +153,87 @@ const FamiliesTestimonials = () => {
           </div>
         </motion.div>
 
-        <div className="flex justify-center gap-6 mt-16 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden flex-col md:flex-row">
-          <TestimonialsColumn 
-            testimonials={firstColumn} 
-            duration={15} 
-            onAudioPlay={handleAudioPlay}
-            playingAudio={playingAudio}
-            animationsPaused={animationsPaused}
-          />
-          <TestimonialsColumn 
-            testimonials={secondColumn} 
-            className="md:block" 
-            duration={19} 
-            onAudioPlay={handleAudioPlay}
-            playingAudio={playingAudio}
-            animationsPaused={animationsPaused}
-          />
-          <TestimonialsColumn 
-            testimonials={thirdColumn} 
-            className="lg:block" 
-            duration={17} 
-            onAudioPlay={handleAudioPlay}
-            playingAudio={playingAudio}
-            animationsPaused={animationsPaused}
-          />
+        <div className="mt-16">
+          {/* תצוגת מובייל - קרוסלה */}
+          <div className="md:hidden">
+            <div className="mx-auto max-w-sm">
+              <AnimatePresence mode="wait">
+                <TestimonialCard 
+                  key={currentTestimonial}
+                  testimonial={testimonials[currentTestimonial]}
+                  onAudioPlay={handleAudioPlay}
+                  playingAudio={playingAudio}
+                />
+              </AnimatePresence>
+              
+              {/* כפתורי ניווט */}
+              <div className="flex gap-4 justify-center mt-6">
+                <button 
+                  onClick={prevTestimonial}
+                  className="flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-200 text-[#f5a383] hover:bg-[#98c5b1] hover:text-white"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                  </svg>
+                </button>
+                <button 
+                  onClick={nextTestimonial}
+                  className="flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-200 text-[#f5a383] hover:bg-[#98c5b1] hover:text-white"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                  </svg>
+                </button>
+              </div>
+              
+              {/* אינדיקטורים */}
+              <div className="flex gap-2 justify-center mt-4">
+                {testimonials.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentTestimonial(index)}
+                    className={`w-3 h-3 rounded-full transition-all duration-200 ${
+                      index === currentTestimonial 
+                        ? 'bg-[#f5a383] scale-110' 
+                        : 'bg-gray-300 hover:bg-gray-400'
+                    }`}
+                  />
+                ))}
+              </div>
+              
+              {/* מחוון מספר העדות */}
+              <div className="text-center mt-3 text-sm text-[#2a2b26]/60 font-staff">
+                {currentTestimonial + 1} מתוך {testimonials.length}
+              </div>
+            </div>
+          </div>
+
+          {/* תצוגת דסקטופ - עמודות */}
+          <div className="hidden md:flex justify-center gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
+            <TestimonialsColumn 
+              testimonials={firstColumn} 
+              duration={15} 
+              onAudioPlay={handleAudioPlay}
+              playingAudio={playingAudio}
+              animationsPaused={animationsPaused}
+            />
+            <TestimonialsColumn 
+              testimonials={secondColumn} 
+              className="hidden md:block" 
+              duration={19} 
+              onAudioPlay={handleAudioPlay}
+              playingAudio={playingAudio}
+              animationsPaused={animationsPaused}
+            />
+            <TestimonialsColumn 
+              testimonials={thirdColumn} 
+              className="hidden lg:block" 
+              duration={17} 
+              onAudioPlay={handleAudioPlay}
+              playingAudio={playingAudio}
+              animationsPaused={animationsPaused}
+            />
+          </div>
         </div>
         
         {/* רקע דקורטיבי */}
