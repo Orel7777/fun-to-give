@@ -56,13 +56,17 @@ const FamiliesTestimonials = () => {
   const handleAudioPlay = (audioPath: string) => {
     // עצור כל אודיו אחר
     if (playingAudio) {
-      const currentAudio = document.getElementById(playingAudio) as HTMLAudioElement;
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
-      }
+      // חפש בכל האודיו אלמנטים שיכולים להיות בדף
+      const allAudios = document.querySelectorAll('audio');
+      allAudios.forEach(audio => {
+        if (audio.id === playingAudio) {
+          audio.pause();
+          audio.currentTime = 0;
+        }
+      });
     }
 
+    // חפש את האלמנט הנוכחי
     const audio = document.getElementById(audioPath) as HTMLAudioElement;
     if (audio) {
       if (playingAudio === audioPath) {
@@ -73,7 +77,7 @@ const FamiliesTestimonials = () => {
         setAnimationsPaused(false);
       } else {
         // נגן אודיו חדש ועצור אנימציות
-        audio.play();
+        audio.play().catch(console.error);
         setPlayingAudio(audioPath);
         setAnimationsPaused(true);
         
@@ -204,6 +208,19 @@ const FamiliesTestimonials = () => {
               {/* מחוון מספר העדות */}
               <div className="text-center mt-3 text-sm text-[#2a2b26]/60 font-staff">
                 {currentTestimonial + 1} מתוך {testimonials.length}
+              </div>
+              
+              {/* כל אלמנטי האודיו - נסתרים אבל קיימים */}
+              <div className="hidden">
+                {testimonials.map((testimonial, index) => (
+                  <audio
+                    key={index}
+                    id={testimonial.audioPath}
+                    preload="metadata"
+                  >
+                    <source src={testimonial.audioPath} type="audio/mpeg" />
+                  </audio>
+                ))}
               </div>
             </div>
           </div>

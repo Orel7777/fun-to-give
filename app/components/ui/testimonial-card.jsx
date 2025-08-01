@@ -52,15 +52,6 @@ const TestimonialCard = ({ testimonial, onAudioPlay, playingAudio }) => {
         </div>
       </div>
       
-      {/* אלמנט אודיו נסתר */}
-      <audio
-        id={testimonial.audioPath}
-        preload="metadata"
-        className="hidden"
-      >
-        <source src={testimonial.audioPath} type="audio/mpeg" />
-      </audio>
-      
       {/* אנימציה של גלים כשמשמיעים */}
       {isPlaying && (
         <div className="absolute bottom-2 left-2 flex gap-1">
