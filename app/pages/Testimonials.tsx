@@ -4,29 +4,54 @@ import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { TestimonialsColumn } from "../components/ui/testimonials-columns";
 
-// עדכון כל העדויות עם 7 המשפחות
-const allTestimonials = [
-  { text: "כמות הדגים הייתה גדולה ובאיכות מאד טובה", name: "משפחה א", audioPath: "/Families_tell_stories/1 - כמות הדגים הייתה גדולה ובאיכות מאד טובה.mp3" },
-  { text: "תודה רבה על כל רגע שאתם חושבים ומתכננים איך לתת לנו", name: "משפחה ב", audioPath: "/Families_tell_stories/2 - תודה רבה על כל רגע שאתם חושבים ומתכננים איך לתת לנו.mp3" },
-  { text: "זה הציל אותנו ממש בישלנו עם זה את החג", name: "משפחה ג", audioPath: "/Families_tell_stories/3 - זה הציל אותנו ממש בישלנו עם זה את החג .mp3" },
-  { text: "זה מאד עזר!", name: "משפחה ד", audioPath: "/Families_tell_stories/4 - זה מאד עזר!.mp3" },
-  { text: "זה עשה לנו ממש שמחה גדולה", name: "משפחה ה", audioPath: "/Families_tell_stories/5 - זה עשה לנו ממש שמחה גדולה.mp3" },
-  { text: "זה ממש הצלת נפשות", name: "משפחה ו", audioPath: "/Families_tell_stories/6 - זה ממש הצלת נפשות.mp3" },
-  { text: "בזכות זה יכלנו להכניס אורחים בפורים", name: "משפחה ז", audioPath: "/Families_tell_stories/7 - בזכות זה יכלנו להכניס אורחים בפורים.mp3" },
+const testimonials = [
+  {
+    text: "כמות הדגים הייתה גדולה ובאיכות מאד טובה",
+    name: "משפחה א'",
+    audioPath: "/Families_tell_stories/1 - כמות הדגים הייתה גדולה ובאיכות מאד טובה.mp3"
+  },
+  {
+    text: "תודה רבה על כל רגע שאתם חושבים ומתכננים איך לתת לנו",
+    name: "משפחה ב'",
+    audioPath: "/Families_tell_stories/2 - תודה רבה על כל רגע שאתם חושבים ומתכננים איך לתת לנו.mp3"
+  },
+  {
+    text: "זה הציל אותנו ממש בישלנו עם זה את החג",
+    name: "משפחה ג'",
+    audioPath: "/Families_tell_stories/3 - זה הציל אותנו ממש בישלנו עם זה את החג .mp3"
+  },
+  {
+    text: "זה מאד עזר!",
+    name: "משפחה ד'",
+    audioPath: "/Families_tell_stories/4 - זה מאד עזר!.mp3"
+  },
+  {
+    text: "זה עשה לנו ממש שמחה גדולה",
+    name: "משפחה ה'",
+    audioPath: "/Families_tell_stories/5 - זה עשה לנו ממש שמחה גדולה.mp3"
+  },
+  {
+    text: "זה ממש הצלת נפשות",
+    name: "משפחה ו'",
+    audioPath: "/Families_tell_stories/6 - זה ממש הצלת נפשות.mp3"
+  },
+  {
+    text: "בזכות זה יכלנו להכניס אורחים בפורים",
+    name: "משפחה ז'",
+    audioPath: "/Families_tell_stories/7 - בזכות זה יכלנו להכניס אורחים בפורים.mp3"
+  }
 ];
 
-// חלוקה לעמודות - כולן נראות במובייל
-const firstColumn = allTestimonials.slice(0, 3);
-const secondColumn = allTestimonials.slice(3, 5);
-const thirdColumn = allTestimonials.slice(5, 7);
+const firstColumn = testimonials.slice(0, 3);
+const secondColumn = testimonials.slice(3, 5);
+const thirdColumn = testimonials.slice(5, 7);
 
 const FamiliesTestimonials = () => {
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const [animationsPaused, setAnimationsPaused] = useState(false);
 
-  // פונקציה משופרת לטיפול בהשמעת אודיו במובייל
-  const handleAudioPlay = async (audioPath: string) => {
-    // עצור אודיו קיים
+  // פונקציה לטיפול בהשמעת אודיו
+  const handleAudioPlay = (audioPath: string) => {
     if (playingAudio && playingAudio !== audioPath) {
       const currentAudio = document.getElementById(playingAudio) as HTMLAudioElement;
       if (currentAudio) {
@@ -36,57 +61,31 @@ const FamiliesTestimonials = () => {
     }
 
     const audio = document.getElementById(audioPath) as HTMLAudioElement;
-    if (!audio) {
-      console.error('אלמנט אודיו לא נמצא:', audioPath);
-      return;
-    }
-
-    try {
+    if (audio) {
       if (playingAudio === audioPath) {
-        // עצור אם לוחצים שוב על אותו אודיו
         audio.pause();
         audio.currentTime = 0;
         setPlayingAudio(null);
         setAnimationsPaused(false);
       } else {
-        // הגדר אודיו למובייל
-        audio.preload = 'auto';
-        audio.volume = 1.0;
-        
         setPlayingAudio(audioPath);
         setAnimationsPaused(true);
-        
-        // נסה לנגן
-        await audio.play();
-        
-        // הגדר event listeners
+        audio.play().catch(error => {
+          console.error('שגיאה בניגון האודיו:', error);
+          if ('mediaSession' in navigator) {  // בדיקה למובייל
+            audio.muted = true;
+            audio.play().then(() => {
+              audio.muted = false;
+            }).catch(mutedError => {
+              console.error('נכשל בניגון:', mutedError);
+              alert('האודיו לא נטען. בדוק את החיבור או את הקבצים.');
+            });
+          }
+        });
         audio.onended = () => {
           setPlayingAudio(null);
           setAnimationsPaused(false);
         };
-        
-        audio.onerror = (error) => {
-          console.error('שגיאה בניגון אודיו:', error);
-          setPlayingAudio(null);
-          setAnimationsPaused(false);
-        };
-      }
-    } catch (error) {
-      console.error('שגיאה בניגון האודיו:', error);
-      
-      // נסה עם muted במובייל
-      try {
-        audio.muted = true;
-        await audio.play();
-        setTimeout(() => {
-          if (audio) {
-            audio.muted = false;
-          }
-        }, 100);
-      } catch (mutedError) {
-        console.error('נכשל בניגון גם עם muted:', mutedError);
-        setPlayingAudio(null);
-        setAnimationsPaused(false);
       }
     }
   };
@@ -151,6 +150,7 @@ const FamiliesTestimonials = () => {
           />
           <TestimonialsColumn 
             testimonials={secondColumn} 
+            className="md:block" 
             duration={19} 
             onAudioPlay={handleAudioPlay}
             playingAudio={playingAudio}
@@ -158,6 +158,7 @@ const FamiliesTestimonials = () => {
           />
           <TestimonialsColumn 
             testimonials={thirdColumn} 
+            className="lg:block" 
             duration={17} 
             onAudioPlay={handleAudioPlay}
             playingAudio={playingAudio}
