@@ -18,31 +18,55 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ ima
   const x = useTransform(scrollYProgress, [0, 1], ["5%", "95%"])
 
   return (
-    <section
-      ref={targetRef}
-      className="relative h-[400vh] w-full"
-    >
-      <div className="flex overflow-hidden sticky top-0 items-center h-screen">
-        <motion.div
-          style={{ x }}
-          className="flex gap-4"
-        >
-          {images.map((src, index) => (
-            <Card
-              src={src}
-              key={src}
-              index={index}
-            />
-          ))}
-        </motion.div>
+    <>
+      {/* תצוגת מובייל - גלילה חופשית */}
+      <div className="md:hidden bg-[#fdf6ed] py-8">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 gap-4">
+            {images.map((src, index) => (
+              <Card
+                src={src}
+                key={src}
+                index={index}
+                isMobile={true}
+              />
+            ))}
+          </div>
+        </div>
       </div>
-    </section>
+
+      {/* תצוגת דסקטופ - אפקט גלילה אופקית */}
+      <section
+        ref={targetRef}
+        className="relative h-[400vh] w-full hidden md:block"
+      >
+        <div className="flex overflow-hidden sticky top-0 items-center h-screen">
+          <motion.div
+            style={{ x }}
+            className="flex gap-4"
+          >
+            {images.map((src, index) => (
+              <Card
+                src={src}
+                key={src}
+                index={index}
+                isMobile={false}
+              />
+            ))}
+          </motion.div>
+        </div>
+      </section>
+    </>
   )
 }
 
-const Card: React.FC<{ src: string; index: number }> = ({ src, index }) => {
+const Card: React.FC<{ src: string; index: number; isMobile: boolean }> = ({ src, index, isMobile }) => {
   return (
-    <div className="group relative h-[450px] w-[450px] overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300">
+    <div className={`group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 ${
+      isMobile 
+        ? 'h-48 w-full aspect-square' 
+        : 'h-[450px] w-[450px]'
+    }`}>
       <Image
         src={src}
         fill

@@ -50,7 +50,9 @@ const thirdColumn = testimonials.slice(5, 7);
 const FamiliesTestimonials = () => {
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
   const [animationsPaused, setAnimationsPaused] = useState(false);
-  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [currentTestimonial, setCurrentTestimonial] = useState(0); // מתחיל עם משפחה א'
+  const [buttonPressed, setButtonPressed] = useState<'prev' | 'next' | null>(null);
+  const [isNavigating, setIsNavigating] = useState(false); // מניעת לחיצות כפולות
 
   // פונקציה לטיפול בהשמעת אודיו
   const handleAudioPlay = (audioPath: string) => {
@@ -88,23 +90,41 @@ const FamiliesTestimonials = () => {
 
   // פונקציות לניווט בקרוסלה
   const nextTestimonial = () => {
+    if (isNavigating) return; // מניעת לחיצות כפולות
+    
+    setIsNavigating(true);
     setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+    setButtonPressed('next');
+    
+    setTimeout(() => {
+      setButtonPressed(null);
+      setIsNavigating(false);
+    }, 300); // חזור למצב רגיל אחרי 300ms
   };
 
   const prevTestimonial = () => {
+    if (isNavigating) return; // מניעת לחיצות כפולות
+    
+    setIsNavigating(true);
     setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+    setButtonPressed('prev');
+    
+    setTimeout(() => {
+      setButtonPressed(null);
+      setIsNavigating(false);
+    }, 300); // חזור למצב רגיל אחרי 300ms
   };
 
   // מעבר אוטומטי כל 5 שניות (אופציונלי)
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!playingAudio) { // רק אם לא משמיעים אודיו
-        nextTestimonial();
+      if (!playingAudio && !isNavigating) { // רק אם לא משמיעים אודיו ולא מנווטים ידנית
+        setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
       }
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [playingAudio]);
+  }, [playingAudio, isNavigating]);
 
   // event listener לגלילה - חזור לאנימציות
   useEffect(() => {
@@ -169,16 +189,26 @@ const FamiliesTestimonials = () => {
               {/* כפתורי ניווט */}
               <div className="flex gap-4 justify-center mt-6">
                 <button 
-                  onClick={prevTestimonial}
-                  className="flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-200 text-[#f5a383] hover:bg-[#98c5b1] hover:text-white"
+                  onClick={nextTestimonial}
+                  disabled={isNavigating}
+                  className={`flex items-center justify-center w-12 h-12 rounded-full shadow-md hover:shadow-lg transition-all duration-200 ${
+                    buttonPressed === 'next' 
+                      ? 'bg-[#9acdbe] text-white' 
+                      : 'bg-white text-[#f5a383] hover:bg-[#98c5b1] hover:text-white'
+                  } ${isNavigating ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
                   </svg>
                 </button>
                 <button 
-                  onClick={nextTestimonial}
-                  className="flex items-center justify-center w-12 h-12 rounded-full bg-white shadow-md hover:shadow-lg transition-all duration-200 text-[#f5a383] hover:bg-[#98c5b1] hover:text-white"
+                  onClick={prevTestimonial}
+                  disabled={isNavigating}
+                  className={`flex items-center justify-center w-12 h-12 rounded-full shadow-md hover:shadow-lg transition-all duration-200 ${
+                    buttonPressed === 'prev' 
+                      ? 'bg-[#9acdbe] text-white' 
+                      : 'bg-white text-[#f5a383] hover:bg-[#98c5b1] hover:text-white'
+                  } ${isNavigating ? 'opacity-50 cursor-not-allowed' : ''}`}
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
@@ -186,25 +216,7 @@ const FamiliesTestimonials = () => {
                 </button>
               </div>
               
-              {/* אינדיקטורים */}
-              <div className="flex gap-2 justify-center mt-4">
-                {testimonials.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentTestimonial(index)}
-                    className={`w-3 h-3 rounded-full transition-all duration-200 ${
-                      index === currentTestimonial 
-                        ? 'bg-[#f5a383] scale-110' 
-                        : 'bg-gray-300 hover:bg-gray-400'
-                    }`}
-                  />
-                ))}
-              </div>
-              
-              {/* מחוון מספר העדות */}
-              <div className="text-center mt-3 text-sm text-[#2a2b26]/60 font-staff">
-                {currentTestimonial + 1} מתוך {testimonials.length}
-              </div>
+
             </div>
           </div>
 

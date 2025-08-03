@@ -3,6 +3,7 @@ import Image from 'next/image';
 import { VideoScrollExpand, HorizontalScrollCarousel } from '../components';
 import FamiliesTestimonials from './Testimonials';
 import { useVideo } from '../contexts/VideoContext';
+import { PulseBeamsFirstDemo } from '../components/call to action/demo';
 
 interface HeroSectionProps {
   showTextAnimation: boolean;
@@ -97,6 +98,11 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               >
                 עם כל נתינה הלב מתמלא
               </p>
+
+              {/* Call to Action Button */}
+              <div className="mt-4">
+                <PulseBeamsFirstDemo />
+              </div>
             </div>
           </div>
 
