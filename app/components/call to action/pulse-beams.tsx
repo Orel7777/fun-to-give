@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, Transition } from "framer-motion";
 import { cn } from "../../lib/utils";
 
 interface BeamPath {
@@ -19,14 +19,7 @@ interface BeamPath {
       y1: string | string[];
       y2: string | string[];
     };
-    transition?: {
-      duration?: number;
-      repeat?: number;
-      repeatType?: string;
-      ease?: string;
-      repeatDelay?: number;
-      delay?: number;
-    };
+    transition?: Transition;
   };
   connectionPoints?: Array<{
     cx: number;
