@@ -1,6 +1,7 @@
 "use client";
 
 import { PulseBeams } from "./pulse-beams";
+import { RepeatType } from "framer-motion";
 
 const beams = [
   {
@@ -21,7 +22,7 @@ const beams = [
       transition: {
         duration: 2,
         repeat: Infinity,
-        repeatType: "loop",
+        repeatType: "loop" as RepeatType,
         ease: "linear",
         repeatDelay: 2,
         delay: Math.random() * 2,
@@ -50,7 +51,7 @@ const beams = [
       transition: {
         duration: 2,
         repeat: Infinity,
-        repeatType: "loop",
+        repeatType: "loop" as RepeatType,
         ease: "linear",
         repeatDelay: 2,
         delay: Math.random() * 2,
@@ -79,7 +80,7 @@ const beams = [
       transition: {
         duration: 2,
         repeat: Infinity,
-        repeatType: "loop",
+        repeatType: "loop" as RepeatType,
         ease: "linear",
         repeatDelay: 2,
         delay: Math.random() * 2,
@@ -108,7 +109,7 @@ const beams = [
       transition: {
         duration: 2,
         repeat: Infinity,
-        repeatType: "loop",
+        repeatType: "loop" as RepeatType,
         ease: "linear",
         repeatDelay: 2,
         delay: Math.random() * 2,
@@ -137,7 +138,7 @@ const beams = [
       transition: {
         duration: 2,
         repeat: Infinity,
-        repeatType: "loop",
+        repeatType: "loop" as RepeatType,
         ease: "linear",
         repeatDelay: 2,
         delay: Math.random() * 2,
