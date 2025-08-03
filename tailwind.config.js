@@ -10,6 +10,9 @@ module.exports = {
       fontFamily: {
         'staff': ['Staff-Regular', 'serif'],
       },
+      screens: {
+        'xs': '363px',
+      },
     },
   },
   plugins: [],
