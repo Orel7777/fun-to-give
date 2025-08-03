@@ -1,7 +1,7 @@
 "use client";
 
 import { PulseBeams } from "./pulse-beams";
-import { RepeatType } from "framer-motion";
+import { RepeatType, Easing } from "framer-motion";
 
 const beams = [
   {
