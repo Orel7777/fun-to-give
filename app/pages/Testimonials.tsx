@@ -152,13 +152,7 @@ const FamiliesTestimonials = () => {
           viewport={{ once: true }}
           className="flex flex-col items-center justify-center max-w-[640px] mx-auto"
         >
-          <div className="flex justify-center">
-            <div className="border border-[#f5a383] py-2 px-6 rounded-lg bg-white/50 backdrop-blur-sm">
-              <span className="text-[#2a2b26] font-staff font-medium">עדויות משפחות</span>
-            </div>
-          </div>
-
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tighter mt-6 sm:mt-8 text-center text-[#2a2b26] font-staff">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff">
             סיפורי משפחות מרגשים
           </h2>
           <p className="text-center mt-4 sm:mt-6 opacity-75 text-base sm:text-lg text-[#2a2b26] font-staff">
