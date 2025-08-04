@@ -182,6 +182,40 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
           <p className="text-lg text-[#2a2b26] font-staff leading-relaxed font-semibold">
             כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
           </p>
+          
+          {/* תמונה עם אנימציה */}
+          <div className="mt-12 mb-8 flex justify-center">
+            <div className="relative group">
+              {/* רקע זוהר */}
+              <div className="absolute inset-0 bg-gradient-to-r from-[#f5a383] to-[#9acdbe] rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500 animate-pulse"></div>
+              
+              {/* מיכל התמונה עם אנימציה */}
+              <div className="relative transform transition-all duration-700 hover:scale-110 hover:rotate-3 active:scale-95"
+                   style={{
+                     animation: 'coinGlow 4s ease-in-out infinite',
+                   }}>
+                <Image
+                  src="/Hand with coin.png"
+                  alt="יד עם מטבע - סמל הנתינה"
+                  width={300}
+                  height={300}
+                  className="object-contain w-64 h-64 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-80 lg:h-80"
+                  style={{
+                    animation: 'coinFloat 4s ease-in-out infinite',
+                  }}
+                />
+                
+                {/* אפקט זוהר מסביב */}
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#f5a383]/20 to-[#9acdbe]/20 blur-md animate-ping"></div>
+                
+                {/* חלקיקים זוהרים */}
+                <div className="absolute -top-2 -left-2 w-4 h-4 bg-[#f5a383] rounded-full opacity-60 animate-ping" style={{ animationDelay: '0s' }}></div>
+                <div className="absolute -top-4 -right-4 w-3 h-3 bg-[#9acdbe] rounded-full opacity-60 animate-ping" style={{ animationDelay: '1s' }}></div>
+                <div className="absolute -bottom-2 -right-2 w-2 h-2 bg-[#f5a383] rounded-full opacity-60 animate-ping" style={{ animationDelay: '2s' }}></div>
+                <div className="absolute -bottom-4 -left-4 w-3 h-3 bg-[#9acdbe] rounded-full opacity-60 animate-ping" style={{ animationDelay: '3s' }}></div>
+              </div>
+            </div>
+          </div>
         </div>
         </VideoScrollExpand>
       )}

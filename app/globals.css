@@ -229,3 +229,31 @@ p {
 .floating-particle {
   animation: float 3s ease-in-out infinite, pulse-glow 2s ease-in-out infinite;
 }
+
+/* Coin image animations */
+@keyframes coinGlow {
+  0%, 100% { 
+    filter: drop-shadow(0 0 20px rgba(245, 163, 131, 0.3)) 
+            drop-shadow(0 0 30px rgba(154, 205, 190, 0.2));
+  }
+  50% { 
+    filter: drop-shadow(0 0 30px rgba(245, 163, 131, 0.6)) 
+            drop-shadow(0 0 40px rgba(154, 205, 190, 0.4))
+            drop-shadow(0 0 50px rgba(245, 163, 131, 0.3));
+  }
+}
+
+@keyframes coinFloat {
+  0%, 100% { 
+    transform: translateY(0px) rotate(0deg); 
+  }
+  25% { 
+    transform: translateY(-10px) rotate(1deg); 
+  }
+  50% { 
+    transform: translateY(-5px) rotate(-1deg); 
+  }
+  75% { 
+    transform: translateY(-15px) rotate(0.5deg); 
+  }
+}

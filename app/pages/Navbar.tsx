@@ -229,7 +229,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               </Link>
             </div>
             
-            <button className="px-4 py-2 font-semibold text-[#2b2e3a] bg-[#f5a383] rounded-lg transition-all duration-300 hover:scale-105 flex items-center gap-2 relative overflow-hidden group cursor-pointer">
+            <button className="px-[14px] py-2 font-semibold text-[#2b2e3a] bg-[#f5a383] rounded-lg transition-all duration-300 hover:scale-105 flex items-center gap-2 relative overflow-hidden group cursor-pointer">
                               <span className="relative z-10">הצטרפו לנתינה</span>
               <div className="relative z-10 w-4 h-4 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110">
                 {/* Default icon (click icon) */}

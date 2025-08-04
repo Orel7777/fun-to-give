@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause } from 'lucide-react';
 import { useVideo } from '../../contexts/VideoContext';
+import ScrollFloat from '../scroll/ScrollFloat';
 
 interface VideoScrollExpandProps {
   videoSrc?: string; // אופציונלי - אם לא מועבר ישתמש בוידאו מהקונטקסט
@@ -48,7 +49,7 @@ const VideoScrollExpand = ({
       if (rect.top <= windowHeight && rect.bottom >= 0) {
         // כאשר הקומפוננטה נראית על המסך
         const visibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
-        progress = Math.min(visibleHeight / (windowHeight * 0.8), 1);
+        progress = Math.min(visibleHeight / (windowHeight * 0.4), 1);
       }
       
       setScrollProgress(progress);
@@ -191,7 +192,7 @@ const VideoScrollExpand = ({
       className="relative min-h-[200vh] bg-gradient-to-b from-[#fdf6ed] via-[#f5a383] to-[#9acdbe]"
     >
       {/* סקציית הוידאו הראשונה */}
-      <div className="flex overflow-hidden sticky top-0 justify-center items-center h-screen">
+      <div className="flex overflow-hidden sticky top-0 justify-center items-center mb-20 h-screen">
         <div className="text-center">
                      {/* כותרות */}
            <motion.div
