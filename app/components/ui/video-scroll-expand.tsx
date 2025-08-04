@@ -69,49 +69,56 @@ const VideoScrollExpand = ({
 
   // פונקציות לניהול הוידאו - משופר למובייל
   const togglePlay = async () => {
-    if (!videoRef.current) return;
+    console.log('togglePlay נקרא, isMobile:', isMobile, 'isPlaying:', isPlaying);
+    if (!videoRef.current) {
+      console.log('videoRef.current לא קיים');
+      return;
+    }
     
     try {
-              if (isPlaying) {
-          videoRef.current.pause();
+      console.log('מנסה לנגן/להשהות וידאו');
+      if (isPlaying) {
+        console.log('משה את הוידאו');
+        videoRef.current.pause();
         setIsPlaying(false);
       } else {
+        console.log('מתחיל לנגן וידאו');
         // במובייל, אנחנו מתחילים עם muted ואז מורידים את הקול
         if (isMobile) {
+          console.log('מנגן במובייל');
           // הגדרת preload לטעינה מהירה כשמתחילים לנגן
           videoRef.current.preload = 'auto';
           videoRef.current.muted = true;
           await videoRef.current.play();
+          console.log('וידאו התחיל לנגן במובייל');
+          setIsPlaying(true);
+          setVideoLoaded(true);
+          
           // מנסים להוריד mute אחרי התחלת הניגון
           setTimeout(() => {
-            if (videoRef.current) {
+            if (videoRef.current && isPlaying) {
               videoRef.current.muted = false;
             }
-          }, 100);
+          }, 500);
         } else {
           videoRef.current.muted = false;
           await videoRef.current.play();
-        }
-        setIsPlaying(true);
-        // במובייל, כשמתחילים לנגן - הוידאו נטען
-        if (isMobile) {
-          setVideoLoaded(true);
+          setIsPlaying(true);
         }
       }
     } catch (error) {
       console.warn('שגיאה בניגון הוידאו:', error);
+      console.log('פרטי השגיאה:', error);
       // אם נכשל, ננסה עם muted
       if (videoRef.current && !isPlaying) {
         try {
           videoRef.current.muted = true;
           await videoRef.current.play();
           setIsPlaying(true);
-          // במובייל, כשמתחילים לנגן - הוידאו נטען
-          if (isMobile) {
-            setVideoLoaded(true);
-          }
+          setVideoLoaded(true);
         } catch (mutedError) {
           console.error('נכשל בניגון גם עם muted:', mutedError);
+          console.log('פרטי השגיאה השנייה:', mutedError);
         }
       }
     }
@@ -266,11 +273,20 @@ const VideoScrollExpand = ({
               opacity: videoOpacity,
             }}
             transition={{ duration: 0.1, ease: "easeOut" }}
-            onMouseEnter={() => !isMobile && setIsHovering(true)}
-            onMouseLeave={() => !isMobile && setIsHovering(false)}
-            onClick={togglePlay}
-            onTouchStart={() => isMobile && setIsHovering(true)}
-            onTouchEnd={() => isMobile && setTimeout(() => setIsHovering(false), 3000)}
+                         onMouseEnter={() => !isMobile && setIsHovering(true)}
+             onMouseLeave={() => !isMobile && setIsHovering(false)}
+                           onClick={(e) => {
+                e.stopPropagation();
+                console.log('לחצו על מיכל הוידאו (click)');
+                togglePlay();
+              }}
+             onTouchStart={() => isMobile && setIsHovering(true)}
+             onTouchEnd={() => isMobile && setTimeout(() => setIsHovering(false), 3000)}
+                           onTouchEndCapture={(e) => {
+                e.stopPropagation();
+                console.log('לחצו על מיכל הוידאו (touch)');
+                togglePlay();
+              }}
           >
             {loading ? (
               <div className="flex justify-center items-center w-full h-full bg-gray-200">
@@ -298,22 +314,29 @@ const VideoScrollExpand = ({
                     }}
                   >
                     {/* אוברליי עם כפתור play */}
-                    <div className="flex justify-center items-center w-full h-full bg-black/30">
-                      <div className="p-4 rounded-full shadow-2xl backdrop-blur-sm bg-white/90">
-                        <svg
-                          width="60"
-                          height="60"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          className="text-[#2a2b26]"
-                        >
-                          <path
-                            d="M8 5v14l11-7z"
-                            fill="currentColor"
-                          />
-                        </svg>
-                      </div>
+                                      <div 
+                    className="flex justify-center items-center w-full h-full bg-black/30"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log('לחצו על כפתור Play ברקע');
+                      togglePlay();
+                    }}
+                  >
+                    <div className="p-4 rounded-full shadow-2xl backdrop-blur-sm bg-white/90 cursor-pointer">
+                      <svg
+                        width="60"
+                        height="60"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        className="text-[#2a2b26]"
+                      >
+                        <path
+                          d="M8 5v14l11-7z"
+                          fill="currentColor"
+                        />
+                      </svg>
                     </div>
+                  </div>
                   </div>
                 )}
                 
@@ -322,8 +345,8 @@ const VideoScrollExpand = ({
                   src={finalVideoUrl}
                   loop
                   playsInline
-                  muted
-                  preload={isMobile ? "none" : "auto"}
+                  muted={isMobile && !isPlaying}
+                  preload="metadata"
                   controls={false}
                   disablePictureInPicture={true}
                   className={`object-cover w-full h-full ${
@@ -333,6 +356,11 @@ const VideoScrollExpand = ({
                     minHeight: '100%',
                     width: '100%',
                     transition: 'opacity 0.3s ease'
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    console.log('לחצו על הוידאו עצמו');
+                    togglePlay();
                   }}
                 />
               </div>
@@ -363,7 +391,7 @@ const VideoScrollExpand = ({
                   }}
                 >
                   <motion.div
-                    className={`rounded-full shadow-2xl backdrop-blur-sm bg-white/90 ${
+                    className={`rounded-full shadow-2xl backdrop-blur-sm bg-white/90 cursor-pointer ${
                       isMobile ? 'p-8' : 'p-6'
                     }`}
                     initial={{ scale: 0.8, opacity: 0 }}
@@ -381,6 +409,11 @@ const VideoScrollExpand = ({
                     style={{
                       minWidth: isMobile ? '80px' : '60px',
                       minHeight: isMobile ? '80px' : '60px'
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      console.log('לחצו על כפתור Play במרכז');
+                      togglePlay();
                     }}
                   >
                     {isPlaying ? (
