@@ -431,7 +431,7 @@ const VideoScrollExpand = ({
 
           {/* אינדיקטור גלילה */}
           <motion.div
-            className="mt-8"
+            className="mt-4 sm:mt-6 md:mt-8"
             animate={{ opacity: 1 - scrollProgress }}
             transition={{ duration: 0.1 }}
           >
@@ -464,7 +464,7 @@ const VideoScrollExpand = ({
 
       {/* תוכן נוסף */}
       <motion.div
-        className="relative z-10 bg-[#fdf6ed] min-h-screen py-20"
+        className="relative z-10 bg-[#fdf6ed] min-h-screen py-12 sm:py-16 md:py-20"
         initial={{ opacity: 0 }}
         animate={{ opacity: scrollProgress > 0.7 ? 1 : 0 }}
         transition={{ duration: 0.5 }}

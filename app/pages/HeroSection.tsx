@@ -148,14 +148,14 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
 
       {/* הוידאו מתחת לטקסט */}
       {loading && (
-        <div className="flex justify-center items-center py-16 bg-[#fdf6ed]">
-          <div className="text-[#2a2b26] font-staff text-xl">טוען וידאו...</div>
+        <div className="flex justify-center items-center py-8 sm:py-12 md:py-16 bg-[#fdf6ed]">
+          <div className="text-[#2a2b26] font-staff text-lg sm:text-xl">טוען וידאו...</div>
         </div>
       )}
       
       {error && (
-        <div className="flex justify-center items-center py-16 bg-[#fdf6ed]">
-          <div className="text-xl text-center text-red-600 font-staff">
+        <div className="flex justify-center items-center py-8 sm:py-12 md:py-16 bg-[#fdf6ed]">
+          <div className="text-lg sm:text-xl text-center text-red-600 font-staff">
             {error}
           </div>
         </div>
@@ -166,25 +166,25 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
           usePreloadedVideo={true}
           title="הפעילות שלנו"
         >
-        <div className="px-8 mx-auto max-w-4xl text-center">
-          <h2 className="text-3xl font-bold mb-6 text-[#2a2b26] font-staff">
+        <div className="px-4 sm:px-6 md:px-8 mx-auto max-w-4xl text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-[#2a2b26] font-staff">
             עמותת &ldquo;כיף לתת&rdquo;
           </h2>
-          <p className="text-lg mb-6 text-[#2a2b26] font-staff leading-relaxed">
+          <p className="text-base sm:text-lg mb-4 sm:mb-6 text-[#2a2b26] font-staff leading-relaxed">
             מעניקה בשר, עופות, דגים ביצים ויין למאות משפחות באופן קבוע.
           </p>
-          <p className="text-lg mb-6 text-[#2a2b26] font-staff leading-relaxed">
+          <p className="text-base sm:text-lg mb-4 sm:mb-6 text-[#2a2b26] font-staff leading-relaxed">
             בנוסף, כיף לתת עוזרת לילדים עם מוגבלויות ומשמחת ילדים בבתי חולים.
           </p>
-          <p className="text-lg mb-6 text-[#2a2b26] font-staff leading-relaxed">
+          <p className="text-base sm:text-lg mb-4 sm:mb-6 text-[#2a2b26] font-staff leading-relaxed">
             הפעילות שלנו מבוצעת מתוך אמונה עמוקה בעקרונות של נתינה, אהבת הזולת ורצון לשמח את האחר.
           </p>
-          <p className="text-lg text-[#2a2b26] font-staff leading-relaxed font-semibold">
+          <p className="text-base sm:text-lg text-[#2a2b26] font-staff leading-relaxed font-semibold">
             כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
           </p>
           
           {/* תמונה עם אנימציה */}
-          <div className="mt-12 mb-8 flex justify-center">
+          <div className="mt-8 sm:mt-10 md:mt-12 mb-6 sm:mb-8 flex justify-center">
             <div className="relative group">
               {/* רקע זוהר */}
               <div className="absolute inset-0 bg-gradient-to-r from-[#f5a383] to-[#9acdbe] rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500 animate-pulse"></div>
@@ -221,8 +221,8 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       )}
 
       {/* גלריה של תמונות פעילות העמותה */}
-      <div className="bg-[#fdf6ed] py-16 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold text-[#2a2b26] font-staff mb-8">
+      <div className="bg-[#fdf6ed] py-8 sm:py-12 md:py-16 text-center">
+        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#2a2b26] font-staff mb-4 sm:mb-6 md:mb-8">
           תמונות מפעילות העמותה
         </h2>
 

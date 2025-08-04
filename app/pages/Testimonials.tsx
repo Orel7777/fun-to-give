@@ -143,7 +143,7 @@ const FamiliesTestimonials = () => {
   }, [animationsPaused]);
 
   return (
-    <section className="bg-[#fdf6ed] py-20 relative">
+    <section className="bg-[#fdf6ed] py-12 sm:py-16 md:py-20 relative">
       <div className="container z-10 px-4 mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -158,10 +158,10 @@ const FamiliesTestimonials = () => {
             </div>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter mt-8 text-center text-[#2a2b26] font-staff">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tighter mt-6 sm:mt-8 text-center text-[#2a2b26] font-staff">
             סיפורי משפחות מרגשים
           </h2>
-          <p className="text-center mt-6 opacity-75 text-lg text-[#2a2b26] font-staff">
+          <p className="text-center mt-4 sm:mt-6 opacity-75 text-base sm:text-lg text-[#2a2b26] font-staff">
             שמעו מה משפחות אומרות על הפעילות שלנו - כל עדות מלווה בהקלטה אמיתית
           </p>
           
@@ -173,7 +173,7 @@ const FamiliesTestimonials = () => {
           </div>
         </motion.div>
 
-        <div className="mt-16">
+        <div className="mt-8 sm:mt-12 md:mt-16">
           {/* תצוגת מובייל - קרוסלה */}
           <div className="md:hidden">
             <div className="mx-auto max-w-sm">
@@ -187,7 +187,7 @@ const FamiliesTestimonials = () => {
               </AnimatePresence>
               
               {/* כפתורי ניווט */}
-              <div className="flex gap-4 justify-center mt-6">
+              <div className="flex gap-4 justify-center mt-4 sm:mt-6">
                 <button 
                   onClick={nextTestimonial}
                   disabled={isNavigating}

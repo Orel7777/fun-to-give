@@ -20,9 +20,9 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ ima
   return (
     <>
       {/* תצוגת מובייל - גלילה חופשית */}
-      <div className="md:hidden bg-[#fdf6ed] py-8">
+      <div className="md:hidden bg-[#fdf6ed] py-6 sm:py-8">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:gap-4">
             {images.map((src, index) => (
               <Card
                 src={src}
@@ -64,7 +64,7 @@ const Card: React.FC<{ src: string; index: number; isMobile: boolean }> = ({ src
   return (
     <div className={`group relative overflow-hidden rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300 ${
       isMobile 
-        ? 'h-48 w-full aspect-square' 
+        ? 'h-40 sm:h-48 w-full aspect-square' 
         : 'h-[450px] w-[450px]'
     }`}>
       <Image
