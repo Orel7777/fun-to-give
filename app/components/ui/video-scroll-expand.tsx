@@ -192,7 +192,7 @@ const VideoScrollExpand = ({
   return (
     <div 
       ref={containerRef}
-      className="relative mt-[-300px] sm:mt-[-70px] min-h-[90vh] sm:min-h-[100vh] overflow-x-hidden"
+      className="relative mt-[-350px] sm:mt-[-70px] min-h-[90vh] sm:min-h-[100vh] overflow-x-hidden"
     >
       {/* סקציית הוידאו הראשונה */}
               <div className="flex overflow-hidden sticky top-0 justify-center items-center mb-0 sm:mb-0 md:mb-4 lg:mb-16 h-[80vh] sm:h-screen">

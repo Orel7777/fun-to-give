@@ -101,7 +101,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               {/* Logo Image - מיקום וגודל התמונה */}
               {/* זוהי המעטפת של הלבבות */}
               <div
-                className="flex relative justify-center items-center mx-auto mb-0 w-40 h-40 sm:w-64 sm:h-64 md:mb-0 lg:mb-0 xl:mb-0 2xl:mb-0 hero-image-container -mt-16 sm:mt-8 md:mt-8 lg:mt-0"
+                className="flex relative justify-center items-center mx-auto mb-0 w-40 h-40 sm:w-64 sm:h-64 md:mb-0 lg:mb-0 xl:mb-0 2xl:mb-0 hero-image-container -mt-32 sm:mt-8 md:mt-8 lg:mt-0"
                 style={{
                   zIndex: 10
                 }}
@@ -189,7 +189,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               </div>
 
               {/* Call to Action Button */}
-              <div className="mt-8 sm:mt-4 md:mt-4">
+              <div className="mt-7 sm:mt-4 md:mt-4">
                 <PulseBeamsFirstDemo />
               </div>
             </div>
