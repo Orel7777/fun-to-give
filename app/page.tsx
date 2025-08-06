@@ -34,7 +34,7 @@ export default function Home() {
   };
 
   return (
-    <>
+    <div suppressHydrationWarning>
       {/* SplashCursor פעיל תמיד */}
       <SplashCursor />
       
@@ -45,9 +45,9 @@ export default function Home() {
         </div>
       )}
 
-      <main ref={mainContentRef} className="pt-16">
+      <main ref={mainContentRef} className="pt-32">
         <HeroSection showTextAnimation={showTextAnimation} />
       </main>
-    </>
+    </div>
   );
 }

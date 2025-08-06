@@ -1,6 +1,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
+import Image from 'next/image';
 import { useVideo } from '../../contexts/VideoContext';
 
 interface LoadPageProps {
@@ -181,6 +182,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
     <div 
       ref={preloaderRef}
       className="fixed inset-0 z-[9999] bg-[#f5a383] flex flex-col items-center justify-center"
+      suppressHydrationWarning
     >
       {/* עיגול הפיזור */}
       <div 
@@ -210,12 +212,14 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
             background: 'conic-gradient(from 0deg, #ffffff, #f8fafc, #e2e8f0, #ffffff)'
           }}
         />
-        <img 
+        <Image 
           ref={logoRef}
           src="/logo.png" 
           alt="כיף לתת" 
+          width={176}
+          height={176}
           className="object-contain relative z-10 w-32 h-32 sm:w-44 sm:h-44"
-          loading="eager"
+          priority
         />
       </div>
 

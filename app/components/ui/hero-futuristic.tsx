@@ -2,6 +2,7 @@
 
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useMemo, useRef, useState, useEffect } from 'react';
+import Image from 'next/image';
 import * as THREE from 'three';
 
 // Define the component as a simple variant first - WebGPU might not be available everywhere
@@ -140,15 +141,16 @@ export const HeroFuturistic = () => {
             }}
           >
             <div className="w-[200px] sm:w-[250px] md:w-[300px] transition-all duration-300">
-              <img
+              <Image
                 src={titleImageSrc}
                 alt={titleImageAlt}
+                width={300}
+                height={100}
+                className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
                 style={{
-                  width: '100%',
-                  height: 'auto',
                   animation: 'glitch 3s ease-in-out infinite alternate'
                 }}
-                className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
+                priority
               />
             </div>
           </div>

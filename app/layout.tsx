@@ -80,6 +80,7 @@ export default function RootLayout({
     <html lang="he" dir="rtl" suppressHydrationWarning={true}>
       <body
         className={`${playfair.className} antialiased`}
+        suppressHydrationWarning={true}
       >
         <VideoProvider>
           {children}

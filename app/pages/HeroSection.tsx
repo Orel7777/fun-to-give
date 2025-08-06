@@ -77,7 +77,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
   return (
     <div className="overflow-x-hidden">
       {/* טקסט ולוגו מקוריים */}
-      <div className="relative h-screen w-full overflow-hidden bg-[#fdf6ed]">
+      <div className="relative h-screen w-full overflow-hidden bg-[#fdf6ed] pt-8">
         {/* Subtle animated background grid */}
         <div className="absolute inset-0 opacity-20 z-5">
           <div className="w-full h-full cyber-grid"></div>
@@ -94,15 +94,14 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         {/* Text Content */}
         <div className="flex relative z-20 flex-col justify-center items-center px-10 h-full text-center">
           <div 
-            className="opacity-100 transition-all transform translate-y-0 duration-2000"
-            style={{ transform: 'translateY(-120px)' }}
+            className="opacity-100 transition-all transform -translate-y-[120px] sm:-translate-y-[60px] md:-translate-y-[120px] duration-2000"
           >
             {/* Content Wrapper - עטיפה חדשה */}
             <div className="flex flex-col items-center">
               {/* Logo Image - מיקום וגודל התמונה */}
               {/* זוהי המעטפת של הלבבות */}
               <div
-                className="flex relative justify-center items-center mx-auto mb-0 w-64 h-64 md:mb-0 lg:mb-0 xl:mb-0 2xl:mb-0 hero-image-container"
+                className="flex relative justify-center items-center mx-auto mb-0 w-40 h-40 sm:w-64 sm:h-64 md:mb-0 lg:mb-0 xl:mb-0 2xl:mb-0 hero-image-container -mt-16 sm:mt-8 md:mt-8 lg:mt-0"
                 style={{
                   zIndex: 10
                 }}
@@ -148,7 +147,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                     filter: 'drop-shadow(0 0 20px rgba(245, 163, 131, 0.9))',
                     willChange: 'transform', 
                     position: 'absolute',
-                    top: '-50px',
+                    top: '0px',
                     left: 0,
                     right: 0,
                     margin: '0 auto',
@@ -171,28 +170,26 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               </div>
 
               {/* Title Image - תמונת הכותרת */}
-              <div className="flex relative z-20 justify-center items-center"
-                   style={{ 
-                     marginTop: '-120px'
-                   }}
+              <div className="flex relative z-20 justify-center items-center -mt-4 sm:-mt-16 md:-mt-12 lg:-mt-20"
               >
-                <div className="w-[200px] sm:w-[250px] md:w-[300px] transition-all duration-300">
-                  <img
+                <div className="w-[160px] sm:w-[250px] md:w-[300px] transition-all duration-300">
+                  <Image
                     src="/title.png"
                     alt="כיף לתת - עם כל נתינה הלב מתמלא"
+                    width={300}
+                    height={100}
+                    className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
                     style={{
-                      width: '100%',
-                      height: 'auto',
                       animation: 'glitch 3s ease-in-out infinite alternate',
                       animationDelay: '0.5s'
                     }}
-                    className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
+                    priority
                   />
                 </div>
               </div>
 
               {/* Call to Action Button */}
-              <div className="mt-4">
+              <div className="mt-8 sm:mt-4 md:mt-4">
                 <PulseBeamsFirstDemo />
               </div>
             </div>
@@ -212,13 +209,13 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
 
       {/* הוידאו מתחת לטקסט */}
       {loading && (
-        <div className="flex justify-center items-center py-8 sm:py-12 md:py-16 bg-[#fdf6ed]">
+        <div className="flex justify-center items-center py-0 sm:py-1 md:py-2 lg:py-4 bg-[#fdf6ed]">
           <div className="text-[#2a2b26] font-staff text-lg sm:text-xl">טוען וידאו...</div>
         </div>
       )}
       
       {error && (
-        <div className="flex justify-center items-center py-8 sm:py-12 md:py-16 bg-[#fdf6ed]">
+        <div className="flex justify-center items-center py-1 sm:py-2 md:py-4 lg:py-6 bg-[#fdf6ed]">
           <div className="text-lg text-center text-red-600 sm:text-xl font-staff">
             {error}
           </div>
@@ -229,9 +226,9 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         <VideoScrollExpand
           usePreloadedVideo={true}
         >
-        <div className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8">
+        <div className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8 -pt-16 sm:pt-0 md:pt-2 lg:pt-8">
           {/* תמונה עם אנימציה */}
-          <div className="flex justify-center mb-0">
+          <div className="flex justify-center mb-0 sm:mb-2">
             <div className="relative group">
               {/* רקע זוהר */}
               <div className="absolute inset-0 bg-gradient-to-r from-[#f5a383] to-[#9acdbe] rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500 animate-pulse"></div>
@@ -264,28 +261,31 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
             </div>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-0 text-[#2a2b26] font-staff">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-1 sm:mb-2">
             עמותת &ldquo;כיף לתת&rdquo;
           </h2>
-          <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl mb-1 sm:mb-2 text-[#2a2b26] font-staff leading-relaxed">
             מעניקה בשר, עופות, דגים ביצים ויין למאות משפחות באופן קבוע.
           </p>
-          <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl mb-1 sm:mb-2 text-[#2a2b26] font-staff leading-relaxed">
             בנוסף, כיף לתת עוזרת לילדים עם מוגבלויות ומשמחת ילדים בבתי חולים.
           </p>
-          <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl mb-1 sm:mb-2 text-[#2a2b26] font-staff leading-relaxed">
             הפעילות שלנו מבוצעת מתוך אמונה עמוקה בעקרונות של נתינה, אהבת הזולת ורצון לשמח את האחר.
           </p>
-          <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed font-semibold">
+          <p className="text-lg sm:text-xl md:text-2xl mb-1 sm:mb-2 text-[#2a2b26] font-staff leading-relaxed font-semibold">
             כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
           </p>
         </div>
         </VideoScrollExpand>
       )}
 
+      {/* מרווח גדול בין הטקסט לגלריה */}
+      <div className="py-8 sm:py-12 md:py-16 lg:py-24"></div>
+
       {/* גלריה של תמונות פעילות העמותה */}
-      <div className="bg-[#fdf6ed] py-2 sm:py-3 md:py-4 text-center">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#2a2b26] font-staff mb-2 sm:mb-3">
+      <div className="bg-[#fdf6ed] py-2 sm:py-4 md:py-6 lg:py-8 text-center">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-2 sm:mb-3 md:mb-4">
           תמונות מפעילות העמותה
         </h2>
       </div>
@@ -310,7 +310,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       />
 
       {/* מרווח בין גלריית התמונות למשפחות מספרות */}
-      <div className="py-8 sm:py-12 md:py-16"></div>
+      <div className="py-2 sm:py-6 md:py-10 lg:py-16"></div>
 
       {/* סיפורי משפחות עם עדויות אודיו */}
       <FamiliesTestimonials />

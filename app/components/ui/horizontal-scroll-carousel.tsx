@@ -10,12 +10,12 @@ interface HorizontalScrollCarouselProps {
 
 const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ images }) => {
   return (
-    <div className="overflow-x-hidden bg-[#fdf6ed] py-12 sm:py-16 md:py-20">
+    <div className="overflow-x-hidden bg-[#fdf6ed] py-2 sm:py-8 md:py-12 lg:py-16">
       <div className="container mx-auto px-4">
 
 
         {/* גלריה מרשימה */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 sm:gap-8 lg:gap-10">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10">
           {images.map((src, index) => (
             <motion.div
               key={src}
@@ -65,7 +65,7 @@ const Card: React.FC<{ src: string; index: number }> = ({ src, index }) => {
 
   return (
     <motion.div 
-      className="group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 ease-out cursor-pointer aspect-square max-w-xs sm:max-w-none mx-auto"
+      className="group relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 ease-out cursor-pointer aspect-square max-w-[160px] sm:max-w-[200px] md:max-w-[280px] lg:max-w-[320px] xl:max-w-[360px] mx-auto"
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseLeave}

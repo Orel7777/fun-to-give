@@ -63,9 +63,9 @@ const VideoScrollExpand = ({
 
   // חישוב גודל הוידאו בהתאם לגלילה - שיפור למובייל
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-  const baseScale = isMobile ? 0.6 : 0.3; // התחלה גדולה יותר במובייל
+  const baseScale = isMobile ? 0.8 : 0.3; // התחלה גדולה יותר במובייל
   const videoScale = baseScale + (scrollProgress * (1 - baseScale)); 
-  const videoOpacity = 0.7 + (scrollProgress * 0.3);
+  const videoOpacity = 0.85 + (scrollProgress * 0.15);
 
   // פונקציות לניהול הוידאו - משופר למובייל
   const togglePlay = async () => {
@@ -192,20 +192,20 @@ const VideoScrollExpand = ({
   return (
     <div 
       ref={containerRef}
-      className="relative min-h-[100vh] overflow-x-hidden"
+      className="relative mt-[-100px] min-h-[90vh] sm:min-h-[100vh] overflow-x-hidden"
     >
       {/* סקציית הוידאו הראשונה */}
-      <div className="flex overflow-hidden sticky top-0 justify-center items-center mb-20 h-screen">
+              <div className="flex overflow-hidden sticky top-0 justify-center items-center mb-0 sm:mb-0 md:mb-4 lg:mb-16 h-[80vh] sm:h-screen">
         <div className="text-center">
                      {/* כותרות */}
            <motion.div
-             className="mb-8"
+             className="mb-2 sm:mb-4"
              initial={{ opacity: 0, y: 20 }}
              animate={{ opacity: 1 - scrollProgress * 0.5, y: -scrollProgress * 50 }}
              transition={{ duration: 0.1 }}
            >
              <motion.h2 
-               className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#2a2b26] font-staff mb-4"
+               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#2a2b26] font-staff mb-2 sm:mb-4"
                initial={{ opacity: 0, scale: 0.8, y: 30 }}
                animate={{ 
                  opacity: 1, 
@@ -227,7 +227,7 @@ const VideoScrollExpand = ({
              </motion.h2>
                            {subtitle && (
                 <motion.p 
-                  className="text-lg sm:text-xl md:text-2xl text-[#2a2b26]/80 font-staff"
+                  className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#2a2b26]/80 font-staff"
                   initial={{ opacity: 0, x: -20 }}
                   animate={{ 
                     opacity: 1, 
@@ -459,41 +459,13 @@ const VideoScrollExpand = ({
           </motion.div>
 
           {/* אינדיקטור גלילה */}
-          <motion.div
-            className="mt-4 sm:mt-6 md:mt-8"
-            animate={{ opacity: 1 - scrollProgress }}
-            transition={{ duration: 0.1 }}
-          >
-            <div className="flex flex-col items-center space-y-2 text-[#2a2b26]/70">
-              <span className="text-sm font-medium font-staff">גלול למטה</span>
-              <svg 
-                width="20" 
-                height="20" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                className="animate-bounce"
-              >
-                <path 
-                  d="M12 5V19" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round"
-                />
-                <path 
-                  d="M7 14L12 19L17 14" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
-          </motion.div>
+
         </div>
       </div>
 
       {/* תוכן נוסף */}
       <motion.div
-        className="relative z-10 bg-[#fdf6ed] min-h-screen py-12 sm:py-16 md:py-20"
+        className="relative z-10 bg-[#fdf6ed] min-h-[90vh] sm:min-h-screen -py-16 sm:py-0 md:py-4 lg:py-16"
         initial={{ opacity: 0 }}
         animate={{ opacity: scrollProgress > 0.7 ? 1 : 0 }}
         transition={{ duration: 0.5 }}

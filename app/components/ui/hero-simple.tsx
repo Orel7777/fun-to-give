@@ -65,16 +65,17 @@ export const HeroSimple = () => {
                         }}
                    >
                      <div className="w-[200px] sm:w-[250px] md:w-[300px] transition-all duration-300">
-                       <img
+                       <Image
                          src="/title.png"
                          alt="כיף לתת - עם כל נתינה הלב מתמלא"
+                         width={300}
+                         height={100}
+                         className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
                          style={{
-                           width: '100%',
-                           height: 'auto',
                            animation: 'glitch 3s ease-in-out infinite alternate',
                            animationDelay: '0.5s'
                          }}
-                         className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
+                         priority
                        />
                      </div>
                    </div>
