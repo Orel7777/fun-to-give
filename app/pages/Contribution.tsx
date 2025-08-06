@@ -112,7 +112,7 @@ const Contribution: React.FC<ContributionProps> = ({ className = '' }) => {
       transition: {
         duration: 1.2,
         staggerChildren: 0.15,
-        ease: "easeInOut"
+        ease: [0.4, 0, 0.2, 1]
       }
     }
   };
