@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { Play, Pause } from 'lucide-react';
 import { useVideo } from '../../contexts/VideoContext';
 
 interface VideoScrollExpandProps {
@@ -24,7 +24,6 @@ const VideoScrollExpand = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [showControls, setShowControls] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -67,19 +66,6 @@ const VideoScrollExpand = ({
   const videoScale = baseScale + (scrollProgress * (1 - baseScale)); 
   const videoOpacity = 0.85 + (scrollProgress * 0.15);
 
-  // פונקציה לשליטה בקול
-  const toggleMute = () => {
-    if (!videoRef.current) return;
-    
-    try {
-      videoRef.current.muted = !videoRef.current.muted;
-      setIsMuted(videoRef.current.muted);
-      console.log(videoRef.current.muted ? '🔇 אודיו מושתק' : '🔊 אודיו מופעל');
-    } catch (error) {
-      console.error('שגיאה בשליטה בקול:', error);
-    }
-  };
-
   // פונקציית ניגון פשוטה
   const togglePlay = async () => {
     console.log('🎬 togglePlay - isMobile:', isMobile, 'isPlaying:', isPlaying);
@@ -99,26 +85,10 @@ const VideoScrollExpand = ({
         
         if (isMobile) {
           // הגדרות פשוטות למובייל
-          videoRef.current.muted = true; // מתחילים עם muted
+          videoRef.current.muted = true;
           videoRef.current.playsInline = true;
-          setIsMuted(true);
-          
-          // מנסים להוריד mute אחרי שהוידאו מתחיל לנגן
-          setTimeout(() => {
-            if (videoRef.current && isPlaying) {
-              try {
-                videoRef.current.muted = false;
-                setIsMuted(false);
-                console.log('🔊 אודיו מופעל במובייל');
-              } catch {
-                console.log('⚠️ לא ניתן להפעיל אודיו, ממשיכים עם muted');
-                setIsMuted(true);
-              }
-            }
-          }, 1000);
         } else {
           videoRef.current.muted = false;
-          setIsMuted(false);
         }
         
         await videoRef.current.play();
@@ -274,32 +244,6 @@ const VideoScrollExpand = ({
                   </motion.div>
                 )}
               </AnimatePresence>
-              
-              {/* כפתור קול במובייל */}
-              {isMobile && isPlaying && (
-                <motion.div
-                  className="absolute top-4 right-4 z-30"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <motion.button
-                    className="p-3 rounded-full shadow-lg backdrop-blur-sm bg-black/50 text-white cursor-pointer"
-                    whileTap={{ scale: 0.95 }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleMute();
-                    }}
-                  >
-                    {isMuted ? (
-                      <VolumeX size={24} />
-                    ) : (
-                      <Volume2 size={24} />
-                    )}
-                  </motion.button>
-                </motion.div>
-              )}
               
               {/* אוברליי */}
               <div 

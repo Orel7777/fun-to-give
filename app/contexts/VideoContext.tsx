@@ -56,7 +56,13 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
       
       // יצירת אלמנט וידאו לטעינה מוקדמת
       const video = document.createElement('video');
-      video.preload = 'metadata';
+      const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+      video.preload = isMobile ? 'auto' : 'metadata';
+      video.muted = true; // הגדרת muted למניעת בעיות autoplay
+      if (isMobile) {
+        video.setAttribute('playsinline', 'true');
+        video.setAttribute('webkit-playsinline', 'true');
+      }
       video.src = url;
       
       // המתנה לטעינת מטאדטה
