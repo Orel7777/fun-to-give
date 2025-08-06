@@ -150,8 +150,8 @@ const VideoScrollExpand = ({
   }, [isPlaying, isHovering, isMobile]);
 
   return (
-    <div ref={containerRef} className="overflow-hidden relative min-h-screen">
-      <div className="flex relative flex-col justify-center items-center px-4 py-8 min-h-screen">
+    <div ref={containerRef} className="relative min-h-screen">
+      <div className="flex relative mt-[-350px] sm:mt-[-150px] flex-col justify-center items-center px-4 py-8 min-h-screen">
         
         {/* כותרות */}
         <motion.div
