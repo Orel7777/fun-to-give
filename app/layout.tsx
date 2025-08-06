@@ -23,12 +23,12 @@ export const metadata: Metadata = {
 // WhatsApp Icon Component
 function WhatsAppIcon() {
   return (
-    <div className="fixed bottom-4 right-4 z-50">
+    <div className="fixed right-4 bottom-4 z-50">
       <a
         href="https://wa.me/972000000000" // Replace with actual WhatsApp number
         target="_blank"
         rel="noopener noreferrer"
-        className="group block w-14 h-14 hover:scale-110 hover:rotate-12 active:scale-95 transition-all duration-300 ease-in-out"
+        className="block w-14 h-14 transition-all duration-300 ease-in-out group hover:scale-110 hover:rotate-12 active:scale-95"
         aria-label="צור קשר דרך WhatsApp"
       >
         <svg
@@ -55,7 +55,7 @@ function EmailIcon() {
         href="mailto:info@example.com" // Replace with actual email
         target="_blank"
         rel="noopener noreferrer"
-        className="group block w-14 h-14 hover:scale-110 hover:rotate-12 active:scale-95 transition-all duration-300 ease-in-out"
+        className="block w-14 h-14 transition-all duration-300 ease-in-out group hover:scale-110 hover:rotate-12 active:scale-95"
         aria-label="שלח אימייל"
       >
         <svg
@@ -77,7 +77,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="he" dir="rtl">
+    <html lang="he" dir="rtl" suppressHydrationWarning={true}>
       <body
         className={`${playfair.className} antialiased`}
       >

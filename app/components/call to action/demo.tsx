@@ -164,14 +164,14 @@ export const PulseBeamsFirstDemo = () => {
       gradientColors={gradientColors}
       className="bg-transparent"
     >
-             <button className="bg-[#f5a383] hover:bg-[#9acdbe] active:bg-[#9acdbe] w-[180px] sm:w-[220px] md:w-[250px] z-40 h-[50px] sm:h-[60px] md:h-[70px] no-underline group cursor-pointer relative shadow-lg rounded-full p-px text-xs font-semibold leading-6 text-white inline-block transition-all duration-300">
+             <button className="bg-[#f5a383] hover:bg-[#e0ccbc] active:bg-[#e0ccbc] w-[180px] sm:w-[220px] md:w-[200px]  z-40 h-[50px] sm:h-[60px] md:h-[62px] no-underline group cursor-pointer relative shadow-lg rounded-full p-px text-xs font-semibold leading-6 text-white inline-block transition-all duration-300">
         <span className="overflow-hidden absolute inset-0 rounded-full">
-          <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(154,205,190,0.6)_0%,rgba(154,205,190,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+          <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(224,204,188,0.6)_0%,rgba(224,204,188,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
         </span>
-                 <div className="relative flex justify-center w-full text-center h-full items-center z-10 rounded-full bg-[#f5a383] group-hover:bg-[#9acdbe] py-0 px-1 ring-1 ring-white/10 transition-all duration-300">
-                                           <span className="inline-block text-lg text-[#2b2e3a] sm:text-xl md:text-2xl font-staff">
-              הצטרפו לנתינה
-            </span>
+                 <div className="relative flex justify-center w-full text-center h-full items-center z-10 rounded-full bg-[#f5a383] group-hover:bg-[#e0ccbc] py-0 px-1 sm:px-2 md:px-3 ring-1 ring-white/10 transition-all duration-300">
+                   <span className="inline-block text-lg text-[#2b2e3a] sm:text-xl md:text-xl font-staff">
+                     הצטרפו לנתינה
+                   </span>
         </div>
       </button>
     </PulseBeams>

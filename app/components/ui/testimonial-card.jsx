@@ -12,7 +12,7 @@ const TestimonialCard = ({ testimonial, onAudioPlay, playingAudio }) => {
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.3 }}
-      className="bg-white rounded-xl p-6 shadow-lg border border-gray-100 relative overflow-hidden"
+      className="bg-[#fdf6ed] rounded-xl p-6 shadow-lg border border-[#f5a383]/20 relative overflow-hidden max-w-full"
     >
       {/* רקע דקורטיבי */}
       <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-[#f5a383]/10 to-transparent rounded-bl-full"></div>
@@ -20,7 +20,7 @@ const TestimonialCard = ({ testimonial, onAudioPlay, playingAudio }) => {
       {/* תוכן העדות */}
       <div className="relative z-10">
         {/* טקסט העדות */}
-        <blockquote className="text-[#2a2b26] text-lg font-staff leading-relaxed mb-4 text-right">
+        <blockquote className="text-[#2a2b26] text-lg sm:text-xl md:text-2xl font-staff leading-relaxed mb-4 text-right">
           "{testimonial.text}"
         </blockquote>
         
@@ -46,8 +46,7 @@ const TestimonialCard = ({ testimonial, onAudioPlay, playingAudio }) => {
           </button>
           
           <div className="text-right">
-            <div className="font-semibold text-[#2a2b26] font-staff">{testimonial.name}</div>
-            <div className="text-sm text-[#f5a383] font-staff">לחץ לשמיעה</div>
+            <div className="text-lg sm:text-xl text-[#f5a383] font-staff">לחץ לשמיעה</div>
           </div>
         </div>
       </div>

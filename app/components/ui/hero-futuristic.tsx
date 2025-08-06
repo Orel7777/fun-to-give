@@ -1,7 +1,6 @@
 'use client';
 
-import { Canvas, extend, useFrame, useThree } from '@react-three/fiber';
-import { useAspect, useTexture } from '@react-three/drei';
+import { Canvas, useFrame } from '@react-three/fiber';
 import { useMemo, useRef, useState, useEffect } from 'react';
 import * as THREE from 'three';
 
@@ -15,7 +14,6 @@ const Scene = () => {
   }, []);
 
   const material = useMemo(() => {
-    const geometry = new THREE.PlaneGeometry(2, 2);
     const material = new THREE.ShaderMaterial({
       vertexShader: `
         varying vec2 vUv;
@@ -92,31 +90,18 @@ const Scene = () => {
 };
 
 export const HeroFuturistic = () => {
-  const titleWords = 'כיף לתת'.split(' ');
-  const subtitle = 'עם כל נתינה הלב מתמלא';
-  const [visibleWords, setVisibleWords] = useState(0);
-  const [subtitleVisible, setSubtitleVisible] = useState(false);
-  const [delays, setDelays] = useState<number[]>([]);
-  const [subtitleDelay, setSubtitleDelay] = useState(0);
+  const titleImageSrc = '/title.png';
+  const titleImageAlt = 'כיף לתת - עם כל נתינה הלב מתמלא';
+  const [imageVisible, setImageVisible] = useState(false);
 
   useEffect(() => {
-    // Generate random delays for glitch effect
-    setDelays(titleWords.map(() => Math.random() * 0.07));
-    setSubtitleDelay(Math.random() * 0.1);
-  }, [titleWords.length]);
-
-  useEffect(() => {
-    if (visibleWords < titleWords.length) {
-      const timeout = setTimeout(() => setVisibleWords(visibleWords + 1), 600);
-      return () => clearTimeout(timeout);
-    } else {
-      const timeout = setTimeout(() => setSubtitleVisible(true), 800);
-      return () => clearTimeout(timeout);
-    }
-  }, [visibleWords, titleWords.length]);
+    // Show image after a short delay
+    const timeout = setTimeout(() => setImageVisible(true), 800);
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
-    <div className="relative h-screen w-full overflow-hidden bg-black cyber-grid">
+    <div className="overflow-hidden relative w-full h-screen bg-black cyber-grid">
       {/* Background Canvas */}
       <div className="absolute inset-0 z-0">
         <Canvas camera={{ position: [0, 0, 5] }}>
@@ -124,48 +109,64 @@ export const HeroFuturistic = () => {
         </Canvas>
       </div>
 
-      {/* Text Content */}
-      <div className="relative z-10 h-full flex flex-col items-center justify-center px-10 text-center">
-        <div className="text-4xl md:text-6xl xl:text-8xl 2xl:text-9xl font-extrabold font-staff">
-          <div className="flex space-x-4 lg:space-x-8 overflow-hidden text-white">
-            {titleWords.map((word, index) => (
-              <div
-                key={index}
-                className={`futuristic-text transition-all duration-1000 ${
-                  index < visibleWords 
-                    ? 'opacity-100 transform translate-y-0' 
-                    : 'opacity-0 transform translate-y-10'
-                }`}
-                style={{ 
-                  animationDelay: `${index * 0.13 + (delays[index] || 0)}s`,
-                  textShadow: '0 0 20px rgba(245, 163, 131, 0.8)'
-                }}
-              >
-                {word}
-              </div>
-            ))}
-          </div>
+      {/* Image Content */}
+      <div className="flex relative z-10 flex-col justify-center items-center px-10 space-y-4 h-full text-center">
+        {/* Hearts Section */}
+        <div className="flex justify-center items-center mb-2 space-x-4">
+          {[1, 2, 3].map((i) => (
+            <div 
+              key={i}
+              className="text-3xl text-pink-500 animate-float"
+              style={{
+                animationDelay: `${i * 0.2}s`,
+                textShadow: '0 0 15px rgba(255, 0, 85, 0.7)'
+              }}
+            >
+              ❤️
+            </div>
+          ))}
         </div>
-        
-        <div className="text-lg md:text-2xl xl:text-3xl 2xl:text-4xl mt-4 overflow-hidden text-white/90 font-bold">
+
+        {/* Title Image */}
+        <div className="relative">
           <div
             className={`transition-all duration-1000 ${
-              subtitleVisible 
+              imageVisible 
                 ? 'opacity-100 transform translate-y-0' 
                 : 'opacity-0 transform translate-y-10'
             }`}
             style={{ 
-              animationDelay: `${titleWords.length * 0.13 + 0.2 + subtitleDelay}s`,
-              textShadow: '0 0 15px rgba(154, 205, 190, 0.6)'
+              animationDelay: '0.5s'
             }}
           >
-            {subtitle}
+            <div className="w-[200px] sm:w-[250px] md:w-[300px] transition-all duration-300">
+              <img
+                src={titleImageSrc}
+                alt={titleImageAlt}
+                style={{
+                  width: '100%',
+                  height: 'auto',
+                  animation: 'glitch 3s ease-in-out infinite alternate'
+                }}
+                className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
+              />
+            </div>
           </div>
+        </div>
+
+        {/* Button */}
+        <div className="mt-2">
+          <button 
+            className="px-8 py-3 font-bold text-white bg-gradient-to-r from-pink-500 to-purple-600 rounded-full shadow-lg transition-all duration-300 transform hover:from-pink-600 hover:to-purple-700 hover:scale-105 active:scale-95"
+            onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+          >
+            התחל עכשיו
+          </button>
         </div>
 
         {/* Scroll indicator */}
         <div 
-          className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/70 animate-bounce"
+          className="absolute bottom-8 left-1/2 animate-bounce transform -translate-x-1/2 text-white/70"
           style={{ animationDelay: '2.5s' }}
         >
           <div className="flex flex-col items-center space-y-2">

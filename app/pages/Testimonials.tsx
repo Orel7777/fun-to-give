@@ -143,7 +143,7 @@ const FamiliesTestimonials = () => {
   }, [animationsPaused]);
 
   return (
-    <section className="bg-[#fdf6ed] py-12 sm:py-16 md:py-20 relative">
+    <section className="bg-[#fdf6ed] pt-2 pb-4 sm:pt-3 sm:pb-6 md:pt-4 md:pb-8 relative overflow-x-hidden">
       <div className="container z-10 px-4 mx-auto">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -152,14 +152,21 @@ const FamiliesTestimonials = () => {
           viewport={{ once: true }}
           className="flex flex-col items-center justify-center max-w-[640px] mx-auto"
         >
-          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff">
-            סיפורי משפחות מרגשים
-          </h2>
-          <p className="text-center mt-4 sm:mt-6 opacity-75 text-base sm:text-lg text-[#2a2b26] font-staff">
+          <div className="flex items-center justify-center gap-3 mb-2">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff">
+              סיפורי משפחות מרגשים
+            </h2>
+            <img 
+              src="/hibuk.png" 
+              alt="חיבוק" 
+              className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 object-contain"
+            />
+          </div>
+          <p className="text-center mt-2 sm:mt-3 opacity-75 text-lg sm:text-xl md:text-2xl text-[#2a2b26] font-staff">
             שמעו מה משפחות אומרות על הפעילות שלנו - כל עדות מלווה בהקלטה אמיתית
           </p>
           
-          <div className="flex items-center gap-2 mt-4 text-[#f5a383]">
+          <div className="flex items-center gap-2 mt-2 text-[#f5a383]">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
               <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
             </svg>
@@ -167,78 +174,47 @@ const FamiliesTestimonials = () => {
           </div>
         </motion.div>
 
-        <div className="mt-8 sm:mt-12 md:mt-16">
-          {/* תצוגת מובייל - קרוסלה */}
-          <div className="md:hidden">
-            <div className="mx-auto max-w-sm">
-              <AnimatePresence mode="wait">
-                <TestimonialCard 
-                  key={currentTestimonial}
-                  testimonial={testimonials[currentTestimonial]}
-                  onAudioPlay={handleAudioPlay}
-                  playingAudio={playingAudio}
-                />
-              </AnimatePresence>
-              
-              {/* כפתורי ניווט */}
-              <div className="flex gap-4 justify-center mt-4 sm:mt-6">
-                <button 
-                  onClick={nextTestimonial}
-                  disabled={isNavigating}
-                  className={`flex items-center justify-center w-12 h-12 rounded-full shadow-md hover:shadow-lg transition-all duration-200 ${
-                    buttonPressed === 'next' 
-                      ? 'bg-[#9acdbe] text-white' 
-                      : 'bg-white text-[#f5a383] hover:bg-[#98c5b1] hover:text-white'
-                  } ${isNavigating ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
-                  </svg>
-                </button>
-                <button 
-                  onClick={prevTestimonial}
-                  disabled={isNavigating}
-                  className={`flex items-center justify-center w-12 h-12 rounded-full shadow-md hover:shadow-lg transition-all duration-200 ${
-                    buttonPressed === 'prev' 
-                      ? 'bg-[#9acdbe] text-white' 
-                      : 'bg-white text-[#f5a383] hover:bg-[#98c5b1] hover:text-white'
-                  } ${isNavigating ? 'opacity-50 cursor-not-allowed' : ''}`}
-                >
-                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-                  </svg>
-                </button>
-              </div>
-              
-
+        <div className="mt-2 sm:mt-4">
+          {/* תצוגה אחידה למובייל ודסקטופ - קרוסלה */}
+          <div className="mx-auto max-w-sm md:max-w-md lg:max-w-lg">
+            <AnimatePresence mode="wait">
+              <TestimonialCard 
+                key={currentTestimonial}
+                testimonial={testimonials[currentTestimonial]}
+                onAudioPlay={handleAudioPlay}
+                playingAudio={playingAudio}
+              />
+            </AnimatePresence>
+            
+            {/* כפתורי ניווט */}
+            <div className="flex gap-4 justify-center mt-4 sm:mt-6">
+              <button 
+                onClick={nextTestimonial}
+                disabled={isNavigating}
+                className={`flex items-center justify-center w-12 h-12 rounded-full shadow-md hover:shadow-lg transition-all duration-200 ${
+                  buttonPressed === 'next' 
+                    ? 'bg-[#9acdbe] text-white' 
+                    : 'bg-white text-[#f5a383] hover:bg-[#98c5b1] hover:text-white'
+                } ${isNavigating ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/>
+                </svg>
+              </button>
+              <button 
+                onClick={prevTestimonial}
+                disabled={isNavigating}
+                className={`flex items-center justify-center w-12 h-12 rounded-full shadow-md hover:shadow-lg transition-all duration-200 ${
+                  buttonPressed === 'prev' 
+                    ? 'bg-[#9acdbe] text-white' 
+                    : 'bg-white text-[#f5a383] hover:bg-[#98c5b1] hover:text-white'
+                } ${isNavigating ? 'opacity-50 cursor-not-allowed' : ''}`}
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+                </svg>
+              </button>
             </div>
-          </div>
-
-          {/* תצוגת דסקטופ - עמודות */}
-          <div className="hidden md:flex justify-center gap-6 [mask-image:linear-gradient(to_bottom,transparent,black_25%,black_75%,transparent)] max-h-[740px] overflow-hidden">
-          <TestimonialsColumn 
-            testimonials={firstColumn} 
-            duration={15} 
-            onAudioPlay={handleAudioPlay}
-            playingAudio={playingAudio}
-            animationsPaused={animationsPaused}
-          />
-          <TestimonialsColumn 
-            testimonials={secondColumn} 
-            className="hidden md:block" 
-            duration={19} 
-            onAudioPlay={handleAudioPlay}
-            playingAudio={playingAudio}
-            animationsPaused={animationsPaused}
-          />
-          <TestimonialsColumn 
-            testimonials={thirdColumn} 
-            className="hidden lg:block" 
-            duration={17} 
-            onAudioPlay={handleAudioPlay}
-            playingAudio={playingAudio}
-            animationsPaused={animationsPaused}
-          />
           </div>
         </div>
         

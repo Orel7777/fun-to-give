@@ -16,7 +16,7 @@ interface VideoScrollExpandProps {
 
 const VideoScrollExpand = ({ 
   videoSrc, 
-  title = "צפה בוידאו", 
+  title, 
   subtitle,
   children,
   usePreloadedVideo = true
@@ -196,7 +196,7 @@ const VideoScrollExpand = ({
   return (
     <div 
       ref={containerRef}
-      className="relative min-h-[200vh] bg-gradient-to-b from-[#fdf6ed] via-[#f5a383] to-[#9acdbe]"
+      className="relative min-h-[100vh] overflow-x-hidden"
     >
       {/* סקציית הוידאו הראשונה */}
       <div className="flex overflow-hidden sticky top-0 justify-center items-center mb-20 h-screen">
@@ -209,7 +209,7 @@ const VideoScrollExpand = ({
              transition={{ duration: 0.1 }}
            >
              <motion.h2 
-               className="text-3xl sm:text-4xl md:text-6xl font-bold text-[#2a2b26] font-staff mb-4"
+               className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#2a2b26] font-staff mb-4"
                initial={{ opacity: 0, scale: 0.8, y: 30 }}
                animate={{ 
                  opacity: 1, 
@@ -322,7 +322,7 @@ const VideoScrollExpand = ({
                       togglePlay();
                     }}
                   >
-                    <div className="p-4 rounded-full shadow-2xl backdrop-blur-sm bg-white/90 cursor-pointer">
+                    <div className="p-4 rounded-full shadow-2xl backdrop-blur-sm cursor-pointer bg-white/90">
                       <svg
                         width="60"
                         height="60"

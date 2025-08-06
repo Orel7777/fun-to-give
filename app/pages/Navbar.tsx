@@ -229,7 +229,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               </Link>
             </div>
             
-            <button className="px-[14px] py-2 font-semibold text-[#2b2e3a] bg-[#f5a383] rounded-lg transition-all duration-300 hover:scale-105 flex items-center gap-2 relative overflow-hidden group cursor-pointer">
+            <button className="px-[14px] py-2 font-semibold text-[#2b2e3a] bg-[#f4a282] rounded-lg transition-all duration-300 hover:scale-105 hover:bg-[#e0ccbc] flex items-center gap-2 relative overflow-hidden group cursor-pointer">
                               <span className="relative z-10">הצטרפו לנתינה</span>
               <div className="relative z-10 w-4 h-4 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110">
                 {/* Default icon (click icon) */}
@@ -262,7 +262,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
 				c0.068,0.068,0.225,0.229,0.63,0.229L7.437,125.215z"/>
                 </svg>
               </div>
-              <div className="absolute inset-0 bg-[#9acdbe] transform -translate-x-full transition-transform duration-300 group-hover:translate-x-0"></div>
+              <div className="absolute inset-0 bg-[#e0ccbc] transform -translate-x-full transition-transform duration-300 group-hover:translate-x-0"></div>
             </button>
           </div>
 
@@ -635,7 +635,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                 צור קשר
               </motion.button>
               <motion.button 
-                className="px-4 py-3 w-full font-semibold text-[#2b2e3a] bg-[#f5a383] rounded-lg hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group cursor-pointer"
+                className="px-4 py-3 w-full font-semibold text-[#2b2e3a] bg-[#f5a383] rounded-lg hover:scale-105 hover:bg-[#e0ccbc] transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group cursor-pointer"
                 whileHover={{
                   scale: 1.05,
                   transition: { 
@@ -676,7 +676,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
 				c0.068,0.068,0.225,0.229,0.63,0.229L7.437,125.215z"/>
                   </svg>
                 </div>
-                <div className="absolute inset-0 bg-[#9acdbe] transform -translate-x-full transition-transform duration-300 group-hover:translate-x-0"></div>
+                <div className="absolute inset-0 bg-[#e0ccbc] transform -translate-x-full transition-transform duration-300 group-hover:translate-x-0"></div>
               </motion.button>
             </div>
           </div>

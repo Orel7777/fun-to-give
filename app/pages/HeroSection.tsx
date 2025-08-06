@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { VideoScrollExpand, HorizontalScrollCarousel } from '../components';
 import FamiliesTestimonials from './Testimonials';
 import { useVideo } from '../contexts/VideoContext';
 import { PulseBeamsFirstDemo } from '../components/call to action/demo';
+import { motion } from 'framer-motion';
 
 interface HeroSectionProps {
   showTextAnimation: boolean;
@@ -14,17 +15,58 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
   const { mainVideo } = useVideo();
   const { loading, error, isReady } = mainVideo;
   
+  // We don't need animation state anymore since we're using a one-time animation
+  // לוגיקת האנימציה - הערות מסבירות
+  // הערה: האנימציה תופעל רק בביקור הראשון באתר
+  // מערכת הלוקל סטורג' תשמור את המידע שהמשתמש כבר ביקר באתר
+  useEffect(() => {
+    // בדיקה האם זהו הביקור הראשון של המשתמש באתר
+    // בגרסה סופית נבדוק את הערך הזה
+    
+    /* 
+    כאן יש שתי אפשרויות:
+    
+    1. למצב פיתוח - תמיד להציג את האנימציה (מחיקת הדגל):
+    localStorage.removeItem('hasVisitedBefore');
+    
+    2. לגרסה סופית - להראות את האנימציה רק בפעם הראשונה:
+    if (!hasVisited) {
+      // האנימציה תופעל רק אם זה ביקור ראשון
+      // הלבבות יוצגו בסיבוב סביב הכותרת והכפתור
+    }
+    */
+    
+    // במצב פיתוח - תמיד להציג את האנימציה
+    localStorage.removeItem('hasVisitedBefore');
+    
+    // לאחר שהאנימציה הסתיימה, נרשום שהמשתמש כבר ביקר באתר
+    const timer = setTimeout(() => {
+      localStorage.setItem('hasVisitedBefore', 'true');
+    }, 6000); // 6 שניות - משך האנימציה
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
   // Only show the futuristic hero when text animation should be visible
   if (!showTextAnimation) {
     return (
       <div className="flex flex-col justify-center items-center px-4 min-h-screen bg-[#fdf6ed] sm:px-6 lg:px-8">
         <div className="relative mx-auto max-w-7xl text-center">
           <div className="mb-8">
-            <div className="text-6xl font-black text-gray-900 md:text-8xl lg:text-9xl font-staff">
-              כיף לתת
-            </div>
-            <div className="mt-4 text-2xl font-bold text-gray-700 md:text-4xl lg:text-5xl font-staff">
-              עם כל נתינה הלב מתמלא
+            <div className="flex justify-center">
+              <div className="w-[200px] sm:w-[250px] md:w-[300px] transition-all duration-300">
+                <Image
+                  src="/title.png"
+                  alt="כיף לתת - עם כל נתינה הלב מתמלא"
+                  width={500}
+                  height={200}
+                  style={{ 
+                    width: '100%',
+                    height: 'auto'
+                  }}
+                  className="object-contain"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -33,7 +75,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
   }
 
   return (
-    <div>
+    <div className="overflow-x-hidden">
       {/* טקסט ולוגו מקוריים */}
       <div className="relative h-screen w-full overflow-hidden bg-[#fdf6ed]">
         {/* Subtle animated background grid */}
@@ -58,46 +100,96 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
             {/* Content Wrapper - עטיפה חדשה */}
             <div className="flex flex-col items-center">
               {/* Logo Image - מיקום וגודל התמונה */}
-              <div className="flex relative justify-center items-center mx-auto mb-0 w-64 h-64 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-80 lg:h-80 hero-image-container"
-                   style={{ 
-                     transform: 'translateY(-40px)'
-                   }}
-              >
-                <Image
-                  src="/noBg.png"
-                  alt="Logo"
-                  width={320}
-                  height={320}
-                  className="object-contain w-full h-full transition-all duration-500 ease-in-out cursor-pointer hover:scale-110 hover:rotate-3 active:scale-95"
-                  style={{
-                    filter: 'drop-shadow(0 0 20px rgba(42, 43, 38, 0.3))',
-                  }}
-                  priority
-                />
-              </div>
-
-              {/* Main Title - הטקסט הראשי */}
-              <h1 className="text-7xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold font-staff text-[#2a2b26] transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
-                  style={{ 
-                    marginTop: '-120px',
-                    textShadow: '0 0 30px rgba(42, 43, 38, 0.8), 0 0 60px rgba(42, 43, 38, 0.4)',
-                    animation: 'glitch 3s ease-in-out infinite alternate'
-                  }}
-              >
-                כיף לתת
-              </h1>
-            
-              {/* Subtitle - הטקסט המשני */}
-              <p 
-                className="text-3xl sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-[#2a2b26]/90 transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
-                style={{ 
-                  marginTop: '0px',
-                  textShadow: '0 0 20px rgba(42, 43, 38, 0.6), 0 0 40px rgba(42, 43, 38, 0.3)',
-                  animationDelay: '0.5s'
+              {/* זוהי המעטפת של הלבבות */}
+              <div
+                className="flex relative justify-center items-center mx-auto mb-0 w-64 h-64 md:mb-0 lg:mb-0 xl:mb-0 2xl:mb-0 hero-image-container"
+                style={{
+                  zIndex: 10
                 }}
               >
-                עם כל נתינה הלב מתמלא
-              </p>
+                {/* זו האנימציה של הלבבות - כאן תוכל להתאים את המסלול */}
+                {/* מתחיל מתחת לכותרת והכפתור כך שהאנימציה נראית יותר טוב */}
+                <motion.div
+                  initial={{ scale: 1, y: 300 }}
+                  animate={{
+                    x: [
+                      0,      
+                      50,    
+                      200,    
+                      150,    
+                      0,      
+                      -150,   
+                      -200,   
+                      -150,   
+                      0       
+                    ],
+                    y: [
+                      0,    
+                      50,    
+                      0,      
+                      -200,   
+                      -300,   
+                      -150,   
+                      0,      
+                      100,    
+                      85     
+                    ],
+                    rotate: -360,
+                    scale: [1.5, 1.2, 1.3, 1.4, 1.5, 1.4, 1.3, 1.2, 1.5]
+                    // 1.5 גודל הלבבות בסוף האנימציה
+                  }}
+                  transition={{ 
+                    duration: 6, 
+                    ease: "easeInOut", 
+                    times: [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]
+                  }}
+                  className="absolute z-50"
+                  style={{
+                    filter: 'drop-shadow(0 0 20px rgba(245, 163, 131, 0.9))',
+                    willChange: 'transform', 
+                    position: 'absolute',
+                    top: '-50px',
+                    left: 0,
+                    right: 0,
+                    margin: '0 auto',
+                    pointerEvents: 'none',
+                    transform: 'translateY(0)'
+                  }}
+                >
+                  <Image
+                    src="/noBg.png"
+                    alt="Logo"
+                    width={320}
+                    height={320}
+                    className="object-contain w-full h-full transition-all duration-500 ease-in-out cursor-pointer"
+                    style={{
+                      filter: 'drop-shadow(0 0 20px rgba(42, 43, 38, 0.3))',
+                    }}
+                    priority
+                  />
+                </motion.div>
+              </div>
+
+              {/* Title Image - תמונת הכותרת */}
+              <div className="flex relative z-20 justify-center items-center"
+                   style={{ 
+                     marginTop: '-120px'
+                   }}
+              >
+                <div className="w-[200px] sm:w-[250px] md:w-[300px] transition-all duration-300">
+                  <img
+                    src="/title.png"
+                    alt="כיף לתת - עם כל נתינה הלב מתמלא"
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      animation: 'glitch 3s ease-in-out infinite alternate',
+                      animationDelay: '0.5s'
+                    }}
+                    className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
+                  />
+                </div>
+              </div>
 
               {/* Call to Action Button */}
               <div className="mt-4">
@@ -106,35 +198,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
             </div>
           </div>
 
-          {/* Scroll indicator */}
-          <div 
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-[#f5a383]/70 transition-all duration-1000 opacity-100 animate-bounce"
-            style={{ animationDelay: '1.5s' }}
-          >
-            <div className="flex flex-col items-center space-y-2 px-6 py-3 border border-[#f5a383]/20 rounded-full backdrop-blur-sm">
-              <span className="text-sm font-medium font-staff">גלול למטה לוידאו</span>
-              <svg 
-                width="20" 
-                height="20" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                className="animate-pulse"
-              >
-                <path 
-                  d="M12 5V19" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round"
-                />
-                <path 
-                  d="M7 14L12 19L17 14" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round"
-                />
-              </svg>
-            </div>
-          </div>
+
 
           {/* Corner decorations */}
           <div className="absolute inset-0 pointer-events-none">
@@ -155,7 +219,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       
       {error && (
         <div className="flex justify-center items-center py-8 sm:py-12 md:py-16 bg-[#fdf6ed]">
-          <div className="text-lg sm:text-xl text-center text-red-600 font-staff">
+          <div className="text-lg text-center text-red-600 sm:text-xl font-staff">
             {error}
           </div>
         </div>
@@ -164,33 +228,16 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       {!loading && !error && isReady && (
         <VideoScrollExpand
           usePreloadedVideo={true}
-          title="הפעילות שלנו"
         >
-        <div className="px-4 sm:px-6 md:px-8 mx-auto max-w-4xl text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4 sm:mb-6 text-[#2a2b26] font-staff">
-            עמותת &ldquo;כיף לתת&rdquo;
-          </h2>
-          <p className="text-base sm:text-lg mb-4 sm:mb-6 text-[#2a2b26] font-staff leading-relaxed">
-            מעניקה בשר, עופות, דגים ביצים ויין למאות משפחות באופן קבוע.
-          </p>
-          <p className="text-base sm:text-lg mb-4 sm:mb-6 text-[#2a2b26] font-staff leading-relaxed">
-            בנוסף, כיף לתת עוזרת לילדים עם מוגבלויות ומשמחת ילדים בבתי חולים.
-          </p>
-          <p className="text-base sm:text-lg mb-4 sm:mb-6 text-[#2a2b26] font-staff leading-relaxed">
-            הפעילות שלנו מבוצעת מתוך אמונה עמוקה בעקרונות של נתינה, אהבת הזולת ורצון לשמח את האחר.
-          </p>
-          <p className="text-base sm:text-lg text-[#2a2b26] font-staff leading-relaxed font-semibold">
-            כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
-          </p>
-          
+        <div className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8">
           {/* תמונה עם אנימציה */}
-          <div className="mt-8 sm:mt-10 md:mt-12 mb-6 sm:mb-8 flex justify-center">
+          <div className="flex justify-center mb-0">
             <div className="relative group">
               {/* רקע זוהר */}
               <div className="absolute inset-0 bg-gradient-to-r from-[#f5a383] to-[#9acdbe] rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500 animate-pulse"></div>
               
               {/* מיכל התמונה עם אנימציה */}
-              <div className="relative transform transition-all duration-700 hover:scale-110 hover:rotate-3 active:scale-95"
+              <div className="relative transition-all duration-700 transform hover:scale-110 hover:rotate-3 active:scale-95"
                    style={{
                      animation: 'coinGlow 4s ease-in-out infinite',
                    }}>
@@ -216,16 +263,31 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               </div>
             </div>
           </div>
+
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-0 text-[#2a2b26] font-staff">
+            עמותת &ldquo;כיף לתת&rdquo;
+          </h2>
+          <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+            מעניקה בשר, עופות, דגים ביצים ויין למאות משפחות באופן קבוע.
+          </p>
+          <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+            בנוסף, כיף לתת עוזרת לילדים עם מוגבלויות ומשמחת ילדים בבתי חולים.
+          </p>
+          <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+            הפעילות שלנו מבוצעת מתוך אמונה עמוקה בעקרונות של נתינה, אהבת הזולת ורצון לשמח את האחר.
+          </p>
+          <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed font-semibold">
+            כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
+          </p>
         </div>
         </VideoScrollExpand>
       )}
 
       {/* גלריה של תמונות פעילות העמותה */}
-      <div className="bg-[#fdf6ed] py-8 sm:py-12 md:py-16 text-center">
-        <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#2a2b26] font-staff mb-4 sm:mb-6 md:mb-8">
+      <div className="bg-[#fdf6ed] py-2 sm:py-3 md:py-4 text-center">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-[#2a2b26] font-staff mb-2 sm:mb-3">
           תמונות מפעילות העמותה
         </h2>
-
       </div>
       
       <HorizontalScrollCarousel
@@ -242,10 +304,13 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
           "/pictures/10.png",
           "/pictures/11.jpeg",
           "/pictures/12.jpeg",
-          "/pictures/13.jpeg",
-          "/pictures/14.jpeg"
+          // "/pictures/13.jpeg", // הוסתר לסדר יפה של 4 תמונות בכל שורה
+          // "/pictures/14.jpeg"  // הוסתר לסדר יפה של 4 תמונות בכל שורה
         ]}
       />
+
+      {/* מרווח בין גלריית התמונות למשפחות מספרות */}
+      <div className="py-8 sm:py-12 md:py-16"></div>
 
       {/* סיפורי משפחות עם עדויות אודיו */}
       <FamiliesTestimonials />

@@ -58,28 +58,26 @@ export const HeroSimple = () => {
                  />
                </div>
 
-                                                                                                                                                                                                                                                                                                                                                                                                                   {/* Main Title - הטקסט הראשי */}
-                   <h1 className="text-7xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-9xl font-extrabold font-staff text-[#2a2b26] transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
-                       style={{ 
-                         marginTop: '-120px',
-                         textShadow: '0 0 30px rgba(42, 43, 38, 0.8), 0 0 60px rgba(42, 43, 38, 0.4)',
-                         animation: 'glitch 3s ease-in-out infinite alternate'
-                       }}
+                   {/* Title Image - תמונת הכותרת */}
+                   <div className="flex justify-center items-center"
+                        style={{ 
+                          marginTop: '-120px'
+                        }}
                    >
-                  כיף לתת
-                </h1>
-               
-                                                                                                                                                                                                                  {/* Subtitle - הטקסט המשני */}
-                   <p 
-                     className="text-3xl sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-[#2a2b26]/90 transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
-                     style={{ 
-                       marginTop: '0px',
-                       textShadow: '0 0 20px rgba(42, 43, 38, 0.6), 0 0 40px rgba(42, 43, 38, 0.3)',
-                       animationDelay: '0.5s'
-                     }}
-                   >
-                 עם כל נתינה הלב מתמלא
-               </p>
+                     <div className="w-[200px] sm:w-[250px] md:w-[300px] transition-all duration-300">
+                       <img
+                         src="/title.png"
+                         alt="כיף לתת - עם כל נתינה הלב מתמלא"
+                         style={{
+                           width: '100%',
+                           height: 'auto',
+                           animation: 'glitch 3s ease-in-out infinite alternate',
+                           animationDelay: '0.5s'
+                         }}
+                         className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
+                       />
+                     </div>
+                   </div>
             </div>
           </div>
 
