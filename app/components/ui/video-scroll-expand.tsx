@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { Play, Volume2, VolumeX } from 'lucide-react'; // הסרתי את Pause
 import { useVideo } from '../../contexts/VideoContext';
 
 interface VideoScrollExpandProps {
@@ -150,12 +150,12 @@ const VideoScrollExpand = ({
   }, [isPlaying, isHovering, isMobile]);
 
   return (
-    <div ref={containerRef} className="relative min-h-screen overflow-hidden">
-      <div className="relative flex flex-col items-center justify-center min-h-screen px-4 py-8">
+    <div ref={containerRef} className="overflow-hidden relative min-h-screen">
+      <div className="flex relative flex-col justify-center items-center px-4 py-8 min-h-screen">
         
         {/* כותרות */}
         <motion.div
-          className="mb-8 text-center z-20"
+          className="z-20 mb-8 text-center"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
@@ -174,7 +174,7 @@ const VideoScrollExpand = ({
 
         {/* וידאו */}
         <motion.div
-          className="relative mx-auto rounded-2xl shadow-2xl overflow-hidden cursor-pointer"
+          className="overflow-hidden relative mx-auto rounded-2xl shadow-2xl cursor-pointer"
           style={{
             width: isMobile ? `${Math.max(videoScale * 90, 85)}vw` : `${videoScale * 80}vw`,
             height: isMobile ? `${Math.max(videoScale * 50, 48)}vw` : `${videoScale * 45}vw`,
@@ -211,7 +211,7 @@ const VideoScrollExpand = ({
               {/* רקע למובייל */}
               {isMobile && !isPlaying && (
                 <div 
-                  className="absolute inset-0 flex justify-center items-center bg-center bg-cover"
+                  className="flex absolute inset-0 justify-center items-center bg-center bg-cover"
                   style={{
                     backgroundImage: 'url(/tumbil.png)',
                     backgroundColor: '#f5a383'
@@ -252,7 +252,7 @@ const VideoScrollExpand = ({
               <AnimatePresence>
                 {showControls && !isPlaying && (
                   <motion.div
-                    className="absolute inset-0 flex justify-center items-center"
+                    className="flex absolute inset-0 justify-center items-center"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
@@ -285,7 +285,7 @@ const VideoScrollExpand = ({
                   transition={{ duration: 0.3 }}
                 >
                   <motion.button
-                    className="p-3 rounded-full shadow-lg backdrop-blur-sm bg-black/50 text-white cursor-pointer"
+                    className="p-3 text-white rounded-full shadow-lg backdrop-blur-sm cursor-pointer bg-black/50"
                     whileTap={{ scale: 0.95 }}
                     onClick={(e) => {
                       e.stopPropagation();
