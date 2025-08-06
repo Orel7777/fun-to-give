@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
-import { Heart, Star, Gift, Users, Sparkles, Crown, Zap, Diamond } from 'lucide-react';
+import { Heart, Star, Users, Sparkles, Crown, Zap, Diamond } from 'lucide-react';
 
 interface ContributionProps {
   className?: string;

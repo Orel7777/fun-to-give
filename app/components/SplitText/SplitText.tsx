@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 
 // Interfaces
 interface SplitTextProps {
@@ -10,8 +10,8 @@ interface SplitTextProps {
   duration?: number;
   ease?: string;
   splitType?: "chars" | "words" | "lines";
-  from?: { [key: string]: any };
-  to?: { [key: string]: any };
+  from?: { [key: string]: string | number };
+  to?: { [key: string]: string | number };
   threshold?: number;
   rootMargin?: string;
   textAlign?: "center" | "right" | "left";
@@ -85,6 +85,28 @@ const SplitText: React.FC<SplitTextProps> = ({
     setElements(splitElements);
   }, [text, splitType]);
 
+  const startAnimation = useCallback(() => {
+    // Start animation with stagger
+    elements.forEach((_, index) => {
+      setTimeout(() => {
+        setElements(prev => 
+          prev.map((element, i) => 
+            i === index 
+              ? { ...element, isVisible: true }
+              : element
+          )
+        );
+      }, delay + (index * stagger));
+    });
+
+    // Call completion callback
+    if (onLetterAnimationComplete) {
+      setTimeout(() => {
+        onLetterAnimationComplete();
+      }, delay + (elements.length * stagger) + (duration * 1000));
+    }
+  }, [elements, delay, stagger, duration, onLetterAnimationComplete]);
+
   // Intersection Observer setup
   useEffect(() => {
     if (!containerRef.current || elements.length === 0) return;
@@ -112,29 +134,7 @@ const SplitText: React.FC<SplitTextProps> = ({
     return () => {
       observer.disconnect();
     };
-  }, [elements, animationStarted, threshold, rootMargin]);
-
-  const startAnimation = () => {
-    // Start animation with stagger
-    elements.forEach((_, index) => {
-      setTimeout(() => {
-        setElements(prev => 
-          prev.map((element, i) => 
-            i === index 
-              ? { ...element, isVisible: true }
-              : element
-          )
-        );
-      }, delay + (index * stagger));
-    });
-
-    // Call completion callback
-    if (onLetterAnimationComplete) {
-      setTimeout(() => {
-        onLetterAnimationComplete();
-      }, delay + (elements.length * stagger) + (duration * 1000));
-    }
-  };
+  }, [elements, animationStarted, threshold, rootMargin, startAnimation]);
 
   const getTextAlign = () => {
     switch (textAlign) {
@@ -149,7 +149,7 @@ const SplitText: React.FC<SplitTextProps> = ({
     }
   };
 
-  const getAnimationClass = (element: SplitTextElement, index: number) => {
+  const getAnimationClass = (element: SplitTextElement) => {
     if (!isVisible) return "split-text-hidden";
     
     const baseClass = element.isVisible ? "split-text-visible" : "split-text-hidden";
@@ -168,7 +168,7 @@ const SplitText: React.FC<SplitTextProps> = ({
         {elements.map((element, index) => (
           <span
             key={`${element.char}-${index}`}
-            className={`split-text-element inline-block ${getAnimationClass(element, index)} ${
+            className={`split-text-element inline-block ${getAnimationClass(element)} ${
               element.char === "\u00A0" ? "w-2" : ""
             }`}
             style={{

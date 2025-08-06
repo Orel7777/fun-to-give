@@ -15,7 +15,7 @@ const HebrewTitleExample: React.FC = () => {
         textClassName="rtl"
         containerClassName="hebrew-title"
       >
-        עמותת "כיף לתת"
+        עמותת &quot;כיף לתת&quot;
       </ScrollFloat>
       
       {/* Alternative styles - uncomment to use different gradients */}
@@ -24,7 +24,7 @@ const HebrewTitleExample: React.FC = () => {
         textClassName="gradient-gold rtl"
         containerClassName="hebrew-title"
       >
-        עמותת "כיף לתת"
+        עמותת &quot;כיף לתת&quot;
       </ScrollFloat>
       */}
       
@@ -33,7 +33,7 @@ const HebrewTitleExample: React.FC = () => {
         textClassName="gradient-ocean rtl"
         containerClassName="hebrew-title"
       >
-        עמותת "כיף לתת"
+        עמותת &quot;כיף לתת&quot;
       </ScrollFloat>
       */}
       
@@ -42,7 +42,7 @@ const HebrewTitleExample: React.FC = () => {
         textClassName="elegant-dark rtl"
         containerClassName="hebrew-title"
       >
-        עמותת "כיף לתת"
+        עמותת &quot;כיף לתת&quot;
       </ScrollFloat>
       */}
     </div>

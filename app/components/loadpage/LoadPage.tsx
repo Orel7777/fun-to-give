@@ -12,7 +12,7 @@ interface LoadPageProps {
 export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 'כיף לתת מקוצר.mp4' }: LoadPageProps) {
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-  const [videoProgress, setVideoProgress] = useState(0);
+
   const { mainVideo, preloadVideo } = useVideo();
   const videoStatusRef = useRef({ isReady: false, loading: false });
   const videoLoadedRef = useRef(false);
@@ -54,7 +54,6 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       
       const totalProgress = timeProgress + videoLoadProgress;
       setProgress(totalProgress);
-      setVideoProgress(videoLoadProgress);
 
       // הטעינה מסתיימת רק כשגם הזמן וגם הוידאו מוכנים
       const isComplete = elapsed >= duration && videoStatusRef.current.isReady;

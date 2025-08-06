@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { TestimonialsColumn } from "../components/ui/testimonials-columns";
+
 import TestimonialCard from "../components/ui/testimonial-card";
 
 const testimonials = [
@@ -43,9 +43,7 @@ const testimonials = [
   }
 ];
 
-const firstColumn = testimonials.slice(0, 3);
-const secondColumn = testimonials.slice(3, 5);
-const thirdColumn = testimonials.slice(5, 7);
+
 
 const FamiliesTestimonials = () => {
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);

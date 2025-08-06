@@ -93,12 +93,7 @@ const FloatingIcon: React.FC<FloatingIconProps> = ({ children, delay = 0, classN
 };
 
 const Designation: React.FC<DesignationProps> = ({ className = '' }) => {
-  const [pageLoaded, setPageLoaded] = useState(false);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setPageLoaded(true), 500);
-    return () => clearTimeout(timer);
-  }, []);
 
   return (
     <section className={`relative py-16 sm:py-20 lg:py-28 bg-[#fdf6ed] overflow-hidden ${className}`}>

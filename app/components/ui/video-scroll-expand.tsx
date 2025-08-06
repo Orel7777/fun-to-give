@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause } from 'lucide-react';
 import { useVideo } from '../../contexts/VideoContext';
-import ScrollFloat from '../scroll/ScrollFloat';
+
 
 interface VideoScrollExpandProps {
   videoSrc?: string; // אופציונלי - אם לא מועבר ישתמש בוידאו מהקונטקסט
@@ -25,7 +25,7 @@ const VideoScrollExpand = ({
   const [isPlaying, setIsPlaying] = useState(false);
   const [showControls, setShowControls] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const [videoLoaded, setVideoLoaded] = useState(false);
+
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { mainVideo } = useVideo();
@@ -92,7 +92,6 @@ const VideoScrollExpand = ({
           await videoRef.current.play();
           console.log('וידאו התחיל לנגן במובייל');
           setIsPlaying(true);
-          setVideoLoaded(true);
           
           // מנסים להוריד mute אחרי התחלת הניגון
           setTimeout(() => {
@@ -115,7 +114,6 @@ const VideoScrollExpand = ({
           videoRef.current.muted = true;
           await videoRef.current.play();
           setIsPlaying(true);
-          setVideoLoaded(true);
         } catch (mutedError) {
           console.error('נכשל בניגון גם עם muted:', mutedError);
           console.log('פרטי השגיאה השנייה:', mutedError);
@@ -138,7 +136,6 @@ const VideoScrollExpand = ({
       
       const handleLoadedData = () => {
         console.log('נתוני הוידאו נטענו');
-        setVideoLoaded(true);
         // הבטחה שהוידאו יתחיל מהפריים הראשון
         if (video.currentTime !== 0) {
           video.currentTime = 0;
@@ -155,7 +152,6 @@ const VideoScrollExpand = ({
       
       const handleLoadedMetadata = () => {
         console.log('מטאדטה נטענה - מציג פריים ראשון');
-        setVideoLoaded(true);
         // הבטחה שהוידאו יציג את הפריים הראשון מיד
         video.currentTime = 0;
       };

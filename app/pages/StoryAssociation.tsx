@@ -234,7 +234,6 @@ const DonationButton: React.FC<{ className?: string }> = ({ className = '' }) =>
 };
 
 const StoryAssociation: React.FC<StoryAssociationProps> = ({ className = '' }) => {
-  const [isVisible, setIsVisible] = useState(false);
   const elementRef = useRef(null);
 
   useEffect(() => {
@@ -242,7 +241,7 @@ const StoryAssociation: React.FC<StoryAssociationProps> = ({ className = '' }) =
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          timer = setTimeout(() => setIsVisible(true), 300);
+          timer = setTimeout(() => {}, 300);
         }
       });
     });
