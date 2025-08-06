@@ -5,7 +5,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Pause } from 'lucide-react';
 import { useVideo } from '../../contexts/VideoContext';
 
-
 interface VideoScrollExpandProps {
   videoSrc?: string; // אופציונלי - אם לא מועבר ישתמש בוידאו מהקונטקסט
   title?: string;
@@ -229,59 +228,59 @@ const VideoScrollExpand = ({
       className="relative mt-[-350px] sm:mt-[-70px] min-h-[90vh] sm:min-h-[100vh] overflow-x-hidden"
     >
       {/* סקציית הוידאו הראשונה */}
-              <div className="flex overflow-hidden sticky top-0 justify-center items-center mb-0 sm:mb-0 md:mb-4 lg:mb-16 h-[80vh] sm:h-screen">
+      <div className="flex overflow-hidden sticky top-0 justify-center items-center mb-0 sm:mb-0 md:mb-4 lg:mb-16 h-[80vh] sm:h-screen">
         <div className="text-center">
-                     {/* כותרות */}
-           <motion.div
-             className="mb-2 sm:mb-4"
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1 - scrollProgress * 0.5, y: -scrollProgress * 50 }}
-             transition={{ duration: 0.1 }}
-           >
-             <motion.h2 
-               className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#2a2b26] font-staff mb-2 sm:mb-4"
-               initial={{ opacity: 0, scale: 0.8, y: 30 }}
-               animate={{ 
-                 opacity: 1, 
-                 scale: 1, 
-                 y: 0,
-                 textShadow: scrollProgress > 0.3 ? "0 0 20px rgba(245, 163, 131, 0.5)" : "none"
-               }}
-               transition={{ 
-                 duration: 0.8, 
-                 ease: "easeOut",
-                 delay: 0.2
-               }}
-               whileHover={{ 
-                 scale: 1.05,
-                 textShadow: "0 0 30px rgba(245, 163, 131, 0.8)"
-               }}
-             >
-               {title}
-             </motion.h2>
-                           {subtitle && (
-                <motion.p 
-                  className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#2a2b26]/80 font-staff"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ 
-                    opacity: 1, 
-                    x: 0,
-                    color: scrollProgress > 0.5 ? "rgba(42, 43, 38, 0.9)" : "rgba(42, 43, 38, 0.8)"
-                  }}
-                  transition={{ 
-                    duration: 0.6, 
-                    ease: "easeOut",
-                    delay: 0.4
-                  }}
-                  whileHover={{ 
-                    color: "rgba(42, 43, 38, 1)",
-                    x: 5
-                  }}
-                >
-                  {subtitle}
-                </motion.p>
-              )}
-           </motion.div>
+          {/* כותרות */}
+          <motion.div
+            className="mb-2 sm:mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1 - scrollProgress * 0.5, y: -scrollProgress * 50 }}
+            transition={{ duration: 0.1 }}
+          >
+            <motion.h2 
+              className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-[#2a2b26] font-staff mb-2 sm:mb-4"
+              initial={{ opacity: 0, scale: 0.8, y: 30 }}
+              animate={{ 
+                opacity: 1, 
+                scale: 1, 
+                y: 0,
+                textShadow: scrollProgress > 0.3 ? "0 0 20px rgba(245, 163, 131, 0.5)" : "none"
+              }}
+              transition={{ 
+                duration: 0.8, 
+                ease: "easeOut",
+                delay: 0.2
+              }}
+              whileHover={{ 
+                scale: 1.05,
+                textShadow: "0 0 30px rgba(245, 163, 131, 0.8)"
+              }}
+            >
+              {title}
+            </motion.h2>
+            {subtitle && (
+              <motion.p 
+                className="text-base sm:text-lg md:text-xl lg:text-2xl text-[#2a2b26]/80 font-staff"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ 
+                  opacity: 1, 
+                  x: 0,
+                  color: scrollProgress > 0.5 ? "rgba(42, 43, 38, 0.9)" : "rgba(42, 43, 38, 0.8)"
+                }}
+                transition={{ 
+                  duration: 0.6, 
+                  ease: "easeOut",
+                  delay: 0.4
+                }}
+                whileHover={{ 
+                  color: "rgba(42, 43, 38, 1)",
+                  x: 5
+                }}
+              >
+                {subtitle}
+              </motion.p>
+            )}
+          </motion.div>
 
           {/* הוידאו */}
           <motion.div
@@ -397,6 +396,7 @@ const VideoScrollExpand = ({
                         </svg>
                       </div>
                     </div>
+                  </div>
                 )}
                 
                 <video
@@ -542,9 +542,6 @@ const VideoScrollExpand = ({
               style={{ opacity: 1 - scrollProgress * 0.5 }}
             />
           </motion.div>
-
-          {/* אינדיקטור גלילה */}
-
         </div>
       </div>
 
