@@ -10,7 +10,7 @@ interface HorizontalScrollCarouselProps {
 
 const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ images }) => {
   return (
-    <div className="overflow-x-hidden bg-[#fdf6ed] py-2 sm:py-8 md:py-12 lg:py-16">
+    <div className="overflow-x-hidden bg-[#fdf6ed] py-2 sm:py-8 md:py-12 lg:py-16 pb-8 sm:pb-12 md:pb-16 lg:pb-20">
       <div className="container mx-auto px-4">
 
 

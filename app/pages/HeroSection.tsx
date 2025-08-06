@@ -285,7 +285,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
 
       {/* גלריה של תמונות פעילות העמותה */}
       <div className="bg-[#fdf6ed] py-2 sm:py-4 md:py-6 lg:py-8 text-center">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-2 sm:mb-3 md:mb-4">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-6 sm:mb-8 md:mb-10">
           תמונות מפעילות העמותה
         </h2>
       </div>
@@ -310,7 +310,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       />
 
       {/* מרווח בין גלריית התמונות למשפחות מספרות */}
-      <div className="py-2 sm:py-6 md:py-10 lg:py-16"></div>
+      <div className="py-4 sm:py-8 md:py-12 lg:py-20"></div>
 
       {/* סיפורי משפחות עם עדויות אודיו */}
       <FamiliesTestimonials />
