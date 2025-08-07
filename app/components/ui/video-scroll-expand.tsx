@@ -33,7 +33,7 @@ const VideoScrollExpand = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { mainVideo } = useVideo();
-  const { isMobile, isTablet, isDesktop, width, height } = useResponsive();
+  const { isMobile } = useResponsive();
   
   // הוספת event listeners לוידאו
   useEffect(() => {
@@ -446,10 +446,10 @@ const VideoScrollExpand = ({
                           togglePlay();
                         }
                       }}
-                      onFocus={(e) => {
+                      onFocus={() => {
                         console.log('🎯 כפתור play קיבל focus');
                       }}
-                      onBlur={(e) => {
+                      onBlur={() => {
                         console.log('🎯 כפתור play איבד focus');
                       }}
                       onContextMenu={(e) => {
@@ -532,25 +532,6 @@ const VideoScrollExpand = ({
                         navigator.vibrate(30);
                       }
                       
-                      // Sound feedback (אם הדפדפן תומך)
-                      try {
-                        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-                        const oscillator = audioContext.createOscillator();
-                        const gainNode = audioContext.createGain();
-                        
-                        oscillator.connect(gainNode);
-                        gainNode.connect(audioContext.destination);
-                        
-                        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
-                        gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                        
-                        oscillator.start(audioContext.currentTime);
-                        oscillator.stop(audioContext.currentTime + 0.1);
-                      } catch (error) {
-                        // אם אין תמיכה ב-AudioContext, נמשיך בלי sound
-                      }
-                      
                       toggleMute();
                     }}
                     onPointerDown={(e) => {
@@ -568,25 +549,6 @@ const VideoScrollExpand = ({
                       // Haptic feedback (אם הדפדפן תומך)
                       if ('vibrate' in navigator) {
                         navigator.vibrate(30);
-                      }
-                      
-                      // Sound feedback (אם הדפדפן תומך)
-                      try {
-                        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-                        const oscillator = audioContext.createOscillator();
-                        const gainNode = audioContext.createGain();
-                        
-                        oscillator.connect(gainNode);
-                        gainNode.connect(audioContext.destination);
-                        
-                        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
-                        gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
-                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                        
-                        oscillator.start(audioContext.currentTime);
-                        oscillator.stop(audioContext.currentTime + 0.1);
-                      } catch (error) {
-                        // אם אין תמיכה ב-AudioContext, נמשיך בלי sound
                       }
                       
                       toggleMute();

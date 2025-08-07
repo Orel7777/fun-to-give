@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Play, Pause } from 'lucide-react';
+import { Play } from 'lucide-react';
 import { useVideo } from '../../contexts/VideoContext';
 
 interface VideoScrollExpandProps {
