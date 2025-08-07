@@ -90,6 +90,21 @@ p {
   }
 }
 
+/* Force proper viewport detection */
+html {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+/* Ensure proper mobile detection */
+@media screen and (max-width: 640px) {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+
+
 /* Menu hover styles */
 .menu-item:hover {
   color: #f5a383 !important;

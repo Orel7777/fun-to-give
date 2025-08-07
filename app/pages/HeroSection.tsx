@@ -94,14 +94,14 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         {/* Text Content */}
         <div className="flex relative z-20 flex-col justify-center items-center px-10 h-full text-center">
           <div 
-            className="opacity-100 transition-all transform -translate-y-[120px] sm:-translate-y-[60px] md:-translate-y-[120px] duration-2000"
+            className="opacity-100 transition-all transform -translate-y-[60px] sm:-translate-y-[30px] md:-translate-y-[60px] duration-2000"
           >
             {/* Content Wrapper - עטיפה חדשה */}
             <div className="flex flex-col items-center">
               {/* Logo Image - מיקום וגודל התמונה */}
               {/* זוהי המעטפת של הלבבות */}
               <div
-                className="flex relative justify-center items-center mx-auto mb-0 w-40 h-40 sm:w-64 sm:h-64 md:mb-0 lg:mb-0 xl:mb-0 2xl:mb-0 hero-image-container -mt-32 sm:mt-8 md:mt-8 lg:mt-0"
+                className="flex relative justify-center items-center mx-auto -mt-20 w-40 h-40 sm:w-64 sm:h-64 hero-image-container sm:mt-2 md:mt-2 lg:mt-0"
                 style={{
                   zIndex: 10
                 }}
@@ -111,36 +111,35 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                 <motion.div
                   initial={{ scale: 1, y: 300 }}
                   animate={{
-                    x: [
-                      0,      
-                      50,    
-                      200,    
-                      150,    
-                      0,      
-                      -150,   
-                      -200,   
-                      -150,   
-                      0       
-                    ],
-                    y: [
-                      0,    
-                      50,    
-                      0,      
-                      -200,   
-                      -300,   
-                      -150,   
-                      0,      
-                      100,    
-                      85     
-                    ],
-                    rotate: -360,
-                    scale: [1.5, 1.2, 1.3, 1.4, 1.5, 1.4, 1.3, 1.2, 1.5]
-                    // 1.5 גודל הלבבות בסוף האנימציה
+                    // מסלול התנועה של הלבבות:
+                    // נקודה 1: (0,0) - מרכז התחלה
+                    // נקודה 2: (50,50) - ימינה למעלה
+                    // נקודה 3: (200,0) - ימינה
+                    // נקודה 4: (150,-200) - ימינה למעלה
+                    // נקודה 5: (0,-300) - מרכז למעלה (הנקודה הגבוהה ביותר)
+                    // נקודה 6: (-150,-150) - שמאלה למעלה
+                    // נקודה 7: (-200,0) - שמאלה
+                    // נקודה 8: (-150,100) - שמאלה למטה
+                    // נקודה 9: (0,85) - חזרה למרכז (קצת למטה)
+                    x: [0, 50, 200, 150, 0, -150, -200, -150, 0],
+                    y: [0, 50, 0, -200, -300, -150, 0, 100, 85],
+                    rotate: -360, // סיבוב מלא נגד כיוון השעון
+                    scale: [1.5, 1.2, 1.3, 1.4, 1.5, 1.4, 1.3, 1.2, 1.5] // שינוי גודל
                   }}
                   transition={{ 
                     duration: 6, 
                     ease: "easeInOut", 
-                    times: [0, 0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875, 1]
+                    times: [
+                      0,      // נקודה 1: התחלה (0%)
+                      0.125,  // נקודה 2: ימינה למעלה (12.5%)
+                      0.25,   // נקודה 3: ימינה (25%)
+                      0.375,  // נקודה 4: ימינה למעלה (37.5%)
+                      0.5,    // נקודה 5: מרכז למעלה (50%)
+                      0.625,  // נקודה 6: שמאלה למעלה (62.5%)
+                      0.75,   // נקודה 7: שמאלה (75%)
+                      0.875,  // נקודה 8: שמאלה למטה (87.5%)
+                      1       // נקודה 9: חזרה למרכז (100%)
+                    ]
                   }}
                   className="absolute z-50"
                   style={{
@@ -170,7 +169,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               </div>
 
               {/* Title Image - תמונת הכותרת */}
-              <div className="flex relative z-20 justify-center items-center -mt-4 sm:-mt-16 md:-mt-12 lg:-mt-20"
+              <div className="flex relative z-20 justify-center items-center -mt-1 sm:-mt-6 md:-mt-4 lg:-mt-8"
               >
                 <div className="w-[160px] sm:w-[250px] md:w-[300px] transition-all duration-300">
                   <Image
@@ -189,7 +188,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               </div>
 
               {/* Call to Action Button */}
-              <div className="mt-7 sm:mt-4 md:mt-4">
+              <div className="mt-1 sm:mt-1 md:mt-1">
                 <PulseBeamsFirstDemo />
               </div>
             </div>

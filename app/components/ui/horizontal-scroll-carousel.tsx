@@ -3,12 +3,33 @@
 import * as React from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
+import { ImageDialog } from "./image-dialog"
 
 interface HorizontalScrollCarouselProps {
   images: string[]
 }
 
 const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ images }) => {
+  const [dialogOpen, setDialogOpen] = React.useState(false)
+  const [currentImageIndex, setCurrentImageIndex] = React.useState(0)
+
+  const openDialog = (index: number) => {
+    setCurrentImageIndex(index)
+    setDialogOpen(true)
+  }
+
+  const closeDialog = () => {
+    setDialogOpen(false)
+  }
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length)
+  }
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
+  }
+
   return (
     <div className="overflow-x-hidden bg-[#fdf6ed] py-2 sm:py-8 md:py-12 lg:py-16 pb-8 sm:pb-12 md:pb-16 lg:pb-20">
       <div className="container mx-auto px-4">
@@ -31,20 +52,40 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ ima
               <Card
                 src={src}
                 index={index}
+                onClick={() => openDialog(index)}
               />
             </motion.div>
           ))}
         </div>
 
-
+        {/* דיאלוג תמונות */}
+        <ImageDialog
+          images={images}
+          isOpen={dialogOpen}
+          currentIndex={currentImageIndex}
+          onClose={closeDialog}
+          onNext={nextImage}
+          onPrev={prevImage}
+        />
       </div>
     </div>
   )
 }
 
-const Card: React.FC<{ src: string; index: number }> = ({ src, index }) => {
+const Card: React.FC<{ src: string; index: number; onClick: () => void }> = ({ src, index, onClick }) => {
   const [isPressed, setIsPressed] = React.useState(false)
   const [isHovered, setIsHovered] = React.useState(false)
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+    onClick()
+  }
+
+  const handleTap = () => {
+    console.log('Card tapped - index:', index)
+    onClick()
+  }
 
   const handleMouseDown = () => {
     setIsPressed(true)
@@ -72,15 +113,17 @@ const Card: React.FC<{ src: string; index: number }> = ({ src, index }) => {
       onMouseEnter={handleMouseEnter}
       onTouchStart={handleMouseDown}
       onTouchEnd={handleMouseUp}
+      onClick={handleClick}
       whileHover={{ 
         scale: 1.05,
         y: -8,
         transition: { duration: 0.3 }
       }}
       whileTap={{ 
-        scale: 1.1,
+        scale: 0.95,
         transition: { duration: 0.1 }
       }}
+      onTap={handleTap}
     >
       {/* רקע זוהר */}
       <div className={`absolute inset-0 bg-gradient-to-br from-[#f5a383]/20 to-[#9acdbe]/20 transition-all duration-500 ${

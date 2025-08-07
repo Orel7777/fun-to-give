@@ -45,7 +45,8 @@ export default function Home() {
         </div>
       )}
 
-      <main ref={mainContentRef} className="pt-32">
+      <main ref={mainContentRef}>
+      {/* className="pt-32" */}
         <HeroSection showTextAnimation={showTextAnimation} />
       </main>
     </div>

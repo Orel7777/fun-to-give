@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, Volume2, VolumeX } from 'lucide-react'; // הסרתי את Pause
 import { useVideo } from '../../contexts/VideoContext';
+import { useResponsive } from '../../hooks/useResponsive';
 
 interface VideoScrollExpandProps {
   videoSrc?: string;
@@ -29,15 +30,13 @@ const VideoScrollExpand = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const { mainVideo } = useVideo();
+  const { isMobile, isTablet, isDesktop, width, height } = useResponsive();
   
   // בחירה בין וידאו מוקדם לוידאו רגיל
   const shouldUsePreloaded = usePreloadedVideo && mainVideo.isReady;
   const finalVideoUrl = shouldUsePreloaded ? mainVideo.videoUrl : (videoSrc?.startsWith('/') ? videoSrc : '/Families_tell_stories/1 - כמות הדגים הייתה גדולה ובאיכות מאד טובה.mp4');
   const loading = usePreloadedVideo ? mainVideo.loading : false;
   const error = usePreloadedVideo ? mainVideo.error : null;
-  
-  // זיהוי מסכים קטנים
-  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -151,7 +150,7 @@ const VideoScrollExpand = ({
 
   return (
     <div ref={containerRef} className="relative min-h-screen">
-      <div className="flex relative mt-[-650px] sm:mt-[-150px] flex-col justify-center items-center px-4 py-8 min-h-screen">
+      <div className="flex relative mt-[-480px] sm:mt-[-150px] flex-col justify-center items-center px-4 py-8 min-h-screen">
         
         {/* כותרות */}
         <motion.div
