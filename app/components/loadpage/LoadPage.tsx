@@ -34,7 +34,17 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
   useEffect(() => {
     if (!videoLoadedRef.current) {
       videoLoadedRef.current = true;
-      preloadVideo(videoPath);
+      
+      // במובייל - ננסה לטעון את הוידאו
+      const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+      
+      if (!isMobile) {
+        console.log('🎬 מתחיל טעינת וידאו (דסקטופ)');
+        preloadVideo(videoPath);
+      } else {
+        console.log('📱 במובייל - מנסה לטעון וידאו');
+        preloadVideo(videoPath);
+      }
     }
   }, [preloadVideo, videoPath]);
 
@@ -42,6 +52,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
   useEffect(() => {
     const startTime = Date.now();
     let animationFrameId: number;
+    let mobileTimeoutId: number;
 
     const updateProgress = () => {
       const currentTime = Date.now();
@@ -56,13 +67,23 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       const totalProgress = timeProgress + videoLoadProgress;
       setProgress(totalProgress);
 
-      // הטעינה מסתיימת רק כשגם הזמן וגם הוידאו מוכנים
-      const isComplete = elapsed >= duration && videoStatusRef.current.isReady;
+      // במובייל - אם עבר יותר מ-10 שניות, נמשיך בלי הוידאו
+      const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+      const shouldContinueWithoutVideo = isMobile && elapsed > 10000;
+      
+      // הטעינה מסתיימת כשגם הזמן וגם הוידאו מוכנים, או במובייל אחרי 10 שניות
+      const isComplete = (elapsed >= duration && videoStatusRef.current.isReady) || shouldContinueWithoutVideo;
       
       if (!isComplete) {
         animationFrameId = requestAnimationFrame(updateProgress);
       } else {
-        console.log('הטעינה הסתיימה (זמן + וידאו), מתחיל אנימציות');
+        console.log('הטעינה הסתיימה:', {
+          elapsed,
+          isReady: videoStatusRef.current.isReady,
+          isMobile,
+          shouldContinueWithoutVideo
+        });
+        
         // הטעינה הסתיימה - אפקטי GSAP
         
         // התחל את אנימציית העיגול והפיזור
@@ -128,6 +149,23 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       }
     };
 
+    // במובייל - timeout נוסף למקרה שהוידאו לא נטען
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    if (isMobile) {
+      mobileTimeoutId = window.setTimeout(() => {
+        console.log('⏰ timeout במובייל - ממשיך בלי הוידאו');
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+        }
+        // כפייה לסיום הטעינה
+        setProgress(100);
+        setTimeout(() => {
+          setIsVisible(false);
+          onLoadComplete?.();
+        }, 1000);
+      }, 15000); // 15 שניות timeout במובייל
+    }
+
     // אנימציה ראשונית
     gsap.fromTo(preloaderRef.current, 
       { opacity: 0, scale: 1.1 },
@@ -170,6 +208,9 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
     return () => {
       if (animationFrameId) {
         cancelAnimationFrame(animationFrameId);
+      }
+      if (mobileTimeoutId) {
+        clearTimeout(mobileTimeoutId);
       }
     };
   }, [duration, onLoadComplete]); // הסרת התלות ב-mainVideo

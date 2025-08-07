@@ -57,7 +57,7 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
       // יצירת אלמנט וידאו לטעינה מוקדמת
       const video = document.createElement('video');
       const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-      video.preload = 'auto'; // תמיד לטעון את כל הוידאו
+      video.preload = isMobile ? 'metadata' : 'auto'; // במובייל - רק מטאדטה, בדסקטופ - הכל
       video.muted = true; // הגדרת muted למניעת בעיות autoplay
       if (isMobile) {
         video.setAttribute('playsinline', 'true');
@@ -72,7 +72,7 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
         const resolveOnce = () => {
           if (!hasResolved) {
             hasResolved = true;
-            console.log('✅ וידאו נטען במלואו מראש:', url);
+            console.log('✅ וידאו נטען בהצלחה מראש:', url);
             resolve(undefined);
           }
         };
@@ -87,6 +87,10 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
         // המתנה לטעינת מטאדטה
         video.onloadedmetadata = () => {
           console.log('📊 מטאדטה של הוידאו נטענה');
+          // במובייל - אם זה רק מטאדטה, נחשב מוכן
+          if (isMobile && video.preload === 'metadata') {
+            resolveOnce();
+          }
         };
         
         // המתנה לטעינת נתונים
@@ -116,7 +120,7 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
         // timeout למקרה שהטעינה נתקעת
         setTimeout(() => {
           rejectOnce(new Error('זמן הטעינה פג'));
-        }, 30000); // הגדלת הזמן ל-30 שניות
+        }, isMobile ? 15000 : 30000); // 15 שניות במובייל, 30 שניות בדסקטופ
       });
       
       setMainVideo({
