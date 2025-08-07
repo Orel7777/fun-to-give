@@ -26,6 +26,7 @@ const VideoScrollExpand = ({
   const [showControls, setShowControls] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
+  const [isTouching, setIsTouching] = useState(false); // חדש - לניהול לחיצה במובייל
 
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -241,30 +242,36 @@ const VideoScrollExpand = ({
             maxHeight: isMobile ? '53vw' : '675px',
             minWidth: isMobile ? '320px' : '300px',
             minHeight: isMobile ? '180px' : '169px',
-            pointerEvents: isMobile && showControls && !isPlaying ? 'none' : 'auto'
+            pointerEvents: isMobile && !isPlaying ? 'none' : 'auto' // במובייל - לא מקבל אירועי לחיצה כשהכפתור מוצג
           }}
           animate={{
-            scale: videoScale,
+            scale: isMobile && isTouching && isPlaying ? videoScale * 0.95 : videoScale, // אנימציה ויזואלית במובייל רק כשמתנגן
             opacity: videoOpacity,
           }}
           transition={{ duration: 0.1, ease: "easeOut" }}
-          onClick={isMobile ? undefined : togglePlay}
+          onClick={isMobile && !isPlaying ? undefined : togglePlay}
           onMouseEnter={() => !isMobile && setIsHovering(true)}
           onMouseLeave={() => !isMobile && setIsHovering(false)}
           onTouchStart={(e) => {
-            if (isMobile) {
+            if (isMobile && isPlaying) {
               e.preventDefault();
+              setIsTouching(true);
               console.log('📱 touch start על מיכל הוידאו');
             }
           }}
           onTouchEnd={(e) => {
-            if (isMobile) {
+            if (isMobile && isPlaying) {
               e.preventDefault();
               e.stopPropagation();
+              setIsTouching(false);
               console.log('📱 touch end על מיכל הוידאו');
-              if (!showControls || isPlaying) {
-                togglePlay();
+              
+              // Haptic feedback (אם הדפדפן תומך)
+              if ('vibrate' in navigator) {
+                navigator.vibrate(50);
               }
+              
+              togglePlay();
             }
           }}
         >
@@ -326,7 +333,8 @@ const VideoScrollExpand = ({
                 style={{
                   objectFit: 'cover',
                   width: '100%',
-                  height: '100%'
+                  height: '100%',
+                  pointerEvents: 'none' // לא מקבל אירועי לחיצה
                 }}
                 className={`${
                   isMobile && !isPlaying ? 'opacity-0' : 'opacity-100'
@@ -335,14 +343,16 @@ const VideoScrollExpand = ({
               
               {/* כפתור play במרכז */}
               <AnimatePresence>
-                {((showControls && !isPlaying) || (isMobile && !isPlaying)) && (
+                {!isPlaying && (
                   <motion.div
                     className="flex absolute inset-0 justify-center items-center z-50"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    style={{ pointerEvents: 'auto' }}
+                    style={{ 
+                      pointerEvents: 'auto' // תמיד מקבל אירועי לחיצה
+                    }}
                   >
                     <motion.button
                       className={`rounded-full shadow-2xl backdrop-blur-sm bg-white/90 cursor-pointer border-0 outline-none ${
@@ -370,19 +380,15 @@ const VideoScrollExpand = ({
                         togglePlay();
                       }}
                       onMouseDown={(e) => {
-                        if (isMobile) {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          console.log('🖱️ mouse down על כפתור play (mobile)');
-                        }
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('🖱️ mouse down על כפתור play');
                       }}
                       onMouseUp={(e) => {
-                        if (isMobile) {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          console.log('🖱️ mouse up על כפתור play (mobile)');
-                          togglePlay();
-                        }
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('🖱️ mouse up על כפתור play');
+                        togglePlay();
                       }}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
@@ -423,7 +429,7 @@ const VideoScrollExpand = ({
                         e.stopPropagation();
                       }}
                       style={{ 
-                        pointerEvents: 'auto',
+                        pointerEvents: 'auto', // תמיד מקבל אירועי לחיצה
                         zIndex: 1000,
                         position: 'relative',
                         minWidth: isMobile ? '80px' : '60px',
@@ -482,6 +488,17 @@ const VideoScrollExpand = ({
                 className="absolute inset-0 pointer-events-none bg-black/20"
                 style={{ opacity: 1 - scrollProgress * 0.5 }}
               />
+              
+              {/* אוברליי זמני למובייל */}
+              {isMobile && isTouching && isPlaying && (
+                <motion.div 
+                  className="absolute inset-0 pointer-events-none bg-white/20"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.1 }}
+                />
+              )}
             </div>
           ) : null}
         </motion.div>

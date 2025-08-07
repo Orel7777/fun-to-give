@@ -57,7 +57,7 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
       // יצירת אלמנט וידאו לטעינה מוקדמת
       const video = document.createElement('video');
       const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-      video.preload = isMobile ? 'auto' : 'metadata';
+      video.preload = 'auto'; // תמיד לטעון את כל הוידאו
       video.muted = true; // הגדרת muted למניעת בעיות autoplay
       if (isMobile) {
         video.setAttribute('playsinline', 'true');
@@ -65,20 +65,58 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
       }
       video.src = url;
       
-      // המתנה לטעינת מטאדטה
+      // המתנה לטעינה מלאה של הוידאו
       await new Promise((resolve, reject) => {
-        video.onloadedmetadata = () => {
-          console.log('✅ וידאו נטען בהצלחה מראש:', url);
-          resolve(undefined);
+        let hasResolved = false;
+        
+        const resolveOnce = () => {
+          if (!hasResolved) {
+            hasResolved = true;
+            console.log('✅ וידאו נטען במלואו מראש:', url);
+            resolve(undefined);
+          }
         };
+        
+        const rejectOnce = (error: Error) => {
+          if (!hasResolved) {
+            hasResolved = true;
+            reject(error);
+          }
+        };
+        
+        // המתנה לטעינת מטאדטה
+        video.onloadedmetadata = () => {
+          console.log('📊 מטאדטה של הוידאו נטענה');
+        };
+        
+        // המתנה לטעינת נתונים
+        video.onloadeddata = () => {
+          console.log('📦 נתוני הוידאו נטענו');
+        };
+        
+        // המתנה לטעינה מלאה
+        video.oncanplaythrough = () => {
+          console.log('🎬 הוידאו מוכן לנגינה מלאה');
+          resolveOnce();
+        };
+        
+        // המתנה לטעינה מלאה (גיבוי)
+        video.oncanplay = () => {
+          console.log('🎬 הוידאו מוכן לנגינה');
+          // בדיקה אם יש מספיק נתונים לנגינה
+          if (video.readyState >= 4) {
+            resolveOnce();
+          }
+        };
+        
         video.onerror = () => {
-          reject(new Error('שגיאה בטעינת הוידאו'));
+          rejectOnce(new Error('שגיאה בטעינת הוידאו'));
         };
         
         // timeout למקרה שהטעינה נתקעת
         setTimeout(() => {
-          reject(new Error('זמן הטעינה פג'));
-        }, 10000);
+          rejectOnce(new Error('זמן הטעינה פג'));
+        }, 30000); // הגדלת הזמן ל-30 שניות
       });
       
       setMainVideo({
