@@ -28,6 +28,7 @@ const VideoScrollExpand = ({
   const [isMuted, setIsMuted] = useState(false);
   const [isTouching, setIsTouching] = useState(false); // חדש - לניהול לחיצה במובייל
   const [isMuteButtonTouching, setIsMuteButtonTouching] = useState(false); // חדש - לניהול לחיצה על כפתור קול
+  const [showAudioFeedback, setShowAudioFeedback] = useState(false); // חדש - לניהול feedback ויזואלי של האודיו
 
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -111,22 +112,52 @@ const VideoScrollExpand = ({
     
     try {
       const newMutedState = !videoRef.current.muted;
-      videoRef.current.muted = newMutedState;
-      setIsMuted(newMutedState);
-      console.log(newMutedState ? '🔇 אודיו מושתק' : '🔊 אודיו מופעל');
+      console.log('🔊 מנסה לשנות מצב קול:', { 
+        currentMuted: videoRef.current.muted, 
+        newMutedState, 
+        isMobile,
+        isPlaying 
+      });
       
-      // במובייל - אם מפעילים אודיו, ננסה לנגן שוב כדי לוודא שזה עובד
-      if (isMobile && !newMutedState && isPlaying && videoRef.current) {
-        videoRef.current.play().catch(error => {
-          console.log('⚠️ לא ניתן להפעיל אודיו במובייל, ממשיכים עם muted');
+      // במובייל - אם מנסים להפעיל אודיו, ננסה לנגן שוב
+      if (isMobile && !newMutedState && isPlaying) {
+        console.log('📱 במובייל - מנסה להפעיל אודיו');
+        
+        // קודם נשנה את המצב
+        videoRef.current.muted = newMutedState;
+        setIsMuted(newMutedState);
+        
+        // ננסה לנגן שוב כדי לוודא שהאודיו עובד
+        videoRef.current.play().then(() => {
+          console.log('✅ אודיו הופעל בהצלחה במובייל');
+          // הצג feedback ויזואלי
+          setShowAudioFeedback(true);
+          setTimeout(() => setShowAudioFeedback(false), 2000);
+        }).catch(error => {
+          console.log('⚠️ לא ניתן להפעיל אודיו במובייל, ממשיכים עם muted:', error);
+          // אם נכשל, נחזור למצב muted
           if (videoRef.current) {
             videoRef.current.muted = true;
             setIsMuted(true);
           }
         });
+      } else {
+        // בדסקטופ או כשמשתיקים - פשוט משנים את המצב
+        videoRef.current.muted = newMutedState;
+        setIsMuted(newMutedState);
+        console.log(newMutedState ? '🔇 אודיו מושתק' : '🔊 אודיו מופעל');
+        
+        // הצג feedback ויזואלי
+        setShowAudioFeedback(true);
+        setTimeout(() => setShowAudioFeedback(false), 2000);
       }
     } catch (error) {
       console.error('שגיאה בשליטה בקול:', error);
+      // במקרה של שגיאה, נחזור למצב muted
+      if (videoRef.current) {
+        videoRef.current.muted = true;
+        setIsMuted(true);
+      }
     }
   };
 
@@ -154,10 +185,12 @@ const VideoScrollExpand = ({
           // במובייל - מתחילים עם muted כדי למנוע בעיות autoplay
           videoRef.current.muted = true;
           setIsMuted(true);
+          console.log('📱 במובייל - וידאו מתחיל עם אודיו מושתק');
         } else {
           // בדסקטופ - מנסים עם אודיו
           videoRef.current.muted = false;
           setIsMuted(false);
+          console.log('💻 בדסקטופ - וידאו מתחיל עם אודיו');
         }
         
         // מנסים לנגן
@@ -166,6 +199,9 @@ const VideoScrollExpand = ({
         console.log('✅ וידאו מתנגן');
         
         // במובייל - לא מנסים להפעיל אודיו אוטומטית, המשתמש יצטרך ללחוץ על כפתור הקול
+        if (isMobile) {
+          console.log('📱 במובייל - המשתמש יכול להפעיל אודיו בלחיצה על כפתור הקול');
+        }
       }
     } catch (error) {
       console.error('❌ שגיאה בנגינה:', error);
@@ -496,6 +532,25 @@ const VideoScrollExpand = ({
                         navigator.vibrate(30);
                       }
                       
+                      // Sound feedback (אם הדפדפן תומך)
+                      try {
+                        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                        
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.1);
+                      } catch (error) {
+                        // אם אין תמיכה ב-AudioContext, נמשיך בלי sound
+                      }
+                      
                       toggleMute();
                     }}
                     onPointerDown={(e) => {
@@ -515,6 +570,25 @@ const VideoScrollExpand = ({
                         navigator.vibrate(30);
                       }
                       
+                      // Sound feedback (אם הדפדפן תומך)
+                      try {
+                        const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+                        const oscillator = audioContext.createOscillator();
+                        const gainNode = audioContext.createGain();
+                        
+                        oscillator.connect(gainNode);
+                        gainNode.connect(audioContext.destination);
+                        
+                        oscillator.frequency.setValueAtTime(600, audioContext.currentTime);
+                        gainNode.gain.setValueAtTime(0.05, audioContext.currentTime);
+                        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
+                        
+                        oscillator.start(audioContext.currentTime);
+                        oscillator.stop(audioContext.currentTime + 0.1);
+                      } catch (error) {
+                        // אם אין תמיכה ב-AudioContext, נמשיך בלי sound
+                      }
+                      
                       toggleMute();
                     }}
                     style={{
@@ -522,7 +596,8 @@ const VideoScrollExpand = ({
                       zIndex: 1001,
                       position: 'relative',
                       transform: isMuteButtonTouching ? 'scale(0.9)' : 'scale(1)',
-                      transition: 'transform 0.1s ease-out'
+                      transition: 'transform 0.1s ease-out',
+                      backgroundColor: isMuteButtonTouching ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)'
                     }}
                   >
                     {isMuted ? (
@@ -549,6 +624,27 @@ const VideoScrollExpand = ({
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.1 }}
                 />
+              )}
+              
+              {/* Feedback ויזואלי לאודיו */}
+              {showAudioFeedback && (
+                <motion.div 
+                  className="absolute inset-0 pointer-events-none flex justify-center items-center"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className={`rounded-full p-4 shadow-lg backdrop-blur-sm ${
+                    isMuted ? 'bg-red-500/80' : 'bg-green-500/80'
+                  }`}>
+                    {isMuted ? (
+                      <VolumeX size={32} className="text-white" />
+                    ) : (
+                      <Volume2 size={32} className="text-white" />
+                    )}
+                  </div>
+                </motion.div>
               )}
             </div>
           ) : null}
