@@ -27,6 +27,7 @@ const VideoScrollExpand = ({
   const [isHovering, setIsHovering] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [isTouching, setIsTouching] = useState(false); // חדש - לניהול לחיצה במובייל
+  const [isMuteButtonTouching, setIsMuteButtonTouching] = useState(false); // חדש - לניהול לחיצה על כפתור קול
 
   const containerRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -109,9 +110,21 @@ const VideoScrollExpand = ({
     if (!videoRef.current) return;
     
     try {
-      videoRef.current.muted = !videoRef.current.muted;
-      setIsMuted(videoRef.current.muted);
-      console.log(videoRef.current.muted ? '🔇 אודיו מושתק' : '🔊 אודיו מופעל');
+      const newMutedState = !videoRef.current.muted;
+      videoRef.current.muted = newMutedState;
+      setIsMuted(newMutedState);
+      console.log(newMutedState ? '🔇 אודיו מושתק' : '🔊 אודיו מופעל');
+      
+      // במובייל - אם מפעילים אודיו, ננסה לנגן שוב כדי לוודא שזה עובד
+      if (isMobile && !newMutedState && isPlaying && videoRef.current) {
+        videoRef.current.play().catch(error => {
+          console.log('⚠️ לא ניתן להפעיל אודיו במובייל, ממשיכים עם muted');
+          if (videoRef.current) {
+            videoRef.current.muted = true;
+            setIsMuted(true);
+          }
+        });
+      }
     } catch (error) {
       console.error('שגיאה בשליטה בקול:', error);
     }
@@ -152,21 +165,7 @@ const VideoScrollExpand = ({
         setIsPlaying(true);
         console.log('✅ וידאו מתנגן');
         
-        // במובייל - מנסים להפעיל אודיו אחרי שהנגינה התחילה
-        if (isMobile) {
-          setTimeout(async () => {
-            if (videoRef.current && isPlaying) {
-              try {
-                videoRef.current.muted = false;
-                setIsMuted(false);
-                console.log('🔊 אודיו מופעל במובייל');
-              } catch (error) {
-                console.log('⚠️ לא ניתן להפעיל אודיו במובייל, ממשיכים עם muted');
-                setIsMuted(true);
-              }
-            }
-          }, 500);
-        }
+        // במובייל - לא מנסים להפעיל אודיו אוטומטית, המשתמש יצטרך ללחוץ על כפתור הקול
       }
     } catch (error) {
       console.error('❌ שגיאה בנגינה:', error);
@@ -272,6 +271,19 @@ const VideoScrollExpand = ({
               }
               
               togglePlay();
+            }
+          }}
+          onTouchMove={(e) => {
+            if (isMobile && isPlaying) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+          }}
+          onTouchCancel={(e) => {
+            if (isMobile && isPlaying) {
+              e.preventDefault();
+              e.stopPropagation();
+              setIsTouching(false);
             }
           }}
         >
@@ -469,9 +481,48 @@ const VideoScrollExpand = ({
                     }}
                     onTouchStart={(e) => {
                       e.preventDefault();
+                      e.stopPropagation();
+                      setIsMuteButtonTouching(true);
+                      console.log('👆 touch start על כפתור קול');
                     }}
                     onTouchEnd={(e) => {
                       e.preventDefault();
+                      e.stopPropagation();
+                      setIsMuteButtonTouching(false);
+                      console.log('👆 touch end על כפתור קול');
+                      
+                      // Haptic feedback (אם הדפדפן תומך)
+                      if ('vibrate' in navigator) {
+                        navigator.vibrate(30);
+                      }
+                      
+                      toggleMute();
+                    }}
+                    onPointerDown={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsMuteButtonTouching(true);
+                      console.log('👆 pointer down על כפתור קול');
+                    }}
+                    onPointerUp={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setIsMuteButtonTouching(false);
+                      console.log('👆 pointer up על כפתור קול');
+                      
+                      // Haptic feedback (אם הדפדפן תומך)
+                      if ('vibrate' in navigator) {
+                        navigator.vibrate(30);
+                      }
+                      
+                      toggleMute();
+                    }}
+                    style={{
+                      pointerEvents: 'auto',
+                      zIndex: 1001,
+                      position: 'relative',
+                      transform: isMuteButtonTouching ? 'scale(0.9)' : 'scale(1)',
+                      transition: 'transform 0.1s ease-out'
                     }}
                   >
                     {isMuted ? (
