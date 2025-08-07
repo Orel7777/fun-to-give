@@ -59,16 +59,23 @@ const VideoScrollExpand = ({
       console.error('❌ שגיאה בוידאו:', e);
     };
     
+    const handleVolumeChange = () => {
+      console.log('🔊 שינוי נפח:', video.muted ? 'מושתק' : 'מופעל');
+      setIsMuted(video.muted);
+    };
+    
     video.addEventListener('play', handlePlay);
     video.addEventListener('pause', handlePause);
     video.addEventListener('ended', handleEnded);
     video.addEventListener('error', handleError);
+    video.addEventListener('volumechange', handleVolumeChange);
     
     return () => {
       video.removeEventListener('play', handlePlay);
       video.removeEventListener('pause', handlePause);
       video.removeEventListener('ended', handleEnded);
       video.removeEventListener('error', handleError);
+      video.removeEventListener('volumechange', handleVolumeChange);
     };
   }, []);
   
@@ -119,38 +126,15 @@ const VideoScrollExpand = ({
         isPlaying 
       });
       
-      // במובייל - אם מנסים להפעיל אודיו, ננסה לנגן שוב
-      if (isMobile && !newMutedState && isPlaying) {
-        console.log('📱 במובייל - מנסה להפעיל אודיו');
-        
-        // קודם נשנה את המצב
-        videoRef.current.muted = newMutedState;
-        setIsMuted(newMutedState);
-        
-        // ננסה לנגן שוב כדי לוודא שהאודיו עובד
-        videoRef.current.play().then(() => {
-          console.log('✅ אודיו הופעל בהצלחה במובייל');
-          // הצג feedback ויזואלי
-          setShowAudioFeedback(true);
-          setTimeout(() => setShowAudioFeedback(false), 2000);
-        }).catch(error => {
-          console.log('⚠️ לא ניתן להפעיל אודיו במובייל, ממשיכים עם muted:', error);
-          // אם נכשל, נחזור למצב muted
-          if (videoRef.current) {
-            videoRef.current.muted = true;
-            setIsMuted(true);
-          }
-        });
-      } else {
-        // בדסקטופ או כשמשתיקים - פשוט משנים את המצב
-        videoRef.current.muted = newMutedState;
-        setIsMuted(newMutedState);
-        console.log(newMutedState ? '🔇 אודיו מושתק' : '🔊 אודיו מופעל');
-        
-        // הצג feedback ויזואלי
-        setShowAudioFeedback(true);
-        setTimeout(() => setShowAudioFeedback(false), 2000);
-      }
+      // פשוט משנים את המצב
+      videoRef.current.muted = newMutedState;
+      setIsMuted(newMutedState);
+      console.log(newMutedState ? '🔇 אודיו מושתק' : '🔊 אודיו מופעל');
+      
+      // הצג feedback ויזואלי
+      setShowAudioFeedback(true);
+      setTimeout(() => setShowAudioFeedback(false), 2000);
+      
     } catch (error) {
       console.error('שגיאה בשליטה בקול:', error);
       // במקרה של שגיאה, נחזור למצב muted
@@ -387,6 +371,9 @@ const VideoScrollExpand = ({
                 className={`${
                   isMobile && !isPlaying ? 'opacity-0' : 'opacity-100'
                 }`}
+                onVolumeChange={() => {
+                  console.log('🔊 נפח השתנה:', videoRef.current?.muted ? 'מושתק' : 'מופעל');
+                }}
               />
               
               {/* כפתור play במרכז */}
@@ -503,6 +490,7 @@ const VideoScrollExpand = ({
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.3 }}
+                  style={{ pointerEvents: 'auto' }}
                 >
                   <motion.button
                     className={`text-white rounded-full shadow-lg backdrop-blur-sm cursor-pointer bg-black/50 border-0 outline-none ${
@@ -512,7 +500,13 @@ const VideoScrollExpand = ({
                     onClick={(e) => {
                       e.preventDefault();
                       e.stopPropagation();
-                      console.log('🔊 כפתור קול נלחץ');
+                      console.log('🔊 כפתור קול נלחץ (click)');
+                      
+                      // Haptic feedback (אם הדפדפן תומך)
+                      if ('vibrate' in navigator) {
+                        navigator.vibrate(30);
+                      }
+                      
                       toggleMute();
                     }}
                     onTouchStart={(e) => {
@@ -526,25 +520,6 @@ const VideoScrollExpand = ({
                       e.stopPropagation();
                       setIsMuteButtonTouching(false);
                       console.log('👆 touch end על כפתור קול');
-                      
-                      // Haptic feedback (אם הדפדפן תומך)
-                      if ('vibrate' in navigator) {
-                        navigator.vibrate(30);
-                      }
-                      
-                      toggleMute();
-                    }}
-                    onPointerDown={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setIsMuteButtonTouching(true);
-                      console.log('👆 pointer down על כפתור קול');
-                    }}
-                    onPointerUp={(e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      setIsMuteButtonTouching(false);
-                      console.log('👆 pointer up על כפתור קול');
                       
                       // Haptic feedback (אם הדפדפן תומך)
                       if ('vibrate' in navigator) {
