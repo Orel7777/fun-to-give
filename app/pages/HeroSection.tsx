@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { VideoScrollExpand, HorizontalScrollCarousel } from '../components';
 import FamiliesTestimonials from './Testimonials';
@@ -14,6 +14,23 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
   // קבלת הוידאו מהקונטקסט (הוא נטען מראש בLoadPage)
   const { mainVideo } = useVideo();
   const { loading, error, isReady } = mainVideo;
+  
+  // זיהוי גודל המסך
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // בדיקה ראשונית
+    checkScreenSize();
+    
+    // האזנה לשינויים בגודל המסך
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
   
   // We don't need animation state anymore since we're using a one-time animation
   // לוגיקת האנימציה - הערות מסבירות
@@ -110,8 +127,23 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                 {/* מתחיל מתחת לכותרת והכפתור כך שהאנימציה נראית יותר טוב */}
                 <motion.div
                   initial={{ scale: 1, y: 300 }}
-                  animate={{
-                    // מסלול התנועה של הלבבות:
+                  animate={isMobile ? {
+                    // מסלול התנועה של הלבבות למסכים קטנים:
+                    // נקודה 1: (0,0) - מרכז התחלה
+                    // נקודה 2: (100,100) - ימינה למעלה (קטן יותר)
+                    // נקודה 3: (150,0) - ימינה (קטן יותר)
+                    // נקודה 4: (100,-150) - ימינה למעלה (קטן יותר)
+                    // נקודה 5: (0,-200) - מרכז למעלה (הנקודה הגבוהה ביותר - קטן יותר)
+                    // נקודה 6: (-100,-100) - שמאלה למעלה (קטן יותר)
+                    // נקודה 7: (-150,0) - שמאלה (קטן יותר)
+                    // נקודה 8: (-100,50) - שמאלה למטה (קטן יותר)
+                    // נקודה 9: (0,50) - חזרה למרכז (קצת למטה - קטן יותר)
+                    x: [0, 100, 100, -220, -220, 0, 0, 0, 0],
+                    y: [0, 0, 300, 300, 0, 0, 0, 0, 85],
+                    rotate: -360, // סיבוב מלא נגד כיוון השעון
+                    scale: [1.5, 1.2, 1.3, 1.4, 1.5, 1.4, 1.3, 1.4, 1.5] // שינוי גודל קטן יותר
+                  } : {
+                    // מסלול התנועה של הלבבות למסכים גדולים:
                     // נקודה 1: (0,0) - מרכז התחלה
                     // נקודה 2: (50,50) - ימינה למעלה
                     // נקודה 3: (200,0) - ימינה
