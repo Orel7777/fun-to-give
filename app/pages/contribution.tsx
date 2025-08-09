@@ -108,20 +108,20 @@ export default function ContributionPage(): React.ReactElement {
   );
 
   return (
-    <main className="w-full bg-cream min-h-screen px-4 md:px-6 lg:px-10 py-10 md:py-14">
+    <main className="px-4 py-10 w-full min-h-screen bg-cream md:px-6 lg:px-10 md:py-14">
       {/* Header */}
-      <section className="max-w-6xl mx-auto">
-        <h1 className="text-3xl md:text-5xl font-extrabold text-center text-primary">
+      <section className="mx-auto max-w-6xl">
+        <h1 className="text-3xl font-extrabold text-center md:text-5xl text-primary">
           הצטרפו אלינו – כל תרומה משנה חיים
         </h1>
-        <p className="text-center mt-3 text-sm md:text-base text-gray">
+        <p className="mt-3 text-sm text-center md:text-base text-gray">
           לא חובה למלא את כל הפרטים – רק שם ושם משפחה.
         </p>
       </section>
 
       {/* Options */}
-      <section className="max-w-5xl mx-auto mt-8 md:mt-10">
-        <div className="flex flex-col md:flex-row gap-4 justify-center">
+      <section className="mx-auto mt-8 max-w-5xl md:mt-10">
+        <div className="flex flex-col gap-4 justify-center md:flex-row">
           <OptionButton id="monthly" label="תרומה חודשית" emoji="♻️" />
           <OptionButton id="basket" label="סל לתרומה" emoji="🛒" />
           <OptionButton id="oneTime" label="תרומה חד פעמית" emoji="💝" />
@@ -129,11 +129,11 @@ export default function ContributionPage(): React.ReactElement {
       </section>
 
       {/* Form + Animation */}
-      <section className="max-w-6xl mx-auto mt-10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <section className="grid grid-cols-1 gap-8 items-start mx-auto mt-10 max-w-6xl lg:grid-cols-2">
         {/* Form */}
-        <form onSubmit={onSubmit} className="bg-accent/10 border border-accent rounded-2xl p-6 shadow-sm backdrop-blur">
+        <form onSubmit={onSubmit} className="p-6 rounded-2xl border shadow-sm backdrop-blur bg-accent/10 border-accent">
           {/* Names */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
               <label htmlFor="firstName" className="block text-sm font-medium text-[#2a2b26] mb-1">
                 שם <span className="text-red-500">*</span>
@@ -167,7 +167,7 @@ export default function ContributionPage(): React.ReactElement {
           </div>
 
           {/* Optional Fields */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+          <div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-2">
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-[#2a2b26] mb-1">
                 טלפון <span className="text-[#2a2b26] text-xs">(לא חובה – ניתן להשאיר ריק)</span>
@@ -213,12 +213,12 @@ export default function ContributionPage(): React.ReactElement {
           </div>
 
           {/* Primary CTA */}
-          <div className="mt-6 flex items-center gap-3">
+          <div className="flex gap-3 items-center mt-6">
             <a
               href="https://www.matara.pro/nedarimplus/online/?mosad=7014073"
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-accent hover:bg-accent-dark text-white font-bold py-3 px-6 rounded-lg flex items-center gap-2"
+              className="flex gap-2 items-center px-6 py-3 font-bold text-white rounded-lg bg-accent hover:bg-accent-dark"
             >
               <span className="text-lg" aria-hidden>
                 ❤️
@@ -232,8 +232,8 @@ export default function ContributionPage(): React.ReactElement {
         </form>
 
         {/* Illustration / Animation */}
-        <div className="flex items-center justify-center">
-          <div className="bg-accent/10 border border-accent rounded-2xl p-6 w-full max-w-md shadow-sm">
+        <div className="flex justify-center items-center">
+          <div className="p-6 w-full max-w-md rounded-2xl border shadow-sm bg-accent/10 border-accent">
             <div className="text-center text-sm text-[#2a2b26] mb-3">אנימציה: ילד פותח מקרר ריק, מתפלל והמקרר מתמלא</div>
             <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-accent/30 grid place-items-center bg-cream">
               {/* Emoji-based simple animation */}
@@ -251,14 +251,14 @@ export default function ContributionPage(): React.ReactElement {
       </section>
 
       {/* Emotional Reinforcement */}
-      <section className="max-w-4xl mx-auto mt-8">
-        <p className="text-center text-lg mt-4 text-primary-dark">
+      <section className="mx-auto mt-8 max-w-4xl">
+        <p className="mt-4 text-lg text-center text-primary-dark">
           בזכותך, עוד משפחה תשב לשולחן מלא – תודה על הלב הגדול 💛
         </p>
       </section>
 
       {/* Image at bottom */}
-      <section className="max-w-5xl mx-auto mt-6">
+      <section className="mx-auto mt-6 max-w-5xl">
         <div className="overflow-hidden rounded-2xl shadow-md">
           {/* Replace with a real image under public/images/food-basket.jpg */}
           <Image
@@ -266,7 +266,7 @@ export default function ContributionPage(): React.ReactElement {
             alt="סל מזון של העמותה"
             width={1600}
             height={900}
-            className="w-full h-auto object-cover"
+            className="object-cover w-full h-auto"
             sizes="100vw"
             priority={false}
           />
@@ -278,7 +278,7 @@ export default function ContributionPage(): React.ReactElement {
         <Link
           href="https://www.matara.pro/nedarimplus/online/?mosad=7014073"
           target="_blank"
-          className="fixed bottom-4 right-4 z-50 bg-accent hover:bg-accent-dark text-white font-bold py-3 px-5 rounded-full shadow-lg flex items-center gap-2 md:hidden"
+          className="flex fixed right-4 bottom-4 z-50 gap-2 items-center px-5 py-3 font-bold text-white rounded-full shadow-lg bg-accent hover:bg-accent-dark md:hidden"
         >
           <span className="text-lg" aria-hidden>
             ❤️

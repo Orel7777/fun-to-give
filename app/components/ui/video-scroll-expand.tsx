@@ -145,6 +145,20 @@ const VideoScrollExpand = ({
     }
   };
 
+  // אתחל וידאו מהתחלה ונגן
+  const restartVideo = async () => {
+    if (!videoRef.current) return;
+    try {
+      videoRef.current.pause();
+      videoRef.current.currentTime = 0;
+      await videoRef.current.play();
+      setIsPlaying(true);
+      console.log('🔁 ניגון מהתחלה');
+    } catch (e) {
+      console.error('❌ שגיאה בהתחלה מהתחלה:', e);
+    }
+  };
+
   // פונקציית ניגון פשוטה
   const togglePlay = async () => {
     console.log('🎬 togglePlay - isMobile:', isMobile, 'isPlaying:', isPlaying);
@@ -164,6 +178,8 @@ const VideoScrollExpand = ({
         
         // הגדרות בסיסיות לכל המכשירים
         videoRef.current.playsInline = true;
+        // ודא שמתחילים מהתחלה
+        try { videoRef.current.currentTime = 0; } catch {}
         
         if (isMobile) {
           // במובייל - מתחילים עם muted כדי למנוע בעיות autoplay
@@ -355,7 +371,7 @@ const VideoScrollExpand = ({
                 loop
                 playsInline
                 muted={isMobile}
-                preload={isMobile ? "auto" : "metadata"}
+                preload="auto"
                 controls={false}
                 disablePictureInPicture
                 webkit-playsinline="true"
@@ -477,6 +493,21 @@ const VideoScrollExpand = ({
                       <Play size={isMobile ? 72 : 48} className="text-[#2a2b26] ml-2" />
                     </motion.button>
                   </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* כפתור התחלה מהתחלה בזמן ניגון */}
+              <AnimatePresence>
+                {isPlaying && (
+                  <motion.button
+                    className="absolute top-3 left-3 z-50 rounded-full bg-white/90 text-[#2a2b26] px-3 py-1 text-sm shadow-md"
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); restartVideo(); }}
+                  >
+                    התחל מהתחלה
+                  </motion.button>
                 )}
               </AnimatePresence>
               

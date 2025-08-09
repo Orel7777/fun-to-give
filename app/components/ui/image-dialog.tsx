@@ -93,7 +93,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
   const dialogContent = (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 z-[9999] flex items-center justify-center"
+        className="fixed inset-0 z-[9999] flex items-start justify-center pt-10 pb-10"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
@@ -101,7 +101,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
       >
         {/* רקע מטושטש של האתר */}
         <motion.div
-          className="absolute inset-0 backdrop-blur-md"
+          className="absolute inset-0 backdrop-blur-md bg-black/70"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -110,7 +110,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
 
         {/* תוכן הדיאלוג */}
         <motion.div
-          className="relative z-50 flex flex-col items-center justify-center max-w-7xl mx-auto h-screen"
+          className="relative z-50 flex flex-col items-center justify-start max-w-7xl mx-auto min-h-screen overflow-y-auto p-6 sm:p-10"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
@@ -122,7 +122,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
           }}
         >
           {/* מיכל התמונה עם כפתורים */}
-          <div className="flex items-center justify-center gap-3 sm:gap-6 w-full">
+          <div className="flex items-center justify-center gap-3 sm:gap-6 w-full py-6">
             {/* כפתור שמאל (תמונה קודמת) */}
             <motion.button
               onClick={handlePrev}
@@ -158,14 +158,16 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
                 >
                   <Image
                     src={images[currentIndex]}
-                    width={1400}
-                    height={1000}
+                    width={1920}
+                    height={1280}
+                    quality={95}
+                    sizes="(max-width: 768px) 90vw, 80vw"
                     style={{ 
-                      objectFit: "cover", 
+                      objectFit: "contain", 
                       width: "100%", 
-                      height: "70vh",
+                      height: "auto",
                       maxWidth: "90vw",
-                      maxHeight: "70vh"
+                      maxHeight: "85vh"
                     }}
                     alt={`תמונה ${currentIndex + 1} מפעילות העמותה`}
                     className="rounded-lg"

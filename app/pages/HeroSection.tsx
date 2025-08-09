@@ -293,19 +293,19 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
             </div>
           </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-1 sm:mb-2">
-            עמותת &ldquo;כיף לתת&rdquo;
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-3 sm:mb-4">
+            עמותת כיף לתת
           </h2>
-          <p className="text-lg sm:text-xl md:text-2xl mb-1 sm:mb-2 text-[#2a2b26] font-staff leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
             מעניקה בשר, עופות, דגים ביצים ויין למאות משפחות באופן קבוע.
           </p>
-          <p className="text-lg sm:text-xl md:text-2xl mb-1 sm:mb-2 text-[#2a2b26] font-staff leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
             בנוסף, כיף לתת עוזרת לילדים עם מוגבלויות ומשמחת ילדים בבתי חולים.
           </p>
-          <p className="text-lg sm:text-xl md:text-2xl mb-1 sm:mb-2 text-[#2a2b26] font-staff leading-relaxed">
+          <p className="text-lg sm:text-xl md:text-2xl mt-2 mb-2 sm:mt-3 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
             הפעילות שלנו מבוצעת מתוך אמונה עמוקה בעקרונות של נתינה, אהבת הזולת ורצון לשמח את האחר.
           </p>
-          <p className="text-lg sm:text-xl md:text-2xl mb-1 sm:mb-2 text-[#2a2b26] font-staff leading-relaxed font-semibold">
+          <p className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-relaxed font-semibold">
             כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
           </p>
         </div>

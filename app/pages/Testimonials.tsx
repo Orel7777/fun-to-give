@@ -164,7 +164,8 @@ const FamiliesTestimonials = () => {
             />
           </div>
           <p className="text-center mt-1 sm:mt-2 md:mt-3 opacity-75 text-lg sm:text-xl md:text-2xl text-[#2a2b26] font-staff">
-            שמעו מה משפחות אומרות על הפעילות שלנו - כל עדות מלווה בהקלטה אמיתית
+            שמעו מה משפחות אומרות על הפעילות שלנו -
+            <span className="block">כל עדות מלווה בהקלטה אמיתית</span>
           </p>
           
           <div className="flex items-center gap-2 mt-1 sm:mt-2 text-[#f5a383]">

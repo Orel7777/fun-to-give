@@ -53,6 +53,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
     const startTime = Date.now();
     let animationFrameId: number;
     let mobileTimeoutId: number;
+    let desktopTimeoutId: number;
 
     const updateProgress = () => {
       const currentTime = Date.now();
@@ -164,6 +165,19 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
           onLoadComplete?.();
         }, 1000);
       }, 15000); // 15 שניות timeout במובייל
+    } else {
+      // בדסקטופ - הוסף timeout בטיחותי כדי למנוע תקיעה
+      desktopTimeoutId = window.setTimeout(() => {
+        console.log('⏰ timeout בדסקטופ - ממשיך למרות שהוידאו לא מוכן');
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+        }
+        setProgress(100);
+        setTimeout(() => {
+          setIsVisible(false);
+          onLoadComplete?.();
+        }, 700);
+      }, 12000); // 12 שניות timeout בדסקטופ
     }
 
     // אנימציה ראשונית
@@ -211,6 +225,9 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       }
       if (mobileTimeoutId) {
         clearTimeout(mobileTimeoutId);
+      }
+      if (desktopTimeoutId) {
+        clearTimeout(desktopTimeoutId);
       }
     };
   }, [duration, onLoadComplete]); // הסרת התלות ב-mainVideo
