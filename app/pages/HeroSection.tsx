@@ -5,6 +5,7 @@ import FamiliesTestimonials from './Testimonials';
 import { useVideo } from '../contexts/VideoContext';
 import { PulseBeamsFirstDemo } from '../components/call to action/demo';
 import { motion } from 'framer-motion';
+import ContributionSection from '../components/ContributionSection';
 
 interface HeroSectionProps {
   showTextAnimation: boolean;
@@ -345,6 +346,11 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
 
       {/* סיפורי משפחות עם עדויות אודיו */}
       <FamiliesTestimonials />
+
+      {/* תרומה - מוצג מיד אחרי משפחות מספרות */}
+      <div className="pt-8 sm:pt-12 md:pt-16 lg:pt-20">
+        <ContributionSection />
+      </div>
     </div>
   );
 };
