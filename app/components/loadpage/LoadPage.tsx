@@ -59,31 +59,17 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       const currentTime = Date.now();
       const elapsed = currentTime - startTime;
       
-      // חישוב התקדמות הזמן (70% מהטעינה)
-      const timeProgress = Math.min((elapsed / duration) * 70, 70);
-      
-      // חישוב התקדמות הוידאו (30% מהטעינה)
-      const videoLoadProgress = videoStatusRef.current.isReady ? 30 : (videoStatusRef.current.loading ? 15 : 0);
-      
-      const totalProgress = timeProgress + videoLoadProgress;
-      setProgress(totalProgress);
+      // חישוב התקדמות הזמן (100% מהטעינה) — רציף עד 100
+      const timeProgress = Math.min((elapsed / duration) * 100, 100);
+      setProgress(timeProgress);
 
-      // במובייל - אם עבר יותר מ-10 שניות, נמשיך בלי הוידאו
-      const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-      const shouldContinueWithoutVideo = isMobile && elapsed > 10000;
-      
-      // הטעינה מסתיימת כשגם הזמן וגם הוידאו מוכנים, או במובייל אחרי 10 שניות
-      const isComplete = (elapsed >= duration && videoStatusRef.current.isReady) || shouldContinueWithoutVideo;
+      // סיום כשהגענו ל-100%
+      const isComplete = timeProgress >= 100;
       
       if (!isComplete) {
         animationFrameId = requestAnimationFrame(updateProgress);
       } else {
-        console.log('הטעינה הסתיימה:', {
-          elapsed,
-          isReady: videoStatusRef.current.isReady,
-          isMobile,
-          shouldContinueWithoutVideo
-        });
+        console.log('הטעינה הסתיימה (100%)');
         
         // הטעינה הסתיימה - אפקטי GSAP
         
