@@ -64,6 +64,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     const addFirstInteractionListeners = () => {
       const opts: AddEventListenerOptions = { once: true, capture: true };
       window.addEventListener('pointerdown', onFirstInteraction as EventListener, opts);
+      window.addEventListener('click', onFirstInteraction as EventListener, opts);
       window.addEventListener('keydown', onFirstInteraction as EventListener, opts);
       window.addEventListener('wheel', onFirstInteraction as EventListener, opts);
       window.addEventListener('touchstart', onFirstInteraction as EventListener, opts);
@@ -73,6 +74,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     const removeFirstInteractionListeners = () => {
       const opts: EventListenerOptions = { capture: true };
       window.removeEventListener('pointerdown', onFirstInteraction as EventListener, opts);
+      window.removeEventListener('click', onFirstInteraction as EventListener, opts);
       window.removeEventListener('keydown', onFirstInteraction as EventListener, opts);
       window.removeEventListener('wheel', onFirstInteraction as EventListener, opts);
       window.removeEventListener('touchstart', onFirstInteraction as EventListener, opts);
