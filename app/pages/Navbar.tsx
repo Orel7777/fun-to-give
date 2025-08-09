@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Menu } from "lucide-react";
 import { motion } from "framer-motion";
@@ -21,6 +21,85 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
   // בדיקה אם זה מובייל
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
   const [isSoundOn, setIsSoundOn] = useState<boolean>(true);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Initialize audio and attempt autoplay on mount
+  useEffect(() => {
+    // Ensure single init on client
+    if (typeof window === 'undefined') return;
+    if (!audioRef.current) {
+      const audio = new Audio('/shortSong.mp3');
+      audio.loop = true;
+      audio.preload = 'auto';
+      audio.volume = 1;
+      audioRef.current = audio;
+    }
+
+    const audio = audioRef.current!;
+
+    const tryPlay = async () => {
+      try {
+        await audio.play();
+        // If playback succeeds, ensure state reflects it
+        setIsSoundOn(true);
+        removeFirstInteractionListeners();
+      } catch (_) {
+        // Autoplay blocked: wait for first user interaction
+        setIsSoundOn(false);
+        addFirstInteractionListeners();
+      }
+    };
+
+    const onFirstInteraction = async () => {
+      try {
+        await audio.play();
+        setIsSoundOn(true);
+      } catch (_) {
+        // keep off if still blocked
+        setIsSoundOn(false);
+      }
+      removeFirstInteractionListeners();
+    };
+
+    const addFirstInteractionListeners = () => {
+      const opts: AddEventListenerOptions = { once: true, capture: true };
+      window.addEventListener('pointerdown', onFirstInteraction as EventListener, opts);
+      window.addEventListener('keydown', onFirstInteraction as EventListener, opts);
+      window.addEventListener('wheel', onFirstInteraction as EventListener, opts);
+      window.addEventListener('touchstart', onFirstInteraction as EventListener, opts);
+      window.addEventListener('app:ready', onFirstInteraction as EventListener, opts);
+    };
+
+    const removeFirstInteractionListeners = () => {
+      const opts: EventListenerOptions = { capture: true };
+      window.removeEventListener('pointerdown', onFirstInteraction as EventListener, opts);
+      window.removeEventListener('keydown', onFirstInteraction as EventListener, opts);
+      window.removeEventListener('wheel', onFirstInteraction as EventListener, opts);
+      window.removeEventListener('touchstart', onFirstInteraction as EventListener, opts);
+      window.removeEventListener('app:ready', onFirstInteraction as EventListener, opts);
+    };
+
+    // Attempt autoplay only once on mount
+    tryPlay();
+
+    return () => {
+      removeFirstInteractionListeners();
+    };
+  }, []);
+
+  // React to toggle changes to play/pause
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (isSoundOn) {
+      audio.play().catch(() => {
+        // If play fails, revert state
+        setIsSoundOn(false);
+      });
+    } else {
+      audio.pause();
+    }
+  }, [isSoundOn]);
 
   const menuItems = [
     { 
@@ -485,14 +564,14 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                   <g fill="#f5a383">
                     <path d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472
                       c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"/>
-                    <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594l233.938,233.938
+                    <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594ל233.938,233.938
                       c4.312,4.312,11.297,4.312,15.594,0C385.078,376.469,385.078,369.484,380.766,365.172z"/>
                     <g>
                       <path d="M352,325.094V166.109c0-19.75-3.828-27.797-20.859-17.812l-97.266,58.672L352,325.094z"/>
-                      <path d="M181.094,208H168c-4.422,0-8,3.578-8,8v80c0,4.422,3.578,8,8,8h67.5l95.641,59.719c3.891,2.281,7.031,3.5,9.656,3.984
+                      <path d="M181.094,208H168c-4.422,0-8,3.578-8,8v80c0,4.422,3.578,8,8,8h67.5ל95.641,59.719c3.891,2.281,7.031,3.5,9.656,3.984
                         L181.094,208z"/>
                     </g>
-                    <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594l233.938,233.938
+                    <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594ל233.938,233.938
                       c4.312,4.312,11.297,4.312,15.594,0C385.078,376.469,385.078,369.484,380.766,365.172z"/>
                   </g>
                 )}
