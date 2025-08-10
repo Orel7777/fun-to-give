@@ -83,7 +83,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                     width: '100%',
                     height: 'auto'
                   }}
-                  className="object-contain"
+                  className="object-fill"
                 />
               </div>
             </div>

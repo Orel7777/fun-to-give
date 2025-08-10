@@ -357,7 +357,7 @@ const ScrollExpandMedia = ({
                   width: `${mediaWidth}px`,
                   height: `${mediaHeight}px`,
                   maxWidth: '95vw',
-                  maxHeight: '85vh',
+                  maxHeight: '92vh',
                   boxShadow: '0px 0px 50px rgba(0, 0, 0, 0.3)',
                 }}
                 ref={mediaRef}
@@ -395,7 +395,14 @@ const ScrollExpandMedia = ({
                       />
                     </div>
                   ) : (
-                    <div className='relative w-full h-full pointer-events-auto bg-black rounded-xl overflow-visible'>
+                    <div
+                      className='relative w-full h-full pointer-events-auto rounded-xl overflow-visible'
+                      style={{
+                        padding: '6px',
+                        background: 'linear-gradient(135deg, #98c5b1, #eb9c7d, #dac8b4)',
+                        borderRadius: '0.75rem'
+                      }}
+                    >
                       {/* Top gradient positioned ABOVE the video box (outside) - full page width, blurred */}
                       <div
                         aria-hidden
@@ -419,7 +426,7 @@ const ScrollExpandMedia = ({
                         loop
                         playsInline
                         preload='auto'
-                        className='w-full h-full object-contain'
+                        className='w-full h-full object-cover lg:object-contain rounded-xl'
                         onClick={async (e) => {
                           e.stopPropagation();
                           const v = videoRef.current;
@@ -447,13 +454,13 @@ const ScrollExpandMedia = ({
                       {!isPlaying && (
                         <div className='absolute inset-0 z-40 flex items-center justify-center pointer-events-none'>
                           <div className='flex items-center justify-center gap-6'>
-                            <span className='text-white/90 font-bold uppercase tracking-widest text-5xl md:text-7xl lg:text-8xl select-none'>
-                              PLAY
+                            <span className='[color:#dac8b4] font-bold uppercase tracking-widest text-5xl md:text-7xl lg:text-8xl select-none'>
+                              REEL
                             </span>
                             {/* Spacer width equal to play button to keep words on sides */}
                             <div className='w-14 h-14' />
-                            <span className='text-white/90 font-bold uppercase tracking-widest text-5xl md:text-7xl lg:text-8xl select-none'>
-                              REEL
+                            <span className='[color:#dac8b4] font-bold uppercase tracking-widest text-5xl md:text-7xl lg:text-8xl select-none'>
+                              PLAY
                             </span>
                           </div>
                         </div>
@@ -497,10 +504,15 @@ const ScrollExpandMedia = ({
                                 } catch {}
                               }
                             }}
-                            className='w-14 h-14 rounded-full bg-white/90 flex items-center justify-center shadow-lg hover:bg-white transition pointer-events-auto z-[60]'
+                            className='w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition pointer-events-auto z-[60]'
+                            style={{ backgroundColor: '#eb9c7d' }}
+                            onMouseEnter={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(1.07)'; el.style.backgroundColor='#98c5b1'; }}
+                            onMouseLeave={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(1)'; el.style.backgroundColor='#eb9c7d'; }}
+                            onMouseDown={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(0.95)'; el.style.backgroundColor='#98c5b1'; }}
+                            onMouseUp={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(1.03)'; el.style.backgroundColor='#98c5b1'; }}
                           >
                             {/* Play icon */}
-                            <svg width='20' height='20' viewBox='0 0 24 24' fill='currentColor' className='text-black'>
+                            <svg width='20' height='20' viewBox='0 0 24 24' fill='currentColor' className='text-white'>
                               <path d='M8 5v14l11-7z' />
                             </svg>
                           </button>
@@ -521,10 +533,15 @@ const ScrollExpandMedia = ({
                                 await v.play();
                               } catch {}
                             }}
-                            className='w-14 h-14 rounded-full bg-white/90 flex items-center justify-center shadow-lg hover:bg-white transition pointer-events-auto z-[60]'
+                            className='w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition pointer-events-auto z-[60]'
+                            style={{ backgroundColor: '#eb9c7d' }}
+                            onMouseEnter={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(1.07)'; el.style.backgroundColor='#98c5b1'; }}
+                            onMouseLeave={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(1)'; el.style.backgroundColor='#eb9c7d'; }}
+                            onMouseDown={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(0.95)'; el.style.backgroundColor='#98c5b1'; }}
+                            onMouseUp={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(1.03)'; el.style.backgroundColor='#98c5b1'; }}
                           >
                             {/* Speaker icon */}
-                            <svg width='22' height='22' viewBox='0 0 24 24' fill='currentColor' className='text-black'>
+                            <svg width='22' height='22' viewBox='0 0 24 24' fill='currentColor' className='text-white'>
                               <path d='M3 10v4h4l5 5V5L7 10H3z'></path>
                               <path d='M16 7c1.5 1.5 1.5 8.5 0 10' fill='none' stroke='currentColor' strokeWidth='2' />
                               <path d='M19 4c3 3 3 14 0 17' fill='none' stroke='currentColor' strokeWidth='2' />
@@ -532,7 +549,8 @@ const ScrollExpandMedia = ({
                           </button>
                         )}
 
-                        {/* Stop button removed per request */}
+                        {/* Stop button removed per request */
+                        }
 
                         {/* Bottom gradient positioned BELOW the video box (outside) - full page width, blurred */}
                         <div

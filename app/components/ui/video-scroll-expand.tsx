@@ -271,10 +271,11 @@ const VideoScrollExpand = ({
         <motion.div
           className="overflow-hidden relative mx-auto rounded-2xl shadow-2xl cursor-pointer"
           style={{
-            width: isMobile ? `${Math.max(videoScale * 90, 85)}vw` : `${videoScale * 80}vw`,
-            height: isMobile ? `${Math.max(videoScale * 50, 48)}vw` : `${videoScale * 45}vw`,
-            maxWidth: isMobile ? '95vw' : '1200px',
-            maxHeight: isMobile ? '53vw' : '675px',
+            // Mobile: full-bleed width with strict 16:9 height to avoid letterboxing
+            width: isMobile ? `${Math.min(100, Math.max(videoScale * 100, 92))}vw` : `${Math.min(100, Math.max(videoScale * 100, 85))}vw`,
+            height: isMobile ? `${Math.max(videoScale * 56.25, 56.25)}vw` : `${Math.max(videoScale * 56.25, 40)}vw`, // keep 16:9 on desktop too
+            maxWidth: isMobile ? '100vw' : '100vw',
+            maxHeight: isMobile ? 'none' : 'none',
             minWidth: isMobile ? '320px' : '300px',
             minHeight: isMobile ? '180px' : '169px',
             pointerEvents: isMobile && !isPlaying ? 'none' : 'auto' // במובייל - לא מקבל אירועי לחיצה כשהכפתור מוצג
@@ -348,7 +349,7 @@ const VideoScrollExpand = ({
                     backgroundColor: '#f5a383'
                   }}
                 >
-                  <div className="flex justify-center items-center w-full h-full bg-black/30 pointer-events-none">
+                  <div className="flex justify-center items-center w-full h-full bg-transparent pointer-events-none">
                     <div className="p-6 rounded-full shadow-2xl backdrop-blur-sm bg-white/95 pointer-events-none">
                       <svg
                         width="60"
@@ -379,9 +380,12 @@ const VideoScrollExpand = ({
                 x5-video-player-type="h5"
                 x5-video-player-fullscreen="false"
                 style={{
-                  objectFit: 'cover',
+                  objectFit: isMobile ? 'cover' : 'contain',
                   width: '100%',
                   height: '100%',
+                  objectPosition: 'center',
+                  transform: 'none',
+                  transformOrigin: 'center center',
                   pointerEvents: 'none' // לא מקבל אירועי לחיצה
                 }}
                 className={`${
@@ -579,7 +583,7 @@ const VideoScrollExpand = ({
               
               {/* אוברליי */}
               <div 
-                className="absolute inset-0 pointer-events-none bg-black/20"
+                className="absolute inset-0 pointer-events-none bg-transparent"
                 style={{ opacity: 1 - scrollProgress * 0.5 }}
               />
               
