@@ -10,6 +10,23 @@ import {
 } from 'react';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { createPortal } from 'react-dom';
+
+// Fullscreen API types for different browsers
+interface FullscreenDocument extends Document {
+  webkitFullscreenElement?: Element | null;
+  mozFullScreenElement?: Element | null;
+  msFullscreenElement?: Element | null;
+  webkitExitFullscreen?: () => Promise<void>;
+  mozCancelFullScreen?: () => Promise<void>;
+  msExitFullscreen?: () => Promise<void>;
+}
+
+interface FullscreenVideoElement extends HTMLVideoElement {
+  webkitRequestFullscreen?: () => Promise<void>;
+  mozRequestFullScreen?: () => Promise<void>;
+  msRequestFullscreen?: () => Promise<void>;
+}
 
 interface ScrollExpandMediaProps {
   mediaType?: 'video' | 'image';
@@ -50,10 +67,152 @@ const ScrollExpandMedia = ({
   const [isCapturing, setIsCapturing] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(true);
+  const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  
+  // Debug: log when isFullscreen changes
+  useEffect(() => {
+    console.log('isFullscreen changed to:', isFullscreen);
+  }, [isFullscreen]);
 
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const mediaRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const modalVideoRef = useRef<HTMLVideoElement | null>(null);
+  const preloadModalRef = useRef<HTMLVideoElement | null>(null);
+  const [isModalPlaying, setIsModalPlaying] = useState<boolean>(true);
+
+  // Fullscreen handling - try native API first, fallback to modal
+  const requestFs = async (): Promise<void> => {
+    console.log('requestFs called!');
+    const video = videoRef.current as FullscreenVideoElement;
+    if (!video) {
+      console.log('No video element found!');
+      return;
+    }
+    
+    // For mobile devices, always use modal fallback
+    if (window.innerWidth < 768) {
+      console.log('Mobile device detected, using modal fallback');
+      try { video.pause(); } catch {}
+      console.log('Setting isFullscreen to true');
+      setIsFullscreen(true);
+      return;
+    }
+    
+    try {
+      // Try native fullscreen API first (desktop only)
+      if (video.requestFullscreen) {
+        await video.requestFullscreen();
+        return;
+      } else if (video.webkitRequestFullscreen) {
+        await video.webkitRequestFullscreen();
+        return;
+      } else if (video.mozRequestFullScreen) {
+        await video.mozRequestFullScreen();
+        return;
+      } else if (video.msRequestFullscreen) {
+        await video.msRequestFullscreen();
+        return;
+      }
+    } catch (error) {
+      console.log('Native fullscreen failed, using modal fallback');
+    }
+    
+    // Fallback to modal-style fullscreen
+    try { video.pause(); } catch {}
+    setIsFullscreen(true);
+  };
+  
+  const exitFs = async (): Promise<void> => {
+    const doc = document as FullscreenDocument;
+    // Try to exit native fullscreen first
+    if (document.fullscreenElement || doc.webkitFullscreenElement || 
+        doc.mozFullScreenElement || doc.msFullscreenElement) {
+      try {
+        if (document.exitFullscreen) {
+          await document.exitFullscreen();
+          return;
+        } else if (doc.webkitExitFullscreen) {
+          await doc.webkitExitFullscreen();
+          return;
+        } else if (doc.mozCancelFullScreen) {
+          await doc.mozCancelFullScreen();
+          return;
+        } else if (doc.msExitFullscreen) {
+          await doc.msExitFullscreen();
+          return;
+        }
+      } catch (error) {
+        console.log('Native fullscreen exit failed');
+      }
+    }
+    
+    // Fallback to modal exit
+    const src = modalVideoRef.current;
+    const dst = videoRef.current;
+    if (src && dst) {
+      try { dst.currentTime = src.currentTime || 0; } catch {}
+      try { await ensureCanPlay(dst); await dst.play(); } catch {}
+    }
+    setIsFullscreen(false);
+  };
+
+  // Lock body scroll while dialog open and sync modal video instantly
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const body = document.body;
+    const prevOverflow = body.style.overflow;
+    const run = async () => {
+      if (isFullscreen) {
+        body.style.overflow = 'hidden';
+        const src = videoRef.current;
+        const dst = modalVideoRef.current;
+        if (dst) {
+          try {
+            if (src) dst.currentTime = src.currentTime || 0;
+            dst.muted = isMuted;
+            await ensureCanPlay(dst);
+            await dst.play();
+          } catch {}
+        }
+      } else {
+        body.style.overflow = prevOverflow;
+      }
+    };
+    run();
+    return () => { body.style.overflow = prevOverflow; };
+  }, [isFullscreen, isMuted]);
+
+  // Preload modal video in background for instant open
+  useEffect(() => {
+    const v = preloadModalRef.current;
+    if (!v) return;
+    try { v.preload = 'auto'; v.load(); } catch {}
+  }, []);
+
+  // Listen for fullscreen changes to sync state
+  useEffect(() => {
+    const doc = document as FullscreenDocument;
+    const handleFullscreenChange = () => {
+      if (!document.fullscreenElement && !doc.webkitFullscreenElement && 
+          !doc.mozFullScreenElement && !doc.msFullscreenElement) {
+        // Exited fullscreen
+        setIsFullscreen(false);
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+    document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+    document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener('webkitfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('mozfullscreenchange', handleFullscreenChange);
+      document.removeEventListener('MSFullscreenChange', handleFullscreenChange);
+    };
+  }, []);
 
   // Wait for video to be ready to play
   const ensureCanPlay = async (v: HTMLVideoElement): Promise<void> => {
@@ -309,9 +468,10 @@ const ScrollExpandMedia = ({
   // Title overlay removed; not splitting title into words
 
   return (
+    <>
     <div
       ref={sectionRef}
-      className='transition-colors duration-700 ease-in-out overflow-x-hidden'
+      className='overflow-x-hidden transition-colors duration-700 ease-in-out'
     >
       <section className='relative flex flex-col items-center justify-start min-h-[100dvh]'>
         <div className='relative w-full flex flex-col items-center min-h-[100dvh]'>
@@ -349,17 +509,91 @@ const ScrollExpandMedia = ({
             <div className='absolute inset-0 bg-black/10' />
           </motion.div>
 
-          <div className='container mx-auto flex flex-col items-center justify-start relative z-10'>
+          <div className='container flex relative z-10 flex-col justify-start items-center mx-auto'>
             <div className='flex flex-col items-center justify-center w-full h-[100dvh] relative'>
+              {/* Backdrop for modal-style fullscreen */}
+              {isFullscreen && (
+                <div className='fixed inset-0 z-[9998] bg-black/70 md:hidden' aria-hidden />
+              )}
+              
+              {/* Fullscreen button - positioned outside the scroll container */}
+              {isPlaying && !isFullscreen && (
+                <>
+                  {/* Mobile Fullscreen button */}
+                  <button
+                    type='button'
+                    aria-label='מסך מלא'
+                    className='md:hidden absolute bottom-8 left-1/2 -translate-x-1/2 px-5 py-2 rounded-full shadow-lg text-white font-medium pointer-events-auto z-[9999]
+                               bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
+                               transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
+                    onClick={async (e) => { 
+                      e.stopPropagation(); 
+                      e.preventDefault();
+                      console.log('Mobile fullscreen button clicked!');
+                      await requestFs(); 
+                    }}
+                  >
+                    מסך מלא
+                  </button>
+                  
+                  {/* Desktop Fullscreen button */}
+                  <button
+                    type='button'
+                    aria-label='מסך מלא'
+                    className='hidden md:block absolute bottom-8 right-8 px-4 py-2 rounded-full shadow-lg text-white font-medium pointer-events-auto z-[9999]
+                               bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
+                               transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
+                    onClick={async (e) => { 
+                      e.stopPropagation(); 
+                      e.preventDefault();
+                      await requestFs(); 
+                    }}
+                  >
+                    מסך מלא
+                  </button>
+                </>
+              )}
+              
+              {/* Exit Fullscreen button - positioned outside the scroll container */}
+              {isFullscreen && (
+                <button
+                  type='button'
+                  aria-label='יציאה'
+                  className='absolute top-4 right-4 px-3 py-2 rounded-full shadow-lg text-white font-medium z-[9999]
+                             bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
+                             transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
+                  onClick={async (e) => { 
+                    e.stopPropagation(); 
+                    e.preventDefault();
+                    await exitFs(); 
+                  }}
+                >
+                  יציאה
+                </button>
+              )}
               <div
-                className='absolute z-0 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 transition-none rounded-2xl'
-                style={{
-                  width: `${mediaWidth}px`,
-                  height: `${mediaHeight}px`,
-                  maxWidth: '95vw',
-                  maxHeight: '92vh',
-                  boxShadow: '0px 0px 50px rgba(0, 0, 0, 0.3)',
-                }}
+                className={
+                  isFullscreen
+                    ? 'flex fixed inset-0 justify-center items-center p-0 rounded-2xl transition-none z-[9999] md:hidden'
+                    : 'absolute top-1/2 left-1/2 z-0 rounded-2xl transition-none transform -translate-x-1/2 -translate-y-1/2'
+                }
+                style={
+                  isFullscreen
+                    ? {
+                        width: '100vw',
+                        height: '100dvh',
+                        maxWidth: '100vw',
+                        maxHeight: '100dvh',
+                        boxShadow: '0px 0px 50px rgba(0, 0, 0, 0.3)',
+                      }
+                    : {
+                        width: `${mediaWidth}px`,
+                        height: `${mediaHeight}px`,
+                        maxWidth: '95vw',
+                        maxHeight: '92vh',
+                        boxShadow: '0px 0px 50px rgba(0, 0, 0, 0.3)',
+                      }
+                }
                 ref={mediaRef}
               >
                 {mediaType === 'video' ? (
@@ -388,7 +622,7 @@ const ScrollExpandMedia = ({
                       ></div>
 
                       <motion.div
-                        className='absolute inset-0 bg-black/30 rounded-xl'
+                        className='absolute inset-0 rounded-xl bg-black/30'
                         initial={{ opacity: 0.7 }}
                         animate={{ opacity: 0.5 - scrollProgress * 0.3 }}
                         transition={{ duration: 0.2 }}
@@ -396,7 +630,7 @@ const ScrollExpandMedia = ({
                     </div>
                   ) : (
                     <div
-                      className='relative w-full h-full pointer-events-auto rounded-xl overflow-visible'
+                      className='overflow-visible relative w-full h-full rounded-xl pointer-events-auto'
                       style={{
                         padding: '6px',
                         background: 'linear-gradient(135deg, #98c5b1, #eb9c7d, #dac8b4)',
@@ -406,7 +640,7 @@ const ScrollExpandMedia = ({
                       {/* Top gradient positioned ABOVE the video box (outside) - full page width, blurred */}
                       <div
                         aria-hidden
-                        className='pointer-events-none absolute blur-lg'
+                        className='absolute blur-lg pointer-events-none'
                         style={{
                           bottom: '100%',
                           height: gradientHeight,
@@ -426,7 +660,7 @@ const ScrollExpandMedia = ({
                         loop
                         playsInline
                         preload='auto'
-                        className='w-full h-full object-cover lg:object-contain rounded-xl'
+                        className={`w-full h-full ${isFullscreen ? 'object-contain' : 'object-cover lg:object-contain'} rounded-xl cursor-pointer`}
                         onClick={async (e) => {
                           e.stopPropagation();
                           const v = videoRef.current;
@@ -445,43 +679,47 @@ const ScrollExpandMedia = ({
                       />
                       {/* overlay gradient */}
                       <motion.div
-                        className='absolute inset-0 bg-black/30 rounded-xl pointer-events-none'
+                        className='absolute inset-0 rounded-xl pointer-events-none bg-black/30'
                         initial={{ opacity: 0.7 }}
                         animate={{ opacity: 0.5 - scrollProgress * 0.3 }}
                         transition={{ duration: 0.2 }}
                       />
                       {/* Lusion-style big text overlay when not playing - split words with center gap for button */}
                       {!isPlaying && (
-                        <div className='absolute inset-0 z-40 flex items-center justify-center pointer-events-none'>
-                          <div className='flex items-center justify-center gap-6'>
-                            <span className='[color:#dac8b4] font-bold uppercase tracking-widest text-5xl md:text-7xl lg:text-8xl select-none'>
-                              REEL
-                            </span>
-                            {/* Spacer width equal to play button to keep words on sides */}
-                            <div className='w-14 h-14' />
-                            <span className='[color:#dac8b4] font-bold uppercase tracking-widest text-5xl md:text-7xl lg:text-8xl select-none'>
-                              PLAY
-                            </span>
+                        <>
+                          {/* Mobile: vertical text above and below the centered play button */}
+                          <div className='flex absolute inset-0 z-40 justify-center items-center pointer-events-none md:hidden'>
+                            <div className='flex flex-col gap-3 justify-center items-center'>
+                              <span className='[color:#dac8b4] font-bold uppercase tracking-widest text-4xl sm:text-5xl select-none'>
+                                PLAY
+                              </span>
+                              {/* Spacer height equal to play button to keep words around it */}
+                              <div className='w-14 h-14' />
+                              <span className='[color:#dac8b4] font-bold uppercase tracking-widest text-4xl sm:text-5xl select-none'>
+                                REEL
+                              </span>
+                            </div>
                           </div>
-                        </div>
+
+                          {/* Desktop: keep side-by-side layout */}
+                          <div className='hidden absolute inset-0 z-40 justify-center items-center pointer-events-none md:flex'>
+                            <div className='flex gap-6 justify-center items-center'>
+                              <span className='[color:#dac8b4] font-bold uppercase tracking-widest text-5xl md:text-7xl lg:text-8xl select-none'>
+                                REEL
+                              </span>
+                              {/* Spacer width equal to play button to keep words on sides */}
+                              <div className='w-14 h-14' />
+                              <span className='[color:#dac8b4] font-bold uppercase tracking-widest text-5xl md:text-7xl lg:text-8xl select-none'>
+                                PLAY
+                              </span>
+                            </div>
+                          </div>
+                        </>
                       )}
 
                       {/* Controls overlay */}
                       <div
-                        className='absolute inset-0 flex items-center justify-center z-50 gap-4 pointer-events-auto'
-                        onClick={async (e) => {
-                          // Clicking anywhere on the overlay when playing -> mute audio (keep playing)
-                          e.stopPropagation();
-                          const v = videoRef.current;
-                          if (!v) return;
-                          if (isPlaying) {
-                            if (isMuted) {
-                              try { v.muted = false; setIsMuted(false); await ensureCanPlay(v); await v.play(); } catch {}
-                            } else {
-                              try { v.muted = true; setIsMuted(true); } catch {}
-                            }
-                          }
-                        }}
+                        className='flex absolute inset-0 z-50 gap-4 justify-center items-center pointer-events-none'
                       >
                         {!isPlaying && (
                           <button
@@ -504,12 +742,9 @@ const ScrollExpandMedia = ({
                                 } catch {}
                               }
                             }}
-                            className='w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition pointer-events-auto z-[60]'
-                            style={{ backgroundColor: '#eb9c7d' }}
-                            onMouseEnter={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(1.07)'; el.style.backgroundColor='#98c5b1'; }}
-                            onMouseLeave={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(1)'; el.style.backgroundColor='#eb9c7d'; }}
-                            onMouseDown={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(0.95)'; el.style.backgroundColor='#98c5b1'; }}
-                            onMouseUp={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(1.03)'; el.style.backgroundColor='#98c5b1'; }}
+                            className='w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition pointer-events-auto z-[60]
+                                       bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
+                                       transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
                           >
                             {/* Play icon */}
                             <svg width='20' height='20' viewBox='0 0 24 24' fill='currentColor' className='text-white'>
@@ -518,12 +753,15 @@ const ScrollExpandMedia = ({
                           </button>
                         )}
 
+
+
+
                         {isPlaying && isMuted && (
                           <button
                             aria-label='Unmute'
-                            onPointerDown={(e) => e.stopPropagation()}
                             onClick={async (e) => {
                               e.stopPropagation();
+                              e.preventDefault();
                               const v = videoRef.current;
                               if (!v) return;
                               try {
@@ -533,12 +771,9 @@ const ScrollExpandMedia = ({
                                 await v.play();
                               } catch {}
                             }}
-                            className='w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition pointer-events-auto z-[60]'
-                            style={{ backgroundColor: '#eb9c7d' }}
-                            onMouseEnter={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(1.07)'; el.style.backgroundColor='#98c5b1'; }}
-                            onMouseLeave={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(1)'; el.style.backgroundColor='#eb9c7d'; }}
-                            onMouseDown={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(0.95)'; el.style.backgroundColor='#98c5b1'; }}
-                            onMouseUp={(e) => { const el=e.currentTarget as HTMLButtonElement; el.style.transform='scale(1.03)'; el.style.backgroundColor='#98c5b1'; }}
+                            className='w-14 h-14 rounded-full flex items-center justify-center shadow-lg transition pointer-events-auto z-[60]
+                                       bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
+                                       transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
                           >
                             {/* Speaker icon */}
                             <svg width='22' height='22' viewBox='0 0 24 24' fill='currentColor' className='text-white'>
@@ -555,7 +790,7 @@ const ScrollExpandMedia = ({
                         {/* Bottom gradient positioned BELOW the video box (outside) - full page width, blurred */}
                         <div
                           aria-hidden
-                          className='pointer-events-none absolute blur-lg'
+                          className='absolute blur-lg pointer-events-none'
                           style={{
                             top: '100%',
                             height: gradientHeight,
@@ -576,11 +811,11 @@ const ScrollExpandMedia = ({
                       alt={title || 'Media content'}
                       width={1280}
                       height={720}
-                      className='w-full h-full object-cover rounded-xl'
+                      className='object-cover w-full h-full rounded-xl'
                     />
 
                     <motion.div
-                      className='absolute inset-0 bg-black/50 rounded-xl'
+                      className='absolute inset-0 rounded-xl bg-black/50'
                       initial={{ opacity: 0.7 }}
                       animate={{ opacity: 0.7 - scrollProgress * 0.3 }}
                       transition={{ duration: 0.2 }}
@@ -589,7 +824,7 @@ const ScrollExpandMedia = ({
                 )}
 
                 {(date || scrollToExpand) && (
-                  <div className='flex flex-col items-center text-center relative z-10 mt-4 transition-none pointer-events-none'>
+                  <div className='flex relative z-10 flex-col items-center mt-4 text-center transition-none pointer-events-none'>
                     {date && (
                       <p
                         className='text-2xl text-blue-200'
@@ -600,7 +835,7 @@ const ScrollExpandMedia = ({
                     )}
                     {scrollToExpand && (
                       <p
-                        className='text-blue-200 font-medium text-center'
+                        className='font-medium text-center text-blue-200'
                         style={{ transform: `translateX(${textTranslateX}vw)` }}
                       >
                         {scrollToExpand}
@@ -614,7 +849,7 @@ const ScrollExpandMedia = ({
             </div>
 
             <motion.section
-              className='flex flex-col w-full px-8 py-10 md:px-16 lg:py-20'
+              className='flex flex-col px-8 py-10 w-full md:px-16 lg:py-20'
               initial={{ opacity: 0 }}
               animate={{ opacity: showContent ? 1 : 0 }}
               transition={{ duration: 0.7 }}
@@ -625,6 +860,96 @@ const ScrollExpandMedia = ({
         </div>
       </section>
     </div>
+
+    {isFullscreen && createPortal(
+      <div className='fixed inset-0 z-[10000] flex items-center justify-center bg-black/80'>
+        <div className='relative w-[100vw] h-[100dvh]'>
+          <video
+            ref={modalVideoRef}
+            src={mediaSrc}
+            poster={posterSrc}
+            autoPlay
+            muted={isMuted}
+            loop
+            playsInline
+            preload='auto'
+            className='object-contain w-full h-full bg-black'
+            controls={false}
+            disablePictureInPicture
+            disableRemotePlayback
+            onPlay={() => setIsModalPlaying(true)}
+            onPause={() => setIsModalPlaying(false)}
+          />
+          <button
+            type='button'
+            aria-label='יציאה'
+            className='absolute top-4 right-4 px-3 py-2 rounded-full shadow-lg text-white font-medium
+                       bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
+                       transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
+            onClick={async (e) => { 
+              e.stopPropagation(); 
+              e.preventDefault();
+              await exitFs(); 
+            }}
+          >
+            יציאה
+          </button>
+
+          {/* Controls inside the dialog */}
+          <div className='flex absolute bottom-6 left-1/2 gap-3 items-center -translate-x-1/2'>
+            <button
+              type='button'
+              aria-label='נגן'
+              className='px-4 py-2 rounded-full shadow-lg text-white font-medium
+                         bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
+                         transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
+              onClick={async (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                const v = modalVideoRef.current;
+                if (!v) return;
+                try { await ensureCanPlay(v); await v.play(); } catch {}
+              }}
+            >
+              {isModalPlaying ? 'מנגן' : 'נגן'}
+            </button>
+
+            <button
+              type='button'
+              aria-label='עצור'
+              className='px-4 py-2 rounded-full shadow-lg text-white font-medium
+                         bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
+                         transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                const v = modalVideoRef.current;
+                if (!v) return;
+                try { v.pause(); setIsModalPlaying(false); } catch {}
+              }}
+            >
+              עצור
+            </button>
+          </div>
+
+          {/* Exit to site button inside dialog */}
+          <button
+            type='button'
+            aria-label='יציאה לאתר'
+            className='absolute bottom-6 right-4 px-4 py-2 rounded-full shadow-lg text-white font-medium
+                       bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
+                       transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
+            onClick={async (e) => { 
+              e.stopPropagation(); 
+              e.preventDefault();
+              await exitFs(); 
+            }}
+          >
+            יציאה לאתר
+          </button>
+        </div>
+      </div>, document.body)}
+    </>
   );
 };
 
