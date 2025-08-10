@@ -11,6 +11,7 @@ import {
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { createPortal } from 'react-dom';
+import Loader from '../Loader';
 
 // Fullscreen API types for different browsers
 interface FullscreenDocument extends Document {
@@ -68,6 +69,7 @@ const ScrollExpandMedia = ({
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isMuted, setIsMuted] = useState<boolean>(true);
   const [isFullscreen, setIsFullscreen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   
   // Debug: log when isFullscreen changes
   useEffect(() => {
@@ -93,9 +95,14 @@ const ScrollExpandMedia = ({
     // For mobile devices, always use modal fallback
     if (window.innerWidth < 768) {
       console.log('Mobile device detected, using modal fallback');
+      setIsLoading(true);
       try { video.pause(); } catch {}
       console.log('Setting isFullscreen to true');
       setIsFullscreen(true);
+      // Hide loader after a short delay to show the modal
+      setTimeout(() => {
+        setIsLoading(false);
+      }, 1000);
       return;
     }
     
@@ -552,6 +559,13 @@ const ScrollExpandMedia = ({
                     מסך מלא
                   </button>
                 </>
+              )}
+              
+              {/* Loader for mobile devices */}
+              {isLoading && (
+                <div className='md:hidden fixed inset-0 z-[10001] bg-black/80 flex items-center justify-center'>
+                  <Loader />
+                </div>
               )}
               
               {/* Exit Fullscreen button - positioned outside the scroll container */}
