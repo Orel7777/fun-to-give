@@ -523,7 +523,7 @@ const ScrollExpandMedia = ({
                   <button
                     type='button'
                     aria-label='מסך מלא'
-                    className='md:hidden absolute bottom-8 left-1/2 -translate-x-1/2 px-5 py-2 rounded-full shadow-lg text-white font-medium pointer-events-auto z-[9999]
+                    className='md:hidden absolute bottom-12 left-1/2 -translate-x-1/2 px-5 py-2 rounded-full shadow-lg text-white font-medium pointer-events-auto z-[9999]
                                bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
                                transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
                     onClick={async (e) => { 
@@ -540,7 +540,7 @@ const ScrollExpandMedia = ({
                   <button
                     type='button'
                     aria-label='מסך מלא'
-                    className='hidden md:block absolute bottom-8 right-8 px-4 py-2 rounded-full shadow-lg text-white font-medium pointer-events-auto z-[9999]
+                    className='hidden md:block absolute bottom-12 right-8 px-4 py-2 rounded-full shadow-lg text-white font-medium pointer-events-auto z-[9999]
                                bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
                                transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
                     onClick={async (e) => { 
