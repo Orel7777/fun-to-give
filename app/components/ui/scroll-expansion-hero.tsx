@@ -19,6 +19,7 @@ interface ScrollExpandMediaProps {
   title?: string;
   date?: string;
   scrollToExpand?: string;
+  textBlend?: boolean; // kept for backward compatibility; not used in this component
   children?: ReactNode;
   // When top of media crosses this viewport height fraction, start capture (e.g., 0.7 => 70% of viewport)
   activationTopVH?: number;

@@ -1,6 +1,6 @@
 
 "use client";
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { gsap } from 'gsap';
 import { SplashCursor } from './components';
 import NavigationBar from './pages/Navbar';
@@ -17,9 +17,15 @@ export default function Home() {
     setIsLoading(false);
     
     // אפקטי GSAP לתוכן הראשי
-    gsap.fromTo(navbarRef.current,
+    gsap.fromTo(
+      navbarRef.current,
       { y: -50 },
-      { y: 0, duration: 1, ease: "power2.out" }
+      { y: 0, duration: 1, ease: "power2.out", onComplete: () => {
+        if (navbarRef.current) {
+          // Clear inline transforms so the navbar can't remain off-screen
+          gsap.set(navbarRef.current, { clearProps: "transform" });
+        }
+      }}
     );
 
     gsap.fromTo(mainContentRef.current,
@@ -33,17 +39,22 @@ export default function Home() {
     }, 1500);
   };
 
+  // Safety: whenever loading state flips, ensure navbar is at y:0
+  useEffect(() => {
+    if (navbarRef.current) {
+      gsap.set(navbarRef.current, { y: 0 });
+    }
+  }, [isLoading]);
+
   return (
     <div suppressHydrationWarning>
       {/* SplashCursor פעיל תמיד */}
       <SplashCursor />
       
       {isLoading && <LoadPage onLoadComplete={handleLoadComplete} duration={2500} videoPath="כיף לתת מקוצר.mp4" />}
-      {!isLoading && (
-        <div ref={navbarRef}>
-          <NavigationBar />
-        </div>
-      )}
+      <div ref={navbarRef}>
+        <NavigationBar />
+      </div>
 
       <main ref={mainContentRef}>
       {/* className="pt-32" */}
