@@ -146,10 +146,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
         }
         // כפייה לסיום הטעינה
         setProgress(100);
-        setTimeout(() => {
-          setIsVisible(false);
-          onLoadComplete?.();
-        }, 1000);
+        console.log('ממתין שהווידאו יסמן isReady לפני הסתרת הטעינה (מובייל)');
       }, 15000); // 15 שניות timeout במובייל
     } else {
       // בדסקטופ - הוסף timeout בטיחותי כדי למנוע תקיעה
@@ -159,10 +156,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
           cancelAnimationFrame(animationFrameId);
         }
         setProgress(100);
-        setTimeout(() => {
-          setIsVisible(false);
-          onLoadComplete?.();
-        }, 700);
+        console.log('ממתין שהווידאו יסמן isReady לפני הסתרת הטעינה (דסקטופ)');
       }, 12000); // 12 שניות timeout בדסקטופ
     }
 
@@ -217,6 +211,16 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       }
     };
   }, [duration, onLoadComplete]); // הסרת התלות ב-mainVideo
+
+  // אל תסגור את מסך הטעינה עד שהווידאו מוכן
+  useEffect(() => {
+    if (progress >= 100) {
+      if (videoStatusRef.current.isReady) {
+        setIsVisible(false);
+        onLoadComplete?.();
+      }
+    }
+  }, [progress, onLoadComplete]);
 
   if (!isVisible) {
     return null;

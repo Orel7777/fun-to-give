@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import { VideoScrollExpand, HorizontalScrollCarousel } from '../components';
+import { HorizontalScrollCarousel } from '../components';
+import ScrollExpandMedia from '../components/ui/scroll-expansion-hero';
 import FamiliesTestimonials from './Testimonials';
 import { useVideo } from '../contexts/VideoContext';
 import { PulseBeamsFirstDemo } from '../components/call to action/demo';
@@ -164,8 +165,8 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                     ease: "easeInOut", 
                     times: [
                       0,      // נקודה 1: התחלה (0%)
-                      0.125,  // נקודה 2: ימינה למעלה (12.5%)
-                      0.25,   // נקודה 3: ימינה (25%)
+                      0.02,  // נקודה 2: ימינה למעלה (12.5%)
+                      0.15,   // נקודה 3: ימינה (25%)
                       0.375,  // נקודה 4: ימינה למעלה (37.5%)
                       0.5,    // נקודה 5: מרכז למעלה (50%)
                       0.625,  // נקודה 6: שמאלה למעלה (62.5%)
@@ -255,61 +256,67 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       )}
       
       {!loading && !error && isReady && (
-        <VideoScrollExpand
-          usePreloadedVideo={true}
+        <ScrollExpandMedia
+          mediaType="video"
+          mediaSrc={mainVideo.videoUrl}
+          bgImageSrc="/pictures/1.JPG"
+          title="עמותת כיף לתת"
+          date="כיף לתת"
+          scrollToExpand="גלול/י להרחבה"
+          textBlend
         >
-        <div className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8 -pt-16 sm:pt-0 md:pt-2 lg:pt-8">
-          {/* תמונה עם אנימציה */}
-          <div className="flex justify-center mb-0 sm:mb-2">
-            <div className="relative group">
-              {/* רקע זוהר */}
-              <div className="absolute inset-0 bg-gradient-to-r from-[#f5a383] to-[#9acdbe] rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500 animate-pulse"></div>
-              
-              {/* מיכל התמונה עם אנימציה */}
-              <div className="relative transition-all duration-700 transform hover:scale-110 hover:rotate-3 active:scale-95"
-                   style={{
-                     animation: 'coinGlow 4s ease-in-out infinite',
-                   }}>
-                <Image
-                  src="/Hand with coin.png"
-                  alt="יד עם מטבע - סמל הנתינה"
-                  width={300}
-                  height={300}
-                  className="object-contain w-64 h-64 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-80 lg:h-80"
-                  style={{
-                    animation: 'coinFloat 4s ease-in-out infinite',
-                  }}
-                />
+          <div className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8 -pt-16 sm:pt-0 md:pt-2 lg:pt-8">
+            {/* תמונה עם אנימציה */}
+            <div className="flex justify-center mb-0 sm:mb-2">
+              <div className="relative group">
+                {/* רקע זוהר */}
+                <div className="absolute inset-0 bg-gradient-to-r from-[#f5a383] to-[#9acdbe] rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500 animate-pulse"></div>
                 
-                {/* אפקט זוהר מסביב */}
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#f5a383]/20 to-[#9acdbe]/20 blur-md animate-ping"></div>
+                {/* מיכל התמונה עם אנימציה */}
+                <div className="relative transition-all duration-700 transform hover:scale-110 hover:rotate-3 active:scale-95"
+                     style={{
+                       animation: 'coinGlow 4s ease-in-out infinite',
+                     }}>
+                  <Image
+                    src="/Hand with coin.png"
+                    alt="יד עם מטבע - סמל הנתינה"
+                    width={300}
+                    height={300}
+                    className="object-contain w-64 h-64 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-80 lg:h-80"
+                    style={{
+                      animation: 'coinFloat 4s ease-in-out infinite',
+                    }}
+                  />
                 
-                {/* חלקיקים זוהרים */}
-                <div className="absolute -top-2 -left-2 w-4 h-4 bg-[#f5a383] rounded-full opacity-60 animate-ping" style={{ animationDelay: '0s' }}></div>
-                <div className="absolute -top-4 -right-4 w-3 h-3 bg-[#9acdbe] rounded-full opacity-60 animate-ping" style={{ animationDelay: '1s' }}></div>
-                <div className="absolute -bottom-2 -right-2 w-2 h-2 bg-[#f5a383] rounded-full opacity-60 animate-ping" style={{ animationDelay: '2s' }}></div>
-                <div className="absolute -bottom-4 -left-4 w-3 h-3 bg-[#9acdbe] rounded-full opacity-60 animate-ping" style={{ animationDelay: '3s' }}></div>
+                  {/* אפקט זוהר מסביב */}
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#f5a383]/20 to-[#9acdbe]/20 blur-md animate-ping"></div>
+                
+                  {/* חלקיקים זוהרים */}
+                  <div className="absolute -top-2 -left-2 w-4 h-4 bg-[#f5a383] rounded-full opacity-60 animate-ping" style={{ animationDelay: '0s' }}></div>
+                  <div className="absolute -top-4 -right-4 w-3 h-3 bg-[#9acdbe] rounded-full opacity-60 animate-ping" style={{ animationDelay: '1s' }}></div>
+                  <div className="absolute -bottom-2 -right-2 w-2 h-2 bg-[#f5a383] rounded-full opacity-60 animate-ping" style={{ animationDelay: '2s' }}></div>
+                  <div className="absolute -bottom-4 -left-4 w-3 h-3 bg-[#9acdbe] rounded-full opacity-60 animate-ping" style={{ animationDelay: '3s' }}></div>
+                </div>
               </div>
             </div>
-          </div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-3 sm:mb-4">
-            עמותת כיף לתת
-          </h2>
-          <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
-            מעניקה בשר, עופות, דגים ביצים ויין למאות משפחות באופן קבוע.
-          </p>
-          <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
-            בנוסף, כיף לתת עוזרת לילדים עם מוגבלויות ומשמחת ילדים בבתי חולים.
-          </p>
-          <p className="text-lg sm:text-xl md:text-2xl mt-2 mb-2 sm:mt-3 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
-            הפעילות שלנו מבוצעת מתוך אמונה עמוקה בעקרונות של נתינה, אהבת הזולת ורצון לשמח את האחר.
-          </p>
-          <p className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-relaxed font-semibold">
-            כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
-          </p>
-        </div>
-        </VideoScrollExpand>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-3 sm:mb-4">
+              עמותת כיף לתת
+            </h2>
+            <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+              מעניקה בשר, עופות, דגים ביצים ויין למאות משפחות באופן קבוע.
+            </p>
+            <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+              בנוסף, כיף לתת עוזרת לילדים עם מוגבלויות ומשמחת ילדים בבתי חולים.
+            </p>
+            <p className="text-lg sm:text-xl md:text-2xl mt-2 mb-2 sm:mt-3 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+              הפעילות שלנו מבוצעת מתוך אמונה עמוקה בעקרונות של נתינה, אהבת הזולת ורצון לשמח את האחר.
+            </p>
+            <p className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-relaxed font-semibold">
+              כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
+            </p>
+          </div>
+        </ScrollExpandMedia>
       )}
 
       {/* מרווח גדול בין הטקסט לגלריה */}
