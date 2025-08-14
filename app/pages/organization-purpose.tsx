@@ -2,13 +2,13 @@
 
 import { motion, useScroll, useTransform, useInView } from "framer-motion"
 import { HandHeart, Building2, Target } from "lucide-react"
-import { Card, CardContent } from "../components/ui/card"
+// import { Card, CardContent } from "../components/ui/card" // Unused
 import { Button } from "../components/ui/MovingBorder"
 import Lottie from "lottie-react"
 import animationA from "../../public/animation-json/A.json"
 import animationB from "../../public/animation-json/B.json"
 import animationC from "../../public/animation-json/C.json"
-import { useRef, useState, useEffect } from "react"
+import { useRef } from "react"
 
 export default function OrganizationPurpose() {
   const ref = useRef(null)
@@ -180,7 +180,7 @@ export default function OrganizationPurpose() {
           animate={isInView ? "visible" : "hidden"}
         >
           {purposes.map((purpose, index) => {
-            const IconComponent = purpose.icon
+            // const IconComponent = purpose.icon // Unused for now
             return (
               <motion.div
                 key={index}

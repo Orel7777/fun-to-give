@@ -1,4 +1,4 @@
-import { Clock, Mail, MapPin, Phone, MessageCircle } from "lucide-react"
+import { Mail, MapPin, Phone } from "lucide-react"
 import Script from "next/script"
 
 export default function Footer() {

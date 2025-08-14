@@ -18,14 +18,12 @@ export default function OrganizationStory() {
     },
   }
 
-  const iconBounce = {
-    animate: {
-      y: [0, -10, 0],
-      transition: {
-        duration: 2,
-        repeat: Number.POSITIVE_INFINITY,
-        ease: "easeInOut",
-      },
+  const iconBounceAnimation = {
+    y: [0, -10, 0],
+    transition: {
+      duration: 2,
+      repeat: Infinity,
+      ease: "easeInOut",
     },
   }
 
@@ -168,7 +166,7 @@ export default function OrganizationStory() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
                   >
-                    העמותה הוקמה על שם של יוסף ומסעדה כנפו ז"ל, שעלו לארץ הקדישו את חייהם לגידול 14 ילדים, שאיתם הם
+                    העמותה הוקמה על שם של יוסף ומסעדה כנפו ז&quot;ל, שעלו לארץ הקדישו את חייהם לגידול 14 ילדים, שאיתם הם
                     חינכו לערכים של אהבת הזולת ואהבת הארץ.
                   </motion.p>
                 </div>
@@ -226,7 +224,7 @@ export default function OrganizationStory() {
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.6, delay: 0.4 }}
                     >
-                      את זכרה של <strong>מרים אלמליח ז"ל</strong>, שהקדישה את חייה לגידול ילדיה ושמשה כוח עוז בבית
+                      את זכרה של <strong>מרים אלמליח ז&quot;ל</strong>, שהקדישה את חייה לגידול ילדיה ושמשה כוח עוז בבית
                       החולים סורוקה במסירות לב ואהבת אדם.
                     </motion.p>
                   </div>
@@ -269,8 +267,8 @@ export default function OrganizationStory() {
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.6, delay: 0.6 }}
                     >
-                      את זכרו של <strong>פרופסור יעקב ביכלר ז"ל</strong>, ששירת את ישראל בכבוד ונתן בסתר לנצרכים ביחד עם
-                      אשתו יהודית ביכלר ז"ל.
+                      את זכרו של <strong>פרופסור יעקב ביכלר ז&quot;ל</strong>, ששירת את ישראל בכבוד ונתן בסתר לנצרכים ביחד עם
+                      אשתו יהודית ביכלר ז&quot;ל.
                     </motion.p>
                   </div>
                 </Card>
@@ -289,7 +287,7 @@ export default function OrganizationStory() {
                    animate={{ opacity: 1, scale: 1 }}
                    transition={{ duration: 0.6, delay: 0.2 }}
                  >
-                   "ואהבת לרעך כמוך"
+                   &quot;ואהבת לרעך כמוך&quot;
                  </motion.h2>
                                  <motion.div
                    className="space-y-4 text-lg leading-relaxed text-gray-800"
