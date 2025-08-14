@@ -11,9 +11,19 @@ interface VideoState {
   isReady: boolean;
 }
 
+interface VideoItemState extends VideoState {
+  path: string;
+}
+
+type VideosMap = Record<string, VideoItemState>;
+
 interface VideoContextType {
   mainVideo: VideoState;
   preloadVideo: (videoPath: string) => Promise<void>;
+  // New aggregate APIs
+  videos: VideosMap;
+  preloadVideos: (videoPaths: string[], onProgress?: (progress: number) => void) => Promise<void>;
+  overallProgress: number; // 0..1 based on count of completed items
 }
 
 const VideoContext = createContext<VideoContextType | undefined>(undefined);
@@ -39,6 +49,10 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
   });
   const loadingVideoRef = React.useRef<string | null>(null);
 
+  // New: track multiple videos and aggregate progress
+  const [videos, setVideos] = useState<VideosMap>({});
+  const [overallProgress, setOverallProgress] = useState(0);
+
   const preloadVideo = useCallback(async (videoPath: string) => {
     // מניעת טעינה כפולה
     if (loadingVideoRef.current === videoPath || mainVideo.isReady) {
@@ -53,17 +67,22 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
       
       const videoRef = ref(storage, videoPath);
       const url = await getDownloadURL(videoRef);
-      
-      // יצירת אלמנט וידאו לטעינה מוקדמת
+
+      // הורדה מלאה מראש כדי למנוע תקיעות
+      const resp = await fetch(url);
+      const blob = await resp.blob();
+      const objectUrl = URL.createObjectURL(blob);
+
+      // יצירת אלמנט וידאו לטעינה מוקדמת מה-blob המלא
       const video = document.createElement('video');
       const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-      video.preload = isMobile ? 'metadata' : 'auto'; // במובייל - רק מטאדטה, בדסקטופ - הכל
+      video.preload = 'auto';
       video.muted = true; // הגדרת muted למניעת בעיות autoplay
       if (isMobile) {
         video.setAttribute('playsinline', 'true');
         video.setAttribute('webkit-playsinline', 'true');
       }
-      video.src = url;
+      video.src = objectUrl;
       
       // המתנה לטעינה מלאה של הוידאו
       await new Promise((resolve, reject) => {
@@ -87,10 +106,6 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
         // המתנה לטעינת מטאדטה
         video.onloadedmetadata = () => {
           console.log('📊 מטאדטה של הוידאו נטענה');
-          // במובייל - אם זה רק מטאדטה, נחשב מוכן אבל נמתין עוד קצת
-          if (isMobile && video.preload === 'metadata') {
-            setTimeout(() => safeResolveOnce(), 1000); // ממתין שנייה לוודא שהמטאדטה נטענה
-          }
         };
         
         // המתנה לטעינת נתונים
@@ -107,17 +122,7 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
         // המתנה לטעינה מלאה (גיבוי)
         video.oncanplay = () => {
           console.log('🎬 הוידאו מוכן לנגינה');
-          // בדיקה אם יש מספיק נתונים לנגינה
-          if (video.readyState >= 3) { // שינוי מ-4 ל-3 לטעינה מהירה יותר
-            safeResolveOnce();
-          } else {
-            // אם אין מספיק נתונים, נמתין עוד קצת
-            setTimeout(() => {
-              if (video.readyState >= 2) { // אפילו עם נתונים חלקיים
-                safeResolveOnce();
-              }
-            }, 2000);
-          }
+          safeResolveOnce();
         };
         
         video.onerror = () => {
@@ -150,11 +155,11 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
         timeoutId = setTimeout(() => {
           console.warn('⚠️ טעינת וידאו ארוכה - ממשיך ברקע...');
           // לא נכשיל את הטעינה, רק נדפיס אזהרה
-        }, isMobile ? 45000 : 60000); // 45 שניות במובייל, 60 שניות בדסקטופ
+        }, 30000);
       });
       
       setMainVideo({
-        videoUrl: url,
+        videoUrl: objectUrl,
         loading: false,
         error: null,
         isReady: true,
@@ -174,8 +179,117 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
     }
   }, [mainVideo.isReady]); // תלוי רק ב-isReady כדי למנוע טעינה כפולה
 
+  // New: preload a single video into videos map and return its URL
+  const preloadSingleIntoMap = useCallback(async (videoPath: string) => {
+    try {
+      setVideos(prev => ({
+        ...prev,
+        [videoPath]: {
+          path: videoPath,
+          videoUrl: prev[videoPath]?.videoUrl || '',
+          loading: true,
+          error: null,
+          isReady: false,
+        },
+      }));
+
+      const videoRef = ref(storage, videoPath);
+      const url = await getDownloadURL(videoRef);
+
+      // הורדה מלאה מראש כדי למנוע תקיעות
+      const resp = await fetch(url);
+      const blob = await resp.blob();
+      const objectUrl = URL.createObjectURL(blob);
+
+      const video = document.createElement('video');
+      const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+      video.preload = 'auto';
+      video.muted = true;
+      if (isMobile) {
+        video.setAttribute('playsinline', 'true');
+        video.setAttribute('webkit-playsinline', 'true');
+      }
+      video.src = objectUrl;
+
+      await new Promise<void>((resolve) => {
+        let done = false;
+        const finish = () => {
+          if (done) return;
+          done = true;
+          resolve();
+        };
+        video.oncanplaythrough = finish;
+        video.oncanplay = () => {
+          finish();
+        };
+        video.onloadedmetadata = () => {};
+        setTimeout(finish, 30000); // safety
+      });
+
+      setVideos(prev => ({
+        ...prev,
+        [videoPath]: {
+          path: videoPath,
+          videoUrl: objectUrl,
+          loading: false,
+          error: null,
+          isReady: true,
+        },
+      }));
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'שגיאה לא ידועה';
+      setVideos(prev => ({
+        ...prev,
+        [videoPath]: {
+          path: videoPath,
+          videoUrl: '',
+          loading: false,
+          error: `לא ניתן לטעון וידאו מ-Firebase Storage: ${errorMessage}`,
+          isReady: false,
+        },
+      }));
+    }
+  }, []);
+
+  // New: preload multiple videos and update overallProgress (based on count completed)
+  const preloadVideos = useCallback(async (videoPaths: string[], onProgress?: (progress: number) => void) => {
+    if (!videoPaths || videoPaths.length === 0) {
+      setOverallProgress(1);
+      onProgress?.(1);
+      return;
+    }
+    // Ensure unique paths
+    const unique = Array.from(new Set(videoPaths));
+    let completed = 0;
+    setOverallProgress(0);
+    // Initialize map entries
+    setVideos(prev => {
+      const next = { ...prev } as VideosMap;
+      unique.forEach(p => {
+        next[p] = next[p] ?? { path: p, videoUrl: '', loading: true, error: null, isReady: false };
+      });
+      return next;
+    });
+
+    await Promise.all(unique.map(async (p) => {
+      // Skip if already ready
+      if (videos[p]?.isReady) {
+        completed += 1;
+        const prog = completed / unique.length;
+        setOverallProgress(prog);
+        onProgress?.(prog);
+        return;
+      }
+      await preloadSingleIntoMap(p);
+      completed += 1;
+      const prog = completed / unique.length;
+      setOverallProgress(prog);
+      onProgress?.(prog);
+    }));
+  }, [preloadSingleIntoMap, videos]);
+
   return (
-    <VideoContext.Provider value={{ mainVideo, preloadVideo }}>
+    <VideoContext.Provider value={{ mainVideo, preloadVideo, videos, preloadVideos, overallProgress }}>
       {children}
     </VideoContext.Provider>
   );

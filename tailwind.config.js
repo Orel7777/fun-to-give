@@ -9,6 +9,7 @@ module.exports = {
     extend: {
       fontFamily: {
         'staff': ['Staff-Regular', 'serif'],
+        'sans': ['Arial', 'sans-serif'],
       },
     },
   },

@@ -3,6 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import Image from 'next/image';
 import { useVideo } from '../../contexts/VideoContext';
+import { firebaseVideoKeys } from '../../lib/videoManifest';
 
 interface LoadPageProps {
   onLoadComplete?: () => void;
@@ -12,9 +13,11 @@ interface LoadPageProps {
 
 export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 'כיף לתת מקוצר.mp4' }: LoadPageProps) {
   const [progress, setProgress] = useState(0);
+  // מונה שמוצג למשתמש - מתקדם במספרים שלמים 1,2,3...
+  const [displayedProgress, setDisplayedProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 
-  const { mainVideo, preloadVideo } = useVideo();
+  const { mainVideo, preloadVideo, preloadVideos, overallProgress } = useVideo();
   const videoStatusRef = useRef({ isReady: false, loading: false });
   const videoLoadedRef = useRef(false);
   const preloaderRef = useRef<HTMLDivElement>(null);
@@ -30,136 +33,26 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
     videoStatusRef.current = { isReady: mainVideo.isReady, loading: mainVideo.loading };
   }, [mainVideo.isReady, mainVideo.loading]);
 
-  // טעינת הוידאו (רק פעם אחת)
+  // טעינת כל הווידאוים (פעם אחת): ראשי + יתר המניפסט
   useEffect(() => {
-    if (!videoLoadedRef.current) {
-      videoLoadedRef.current = true;
-      
-      // במובייל - ננסה לטעון את הוידאו
-      const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-      
-      if (!isMobile) {
-        console.log('🎬 מתחיל טעינת וידאו (דסקטופ)');
-        preloadVideo(videoPath);
-      } else {
-        console.log('📱 במובייל - מנסה לטעון וידאו');
-        preloadVideo(videoPath);
-      }
-    }
-  }, [preloadVideo, videoPath]);
+    if (videoLoadedRef.current) return;
+    videoLoadedRef.current = true;
 
-  // ניהול הטיימר וההתקדמות
-  useEffect(() => {
-    const startTime = Date.now();
-    let animationFrameId: number;
-    let mobileTimeoutId: number;
-    let desktopTimeoutId: number;
-
-    const updateProgress = () => {
-      const currentTime = Date.now();
-      const elapsed = currentTime - startTime;
-      
-      // חישוב התקדמות הזמן (100% מהטעינה) — רציף עד 100
-      const timeProgress = Math.min((elapsed / duration) * 100, 100);
-      setProgress(timeProgress);
-
-      // סיום כשהגענו ל-100%
-      const isComplete = timeProgress >= 100;
-      
-      if (!isComplete) {
-        animationFrameId = requestAnimationFrame(updateProgress);
-      } else {
-        console.log('הטעינה הסתיימה (100%)');
-        
-        // הטעינה הסתיימה - אפקטי GSAP
-        
-        // התחל את אנימציית העיגול והפיזור
-        console.log('מתחיל אנימציית עיגול ופיזור');
-        
-        // הסתר את כל האלמנטים
-        gsap.to([numberRef.current, logoRef.current, logoBgRef.current, progressBarRef.current], {
-          opacity: 0,
-          duration: 0.2,
-          ease: "power2.out"
-        });
-
-        // המתן רגע ואז צור עיגול חדש במרכז
-        setTimeout(() => {
-          // הראה את העיגול החדש
-          gsap.set(circleRef.current, {
-            width: "50px",
-            height: "50px",
-            left: "50%",
-            top: "50%",
-            xPercent: -50,
-            yPercent: -50,
-            scale: 0,
-            opacity: 1,
-            borderRadius: "50%",
-            backgroundColor: "#fdf6ed",
-            position: "fixed",
-            zIndex: 9999,
-            display: "block"
-          });
-
-          // אנימציה 1: הראה את העיגול
-          gsap.to(circleRef.current, {
-            scale: 1,
-            duration: 0.3,
-            ease: "back.out(1.7)",
-            onComplete: () => {
-              console.log('העיגול הופיע, מתחיל פיזור');
-              
-              // אנימציה 2: הרחב את העיגול לכל המסך
-              gsap.to(circleRef.current, {
-                scale: 50,
-                duration: 0.8,
-                ease: "power2.out",
-                onComplete: () => {
-                  console.log('הפיזור הושלם');
-                  
-                  // אנימציה 3: היעלם
-                  gsap.to(preloaderRef.current, {
-                    opacity: 0,
-                    duration: 0.3,
-                    ease: "power2.out",
-                    onComplete: () => {
-                      setIsVisible(false);
-                      onLoadComplete?.();
-                    }
-                  });
-                }
-              });
-            }
-          });
-        }, 300);
-      }
-    };
-
-    // במובייל - timeout נוסף למקרה שהוידאו לא נטען
     const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-    if (isMobile) {
-      mobileTimeoutId = window.setTimeout(() => {
-        console.log('⏰ timeout במובייל - ממשיך בלי הוידאו');
-        if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId);
-        }
-        // כפייה לסיום הטעינה
-        setProgress(100);
-        console.log('ממתין שהווידאו יסמן isReady לפני הסתרת הטעינה (מובייל)');
-      }, 15000); // 15 שניות timeout במובייל
-    } else {
-      // בדסקטופ - הוסף timeout בטיחותי כדי למנוע תקיעה
-      desktopTimeoutId = window.setTimeout(() => {
-        console.log('⏰ timeout בדסקטופ - ממשיך למרות שהוידאו לא מוכן');
-        if (animationFrameId) {
-          cancelAnimationFrame(animationFrameId);
-        }
-        setProgress(100);
-        console.log('ממתין שהווידאו יסמן isReady לפני הסתרת הטעינה (דסקטופ)');
-      }, 12000); // 12 שניות timeout בדסקטופ
-    }
+    console.log(isMobile ? '📱 מתחיל טעינת וידאוים (מובייל)' : '💻 מתחיל טעינת וידאוים (דסקטופ)');
 
+    // 1) טען את הווידאו הראשי לתוך mainVideo כדי לשמר תאימות
+    preloadVideo(videoPath);
+
+    // 2) טען את שאר הווידאוים מהמניפסט (ללא כפילויות)
+    const others = Array.from(new Set(firebaseVideoKeys.filter(k => k && k !== videoPath)));
+    if (others.length > 0) {
+      preloadVideos(others);
+    }
+  }, [preloadVideo, preloadVideos, videoPath]);
+
+  // ניהול אנימציות פתיחה בלבד (ללא טיימר מזויף)
+  useEffect(() => {
     // אנימציה ראשונית
     gsap.fromTo(preloaderRef.current, 
       { opacity: 0, scale: 1.1 },
@@ -181,13 +74,11 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       { opacity: 1, y: 0, scale: 1, duration: 0.8, delay: 0.1, ease: "power2.out" }
     );
 
-    // אנימציה מתמשכת לרקע הלוגו
     gsap.fromTo(logoBgRef.current,
       { opacity: 0, scale: 0.5, rotation: 0 },
       { opacity: 1, scale: 1, rotation: 360, duration: 1, delay: 0.2, ease: "power2.out" }
     );
 
-    // אנימציה מתמשכת לסיבוב הרקע
     gsap.to(logoBgRef.current, {
       rotation: 360,
       duration: 2.5,
@@ -195,29 +86,85 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       ease: "none",
       delay: 1.2
     });
+  }, []);
 
-    animationFrameId = requestAnimationFrame(updateProgress);
-    
-    // cleanup function
-    return () => {
-      if (animationFrameId) {
-        cancelAnimationFrame(animationFrameId);
-      }
-      if (mobileTimeoutId) {
-        clearTimeout(mobileTimeoutId);
-      }
-      if (desktopTimeoutId) {
-        clearTimeout(desktopTimeoutId);
-      }
+  // עדכון התקדמות אמיתי: משלב את הווידאו הראשי + יתר המניפסט על בסיס ספירה
+  useEffect(() => {
+    const othersCount = Array.from(new Set(firebaseVideoKeys.filter(k => k && k !== videoPath))).length;
+    const total = othersCount + 1; // כולל הווידאו הראשי
+    const done = (overallProgress * othersCount) + (mainVideo.isReady ? 1 : 0);
+    const percent = Math.min(100, Math.round((done / total) * 100));
+    setProgress(percent);
+  }, [overallProgress, mainVideo.isReady, videoPath]);
+
+  // אנימציית מספור שלם: הגדלת המספר המוצג צעד-צעד עד היעד האמיתי
+  useEffect(() => {
+    if (displayedProgress >= progress) return;
+    let raf: number;
+    const step = () => {
+      setDisplayedProgress(prev => {
+        if (prev >= progress) return prev;
+        // קפיצה של 1 כדי לשמור על 1,2,3...
+        return Math.min(progress, prev + 1);
+      });
+      raf = requestAnimationFrame(step);
     };
-  }, [duration, onLoadComplete]); // הסרת התלות ב-mainVideo
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [progress, displayedProgress]);
 
-  // אל תסגור את מסך הטעינה עד שהווידאו מוכן
+  // סגירה כשמוכנים: כשהתקדמות 100% והוידאו הראשי מוכן
   useEffect(() => {
     if (progress >= 100) {
       if (videoStatusRef.current.isReady) {
-        setIsVisible(false);
-        onLoadComplete?.();
+        // הטעינה הסתיימה - אפקטי GSAP
+        gsap.to([numberRef.current, logoRef.current, logoBgRef.current, progressBarRef.current], {
+          opacity: 0,
+          duration: 0.2,
+          ease: "power2.out"
+        });
+
+        setTimeout(() => {
+          gsap.set(circleRef.current, {
+            width: "50px",
+            height: "50px",
+            left: "50%",
+            top: "50%",
+            xPercent: -50,
+            yPercent: -50,
+            scale: 0,
+            opacity: 1,
+            borderRadius: "50%",
+            backgroundColor: "#fdf6ed",
+            position: "fixed",
+            zIndex: 9999,
+            display: "block"
+          });
+
+          gsap.to(circleRef.current, {
+            scale: 1,
+            duration: 0.3,
+            ease: "back.out(1.7)",
+            onComplete: () => {
+              gsap.to(circleRef.current, {
+                scale: 50,
+                duration: 0.8,
+                ease: "power2.out",
+                onComplete: () => {
+                  gsap.to(preloaderRef.current, {
+                    opacity: 0,
+                    duration: 0.3,
+                    ease: "power2.out",
+                    onComplete: () => {
+                      setIsVisible(false);
+                      onLoadComplete?.();
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }, 300);
       }
     }
   }, [progress, onLoadComplete]);
@@ -245,7 +192,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
         className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 text-[#fdf6ed] text-6xl sm:text-8xl font-bold"
         style={{ fontFamily: 'Aeonik, sans-serif' }}
       >
-        {Math.round(progress).toString().padStart(3, '0')}
+        {Math.round(displayedProgress).toString().padStart(3, '0')}
       </div>
 
 
@@ -278,8 +225,8 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       >
         <div 
           ref={progressFillRef}
-          className="h-full bg-[#fdf6ed] transition-all duration-300 ease-out shadow-lg absolute top-0 left-0 z-10"
-          style={{ width: `${progress}%` }}
+          className="h-full bg-[#fdf6ed] transition-all duration-200 ease-out shadow-lg absolute top-0 left-0 z-10"
+          style={{ width: `${displayedProgress}%` }}
         />
       </div>
     </div>

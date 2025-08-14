@@ -86,26 +86,29 @@ const VideoScrollExpand = ({
   const error = usePreloadedVideo ? mainVideo.error : null;
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      if (!containerRef.current) return;
-
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        if (!containerRef.current) {
+          ticking = false;
+          return;
+        }
       const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-      
       let progress = 0;
-      
       if (rect.top <= windowHeight && rect.bottom >= 0) {
         const visibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
         progress = Math.min(visibleHeight / (windowHeight * 0.4), 1);
       }
-      
       setScrollProgress(progress);
+        ticking = false;
+      });
     };
-
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
-    
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll as EventListener);
   }, []);
 
   // חישוב גודל הוידאו
@@ -345,7 +348,7 @@ const VideoScrollExpand = ({
                 <div 
                   className="flex absolute inset-0 justify-center items-center bg-center bg-cover pointer-events-none"
                   style={{
-                    backgroundImage: 'url(/tumbil.png)',
+                    backgroundImage: 'url(/tumbil.png),'
                     backgroundColor: '#f5a383'
                   }}
                 >
@@ -372,7 +375,7 @@ const VideoScrollExpand = ({
                 loop
                 playsInline
                 muted={isMobile}
-                preload="auto"
+                preload="metadata"
                 controls={false}
                 disablePictureInPicture
                 webkit-playsinline="true"
@@ -635,5 +638,642 @@ const VideoScrollExpand = ({
     </div>
   );
 };
+
+export default VideoScrollExpand;
+              e.preventDefault();
+
+              e.stopPropagation();
+
+              setIsTouching(false);
+
+            }
+
+          }}
+
+        >
+
+          {loading ? (
+
+            <div className="flex justify-center items-center w-full h-full bg-gray-200">
+
+              <div className="text-center">
+
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#2a2b26] mx-auto mb-4"></div>
+
+                <p className="text-[#2a2b26] font-staff">טוען וידאו...</p>
+
+              </div>
+
+            </div>
+
+          ) : error ? (
+
+            <div className="flex justify-center items-center w-full h-full bg-red-100">
+
+              <div className="text-center">
+
+                <p className="mb-2 text-red-600 font-staff">שגיאה בטעינת הוידאו</p>
+
+                <p className="text-sm text-red-500 font-staff">{error}</p>
+
+              </div>
+
+            </div>
+
+          ) : finalVideoUrl ? (
+
+            <div className="relative w-full h-full">
+
+              {/* רקע למובייל */}
+
+              {isMobile && !isPlaying && (
+
+                <div 
+
+                  className="flex absolute inset-0 justify-center items-center bg-center bg-cover pointer-events-none"
+
+                  style={{
+
+                    backgroundImage: 'url(/tumbil.png),'
+
+                    backgroundColor: '#f5a383'
+
+                  }}
+
+                >
+
+                  <div className="flex justify-center items-center w-full h-full bg-transparent pointer-events-none">
+
+                    <div className="p-6 rounded-full shadow-2xl backdrop-blur-sm bg-white/95 pointer-events-none">
+
+                      <svg
+
+                        width="60"
+
+                        height="60"
+
+                        viewBox="0 0 24 24"
+
+                        fill="none"
+
+                        className="text-[#2a2b26]"
+
+                      >
+
+                        <path d="M8 5v14l11-7z" fill="currentColor" />
+
+                      </svg>
+
+                    </div>
+
+                  </div>
+
+                </div>
+
+              )}
+
+              
+
+              {/* וידאו */}
+
+              <video
+
+                ref={videoRef}
+
+                src={finalVideoUrl}
+
+                loop
+
+                playsInline
+
+                muted={isMobile}
+
+                preload="auto"
+
+                controls={false}
+
+                disablePictureInPicture
+
+                webkit-playsinline="true"
+
+                x5-playsinline="true"
+
+                x5-video-player-type="h5"
+
+                x5-video-player-fullscreen="false"
+
+                style={{
+
+                  objectFit: isMobile ? 'cover' : 'contain',
+
+                  width: '100%',
+
+                  height: '100%',
+
+                  objectPosition: 'center',
+
+                  transform: 'none',
+
+                  transformOrigin: 'center center',
+
+                  pointerEvents: 'none' // לא מקבל אירועי לחיצה
+
+                }}
+
+                className={`${
+
+                  isMobile && !isPlaying ? 'opacity-0' : 'opacity-100'
+
+                }`}
+
+                onVolumeChange={() => {
+
+                  console.log('🔊 נפח השתנה:', videoRef.current?.muted ? 'מושתק' : 'מופעל');
+
+                }}
+
+              />
+
+              
+
+              {/* כפתור play במרכז */}
+
+              <AnimatePresence>
+
+                {!isPlaying && (
+
+                  <motion.div
+
+                    className="flex absolute inset-0 justify-center items-center z-50"
+
+                    initial={{ opacity: 0 }}
+
+                    animate={{ opacity: 1 }}
+
+                    exit={{ opacity: 0 }}
+
+                    transition={{ duration: 0.3 }}
+
+                    style={{ 
+
+                      pointerEvents: 'auto' // תמיד מקבל אירועי לחיצה
+
+                    }}
+
+                  >
+
+                    <motion.button
+
+                      className={`rounded-full shadow-2xl backdrop-blur-sm bg-white/90 cursor-pointer border-0 outline-none ${
+
+                        isMobile ? 'p-12' : 'p-6'
+
+                      }`}
+
+                      tabIndex={0}
+
+                      aria-label="נגן וידאו"
+
+                      whileHover={{ scale: isMobile ? 1 : 1.1 }}
+
+                      whileTap={{ scale: 0.9 }}
+
+                      onClick={(e) => {
+
+                        e.preventDefault();
+
+                        e.stopPropagation();
+
+                        console.log('🎯 כפתור play נלחץ (click)');
+
+                        togglePlay();
+
+                      }}
+
+                      onPointerDown={(e) => {
+
+                        e.preventDefault();
+
+                        e.stopPropagation();
+
+                        console.log('👆 pointer down על כפתור play');
+
+                      }}
+
+                      onPointerUp={(e) => {
+
+                        e.preventDefault();
+
+                        e.stopPropagation();
+
+                        console.log('👆 pointer up על כפתור play');
+
+                        togglePlay();
+
+                      }}
+
+                      onMouseDown={(e) => {
+
+                        e.preventDefault();
+
+                        e.stopPropagation();
+
+                        console.log('🖱️ mouse down על כפתור play');
+
+                      }}
+
+                      onMouseUp={(e) => {
+
+                        e.preventDefault();
+
+                        e.stopPropagation();
+
+                        console.log('🖱️ mouse up על כפתור play');
+
+                        togglePlay();
+
+                      }}
+
+                      onKeyDown={(e) => {
+
+                        if (e.key === 'Enter' || e.key === ' ') {
+
+                          e.preventDefault();
+
+                          e.stopPropagation();
+
+                          console.log('⌨️ key down על כפתור play');
+
+                          togglePlay();
+
+                        }
+
+                      }}
+
+                      onFocus={() => {
+
+                        console.log('🎯 כפתור play קיבל focus');
+
+                      }}
+
+                      onBlur={() => {
+
+                        console.log('🎯 כפתור play איבד focus');
+
+                      }}
+
+                      onContextMenu={(e) => {
+
+                        e.preventDefault();
+
+                        e.stopPropagation();
+
+                        console.log('🖱️ context menu על כפתור play');
+
+                      }}
+
+                      onTouchStart={(e) => {
+
+                        e.preventDefault();
+
+                        e.stopPropagation();
+
+                        console.log('👆 touch start על כפתור play');
+
+                      }}
+
+                      onTouchEnd={(e) => {
+
+                        e.preventDefault();
+
+                        e.stopPropagation();
+
+                        console.log('👆 touch end על כפתור play');
+
+                        togglePlay();
+
+                      }}
+
+                      onTouchMove={(e) => {
+
+                        e.preventDefault();
+
+                        e.stopPropagation();
+
+                      }}
+
+                      onTouchCancel={(e) => {
+
+                        e.preventDefault();
+
+                        e.stopPropagation();
+
+                      }}
+
+                      style={{ 
+
+                        pointerEvents: 'auto', // תמיד מקבל אירועי לחיצה
+
+                        zIndex: 1000,
+
+                        position: 'relative',
+
+                        minWidth: isMobile ? '80px' : '60px',
+
+                        minHeight: isMobile ? '80px' : '60px',
+
+                        display: 'flex',
+
+                        alignItems: 'center',
+
+                        justifyContent: 'center'
+
+                      }}
+
+                    >
+
+                      <Play size={isMobile ? 72 : 48} className="text-[#2a2b26] ml-2" />
+
+                    </motion.button>
+
+                  </motion.div>
+
+                )}
+
+              </AnimatePresence>
+
+
+
+              {/* כפתור התחלה מהתחלה בזמן ניגון */}
+
+              <AnimatePresence>
+
+                {isPlaying && (
+
+                  <motion.button
+
+                    className="absolute top-3 left-3 z-50 rounded-full bg-white/90 text-[#2a2b26] px-3 py-1 text-sm shadow-md"
+
+                    initial={{ opacity: 0, y: -6 }}
+
+                    animate={{ opacity: 1, y: 0 }}
+
+                    exit={{ opacity: 0, y: -6 }}
+
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); restartVideo(); }}
+
+                  >
+
+                    התחל מהתחלה
+
+                  </motion.button>
+
+                )}
+
+              </AnimatePresence>
+
+              
+
+              {/* כפתור קול */}
+
+              {isPlaying && (
+
+                <motion.div
+
+                  className={`absolute z-30 ${
+
+                    isMobile ? 'top-2 right-2' : 'top-4 right-4'
+
+                  }`}
+
+                  initial={{ opacity: 0, scale: 0.8 }}
+
+                  animate={{ opacity: 1, scale: 1 }}
+
+                  exit={{ opacity: 0, scale: 0.8 }}
+
+                  transition={{ duration: 0.3 }}
+
+                  style={{ pointerEvents: 'auto' }}
+
+                >
+
+                  <motion.button
+
+                    className={`text-white rounded-full shadow-lg backdrop-blur-sm cursor-pointer bg-black/50 border-0 outline-none ${
+
+                      isMobile ? 'p-5' : 'p-4'
+
+                    }`}
+
+                    whileTap={{ scale: 0.95 }}
+
+                    onClick={(e) => {
+
+                      e.preventDefault();
+
+                      e.stopPropagation();
+
+                      console.log('🔊 כפתור קול נלחץ (click)');
+
+                      
+
+                      // Haptic feedback (אם הדפדפן תומך)
+
+                      if ('vibrate' in navigator) {
+
+                        navigator.vibrate(30);
+
+                      }
+
+                      
+
+                      toggleMute();
+
+                    }}
+
+                    onTouchStart={(e) => {
+
+                      e.preventDefault();
+
+                      e.stopPropagation();
+
+                      setIsMuteButtonTouching(true);
+
+                      console.log('👆 touch start על כפתור קול');
+
+                    }}
+
+                    onTouchEnd={(e) => {
+
+                      e.preventDefault();
+
+                      e.stopPropagation();
+
+                      setIsMuteButtonTouching(false);
+
+                      console.log('👆 touch end על כפתור קול');
+
+                      
+
+                      // Haptic feedback (אם הדפדפן תומך)
+
+                      if ('vibrate' in navigator) {
+
+                        navigator.vibrate(30);
+
+                      }
+
+                      
+
+                      toggleMute();
+
+                    }}
+
+                    style={{
+
+                      pointerEvents: 'auto',
+
+                      zIndex: 1001,
+
+                      position: 'relative',
+
+                      transform: isMuteButtonTouching ? 'scale(0.9)' : 'scale(1)',
+
+                      transition: 'transform 0.1s ease-out',
+
+                      backgroundColor: isMuteButtonTouching ? 'rgba(0, 0, 0, 0.7)' : 'rgba(0, 0, 0, 0.5)'
+
+                    }}
+
+                  >
+
+                    {isMuted ? (
+
+                      <VolumeX size={isMobile ? 32 : 28} />
+
+                    ) : (
+
+                      <Volume2 size={isMobile ? 32 : 28} />
+
+                    )}
+
+                  </motion.button>
+
+                </motion.div>
+
+              )}
+
+              
+
+              {/* אוברליי */}
+
+              <div 
+
+                className="absolute inset-0 pointer-events-none bg-transparent"
+
+                style={{ opacity: 1 - scrollProgress * 0.5 }}
+
+              />
+
+              
+
+              {/* אוברליי זמני למובייל */}
+
+              {isMobile && isTouching && isPlaying && (
+
+                <motion.div 
+
+                  className="absolute inset-0 pointer-events-none bg-white/20"
+
+                  initial={{ opacity: 0 }}
+
+                  animate={{ opacity: 1 }}
+
+                  exit={{ opacity: 0 }}
+
+                  transition={{ duration: 0.1 }}
+
+                />
+
+              )}
+
+              
+
+              {/* Feedback ויזואלי לאודיו */}
+
+              {showAudioFeedback && (
+
+                <motion.div 
+
+                  className="absolute inset-0 pointer-events-none flex justify-center items-center"
+
+                  initial={{ opacity: 0, scale: 0.8 }}
+
+                  animate={{ opacity: 1, scale: 1 }}
+
+                  exit={{ opacity: 0, scale: 0.8 }}
+
+                  transition={{ duration: 0.3 }}
+
+                >
+
+                  <div className={`rounded-full p-4 shadow-lg backdrop-blur-sm ${
+
+                    isMuted ? 'bg-red-500/80' : 'bg-green-500/80'
+
+                  }`}>
+
+                    {isMuted ? (
+
+                      <VolumeX size={32} className="text-white" />
+
+                    ) : (
+
+                      <Volume2 size={32} className="text-white" />
+
+                    )}
+
+                  </div>
+
+                </motion.div>
+
+              )}
+
+            </div>
+
+          ) : null}
+
+        </motion.div>
+
+      </div>
+
+
+
+      {/* תוכן נוסף */}
+
+      <motion.div
+
+        className="relative z-10 bg-[#fdf6ed] min-h-[90vh] sm:min-h-screen py-16"
+
+        initial={{ opacity: 0 }}
+
+        animate={{ opacity: scrollProgress > 0.7 ? 1 : 0 }}
+
+        transition={{ duration: 0.5 }}
+
+      >
+
+        {children}
+
+      </motion.div>
+
+    </div>
+
+  );
+
+};
+
+
 
 export default VideoScrollExpand;

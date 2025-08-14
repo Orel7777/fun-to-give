@@ -1,7 +1,8 @@
 "use client";
 
-import { PulseBeams } from "./pulse-beams";
+import { PulseBeams } from "./Pulse-beams";
 import { RepeatType } from "framer-motion";
+import { scrollToDonationForm } from "../../lib/utils";
 
 const beams = [
   {
@@ -164,7 +165,10 @@ export const PulseBeamsFirstDemo = () => {
       gradientColors={gradientColors}
       className="bg-transparent"
     >
-             <button className="bg-[#f5a383] hover:bg-[#e0ccbc] active:bg-[#e0ccbc] w-[180px] sm:w-[220px] md:w-[200px]  z-40 h-[50px] sm:h-[60px] md:h-[62px] no-underline group cursor-pointer relative shadow-lg rounded-full p-px text-xs font-semibold leading-6 text-white inline-block transition-all duration-300">
+             <button 
+               className="bg-[#f5a383] hover:bg-[#e0ccbc] active:bg-[#e0ccbc] w-[180px] sm:w-[220px] md:w-[200px]  z-40 h-[50px] sm:h-[60px] md:h-[62px] no-underline group cursor-pointer relative shadow-lg rounded-full p-px text-xs font-semibold leading-6 text-white inline-block transition-all duration-300"
+               onClick={() => scrollToDonationForm()}
+             >
         <span className="overflow-hidden absolute inset-0 rounded-full">
           <span className="absolute inset-0 rounded-full bg-[image:radial-gradient(75%_100%_at_50%_0%,rgba(224,204,188,0.6)_0%,rgba(224,204,188,0)_75%)] opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
         </span>

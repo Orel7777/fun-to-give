@@ -101,7 +101,7 @@ export default function DonationsSection() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <Card className="border-0 shadow-xl backdrop-blur-sm bg-white/80">
+          <Card id="donation-form" className="border-0 shadow-xl backdrop-blur-sm bg-white/80">
             <CardHeader className="pb-6">
               <CardTitle className="text-2xl text-center text-gray-800">פרטי התרומה</CardTitle>
             </CardHeader>

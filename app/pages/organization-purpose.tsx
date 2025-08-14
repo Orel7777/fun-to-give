@@ -9,6 +9,7 @@ import animationA from "../../public/animation-json/A.json"
 import animationB from "../../public/animation-json/B.json"
 import animationC from "../../public/animation-json/C.json"
 import { useRef } from "react"
+import { SlidUp, SlidUpLeft, SlidUpRight } from "../lib/utils"
 
 export default function OrganizationPurpose() {
   const ref = useRef(null)
@@ -110,9 +111,10 @@ export default function OrganizationPurpose() {
         {/* Header */}
         <motion.div
           className="pt-16 mb-12 text-center"
-          variants={isInView ? titleVariants : undefined}
-          initial={isInView ? "visible" : "hidden"}
-          animate={isInView ? "visible" : "hidden"}
+          variants={SlidUp(0.1)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
         >
           {/* מרווח במקום האייקון - שומר על אותו מרחק */}
   
@@ -175,9 +177,10 @@ export default function OrganizationPurpose() {
         {/* Purpose Cards */}
         <motion.div
           className="grid grid-cols-3 gap-2 h-full sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 lg:gap-6"
-          variants={containerVariants}
+          variants={SlidUpLeft(0.3)}
           initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
         >
           {purposes.map((purpose, index) => {
             // const IconComponent = purpose.icon // Unused for now
@@ -270,9 +273,10 @@ export default function OrganizationPurpose() {
         {/* Bottom decorative element */}
         <motion.div
           className="flex justify-center mt-12"
-          initial={{ opacity: 0, scale: 0 }}
-          animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0 }}
-          transition={{ duration: 1, delay: 1.8 }}
+          variants={SlidUpRight(0.8)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
           style={{ y: yTransform }}
         >
           <motion.div
