@@ -18,7 +18,7 @@ export default function OrganizationStory() {
     },
   }
 
-  const iconBounceAnimation = {
+  const iconBounce = {
     y: [0, -10, 0],
     transition: {
       duration: 2,
