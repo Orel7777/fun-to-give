@@ -1,12 +1,36 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import Script from 'next/script';
 import { HorizontalScrollCarousel } from '../components';
 import ScrollExpandMedia from '../components/ui/scroll-expansion-hero';
 import FamiliesTestimonials from './Testimonials';
 import { useVideo } from '../contexts/VideoContext';
 import { PulseBeamsFirstDemo } from '../components/call to action/demo';
 import { motion } from 'framer-motion';
-import ContributionSection from '../components/ContributionSection';
+import DonationsSection from './donations-section';
+import OrganizationPurpose from './organization-purpose';
+import OrganizationStory from './Organization-story';
+
+// Declare the custom element so TSX recognizes <lottie-player />
+/* eslint-disable @typescript-eslint/no-namespace */
+declare global {
+  namespace JSX {
+    interface IntrinsicElements {
+      'lottie-player': React.DetailedHTMLProps<
+        React.HTMLAttributes<HTMLElement>,
+        HTMLElement
+      > & {
+        src?: string;
+        background?: string;
+        speed?: string | number;
+        loop?: boolean;
+        autoplay?: boolean;
+        style?: React.CSSProperties;
+      };
+    }
+  }
+}
+/* eslint-enable @typescript-eslint/no-namespace */
 
 interface HeroSectionProps {
   showTextAnimation: boolean;
@@ -315,17 +339,70 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
             <p className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-relaxed font-semibold">
               כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
             </p>
+
+            {/* Lottie animations row */}
+            <div className="flex flex-row gap-4 justify-center items-center mt-6 sm:mt-8 sm:gap-6 md:gap-10 lg:gap-12">
+              {/* Load Lottie web component once on client */}
+              <Script
+                src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
+                strategy="afterInteractive"
+              />
+
+              <lottie-player
+                src="/animation-json/Donation.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
+                style={{ width: 'auto', height: 'auto' }}
+              ></lottie-player>
+
+              <lottie-player
+                src="/animation-json/handshake%20blue.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
+                style={{ width: 'auto', height: 'auto' }}
+              ></lottie-player>
+
+              <lottie-player
+                src="/animation-json/Heart.json"
+                background="transparent"
+                speed="1"
+                loop
+                autoplay
+                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
+                style={{ width: 'auto', height: 'auto' }}
+              ></lottie-player>
+            </div>
           </div>
         </ScrollExpandMedia>
       )}
 
       {/* מרווח גדול בין הטקסט לגלריה */}
-      <div className="py-8 sm:py-12 md:py-16 lg:py-24"></div>
+      
 
       {/* גלריה של תמונות פעילות העמותה */}
       <div className="bg-[#fdf6ed] py-2 sm:py-4 md:py-6 lg:py-8 text-center">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-6 sm:mb-8 md:mb-10">
+        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-6 sm:mb-8 md:mb-10 flex items-center justify-center gap-3">
           תמונות מפעילות העמותה
+          <svg 
+            width="40" 
+            height="40" 
+            viewBox="0 0 1024 1024" 
+            className="sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16"
+            fill="currentColor"
+          >
+            <path d="M 794.965 466.603 c 0 -87.3813 -70.8835 -158.265 -158.265 -158.265 c -48.2418 0 -91.4773 21.6178 -120.491 55.7511 c -29.0133 -34.1333 -72.2489 -55.7511 -120.491 -55.7511 c -87.3813 0 -158.265 70.8835 -158.265 158.265 c 0 45.8525 21.0489 84.3093 50.7449 116.167 l 228.807 219.819 L 741.831 585.159 c 28.2169 -29.696 53.1342 -71.3387 53.1342 -118.557 Z" fill="#ffa9b1" />
+            <path d="M 457.387 709.632 c -3.18578 -55.7511 -18.2045 -106.041 -18.7733 -108.089 l -13.6533 4.096 c 0.113778 0.341333 2.048 7.05422 4.66489 17.8631 L 361.813 588.117 c 5.12 -5.46133 8.192 -8.64711 8.41955 -8.76089 l -5.00622 -5.12 l -5.00622 -5.12 c -2.95822 2.84445 -72.5902 71.1111 -91.8187 151.211 c -19.3422 80.896 4.66489 123.904 5.68889 125.725 l 12.4018 -7.05422 c -0.113778 -0.113778 -3.75467 -6.71289 -6.82667 -19.456 l 142.905 -3.86845 c 7.28178 9.78489 16.7253 17.408 28.7858 22.1867 l 5.12 13.312 c 24.1209 -9.32978 41.0738 -28.7858 50.5173 -57.7991 c 7.168 -22.4142 9.89867 -50.6311 7.96445 -83.7405 Z" fill="#9fc8fe" />
+            <path d="M 402.773 553.074 m -88.9742 0 a 88.9742 88.9742 0 1 0 177.949 0 a 88.9742 88.9742 0 1 0 -177.949 0 Z" fill="#81b6fe" />
+            <path d="M 566.613 709.632 c 3.18578 -55.7511 18.2045 -106.041 18.7733 -108.089 l 13.6533 4.096 c -0.113778 0.341333 -2.048 7.05422 -4.66489 17.8631 l 67.8115 -35.3849 c -5.12 -5.46133 -8.192 -8.64711 -8.41955 -8.76089 l 5.00622 -5.12 l 5.00622 -5.12 c 2.95822 2.84445 72.5902 71.1111 91.8187 151.211 c 19.3422 80.896 -4.66489 123.904 -5.68889 125.725 l -12.4018 -7.05422 c 0.113778 -0.113778 3.75467 -6.71289 6.82667 -19.456 l -142.905 -3.86845 c 7.28178 9.78489 16.7253 17.408 28.7858 22.1867 l -5.12 13.312 c -24.1209 -9.32978 -41.0738 -28.7858 -50.5173 -57.7991 c -7.168 -22.4142 -9.89867 -50.6311 -7.96445 -83.7405 Z" fill="#ff8882" />
+            <path d="M 621.227 553.074 m -88.9742 0 a 88.9742 88.9742 0 1 0 177.949 0 a 88.9742 88.9742 0 1 0 -177.949 0 Z" fill="#ff6b6a" />
+            <path d="M 9.78503 148.48 v 798.72 h 1012.62 v -798.72 h -1012.62 Z m 943.559 654.677 h -873.813 v -582.542 h 873.813 v 582.542 Z" fill="#e5f1ff" />
+          </svg>
         </h2>
       </div>
       
@@ -355,9 +432,13 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       <FamiliesTestimonials />
 
       {/* תרומה - מוצג מיד אחרי משפחות מספרות */}
-      <div className="pt-8 sm:pt-12 md:pt-16 lg:pt-20">
-        <ContributionSection />
-      </div>
+      <DonationsSection />
+
+      {/* ייעוד העמותה - מוצג אחרי סעיף התרומה ללא מרווח */}
+      <OrganizationPurpose />
+
+      {/* סיפור העמותה - מוצג אחרי ייעוד העמותה */}
+      <OrganizationStory />
     </div>
   );
 };

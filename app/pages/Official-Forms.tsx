@@ -1,26 +1,25 @@
-"use client";
+'use client';
 
 import React from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 
-const FormsDownload: React.FC = () => {
+const OfficialForms = () => {
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#fdf6ed' }}>
-      <div className="container px-4 py-12 mx-auto">
-        <h1 className="mb-12 text-4xl font-bold text-center text-gray-800">
+      <div className="container mx-auto px-4 py-12">
+        <h1 className="text-4xl font-bold text-center mb-12 text-gray-800">
           טפסים רשמיים
         </h1>
         
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {/* תעודת רישום עמותה */}
-          <div className="p-6 text-center bg-white rounded-lg shadow-lg">
-            <h2 className="mb-4 text-xl font-bold text-gray-800">
+          <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+            <h2 className="text-xl font-bold mb-4 text-gray-800">
               תעודת רישום עמותה
             </h2>
-            <div className="relative mb-4">
+            <div className="mb-4 relative">
               <Image
-                src="/טפסים/תעודת רישום עמותה.png"
+                src="/טפסים/תעודת רישום עמותה.pdf"
                 alt="תעודת רישום עמותה"
                 width={300}
                 height={400}
@@ -30,10 +29,10 @@ const FormsDownload: React.FC = () => {
             </div>
             <div className="space-y-2">
               <a
-                href="/טפסים/תעודת רישום עמותה.png"
+                href="/טפסים/תעודת רישום עמותה.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-blue-600 underline hover:text-blue-800"
+                className="block text-blue-600 hover:text-blue-800 underline"
                 style={{ color: '#f5a383' }}
               >
                 לצפייה בתעודה לחץ כאן
@@ -42,7 +41,7 @@ const FormsDownload: React.FC = () => {
                 href="https://www.guidestar.org.il"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-blue-600 underline hover:text-blue-800"
+                className="block text-blue-600 hover:text-blue-800 underline"
                 style={{ color: '#9acdbe' }}
               >
                 צפייה בדף העמותה באתר גיידסטאר
@@ -51,11 +50,11 @@ const FormsDownload: React.FC = () => {
           </div>
 
           {/* אישור מוסד ציבורי לעניין תרומות */}
-          <div className="p-6 text-center bg-white rounded-lg shadow-lg">
-            <h2 className="mb-4 text-xl font-bold text-gray-800">
+          <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+            <h2 className="text-xl font-bold mb-4 text-gray-800">
               אישור מוסד ציבורי לעניין תרומות (טופס 46)
             </h2>
-            <div className="relative mb-4">
+            <div className="mb-4 relative">
               <Image
                 src="/טפסים/טופס 46.png"
                 alt="אישור מוסד ציבורי לעניין תרומות"
@@ -70,7 +69,7 @@ const FormsDownload: React.FC = () => {
                 href="/טפסים/טופס 46.png"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-blue-600 underline hover:text-blue-800"
+                className="block text-blue-600 hover:text-blue-800 underline"
                 style={{ color: '#f5a383' }}
               >
                 לצפייה בתעודה לחץ כאן
@@ -79,11 +78,11 @@ const FormsDownload: React.FC = () => {
           </div>
 
           {/* אישור ניהול תקין */}
-          <div className="p-6 text-center bg-white rounded-lg shadow-lg">
-            <h2 className="mb-4 text-xl font-bold text-gray-800">
+          <div className="bg-white rounded-lg shadow-lg p-6 text-center">
+            <h2 className="text-xl font-bold mb-4 text-gray-800">
               אישור ניהול תקין לשנת 2025
             </h2>
-            <div className="relative mb-4">
+            <div className="mb-4 relative">
               <Image
                 src="/טפסים/אישור הגשת מסמכים.png"
                 alt="אישור ניהול תקין"
@@ -98,7 +97,7 @@ const FormsDownload: React.FC = () => {
                 href="/טפסים/אישור הגשת מסמכים.png"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-blue-600 underline hover:text-blue-800"
+                className="block text-blue-600 hover:text-blue-800 underline"
                 style={{ color: '#f5a383' }}
               >
                 לצפייה בתעודה לחץ כאן
@@ -106,18 +105,9 @@ const FormsDownload: React.FC = () => {
             </div>
           </div>
         </div>
-        
-        {/* כפתור חזרה לאתר */}
-        <div className="mt-12 text-center">
-          <Link href="/">
-                          <button className="px-8 py-3 bg-[#f5a383] text-white font-semibold rounded-lg hover:bg-[#e0ccbc] transition-all duration-300 shadow-lg hover:shadow-xl cursor-pointer">
-              חזרה לאתר
-            </button>
-          </Link>
-        </div>
       </div>
     </div>
   );
 };
 
-export default FormsDownload;
+export default OfficialForms;

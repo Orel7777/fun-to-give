@@ -998,22 +998,23 @@ export default function SplashCursor({
     let lastUpdateTime = Date.now();
     let colorUpdateTimer = 0.0;
 
-    function updateFrame() {
-      const dt = calcDeltaTime();
-      if (resizeCanvas()) initFramebuffers();
-      updateColors(dt);
-      applyInputs();
-      step(dt);
-      render(null);
-      requestAnimationFrame(updateFrame);
-    }
-
     function calcDeltaTime() {
       const now = Date.now();
       let dt = (now - lastUpdateTime) / 1000;
       dt = Math.min(dt, 0.016666);
       lastUpdateTime = now;
       return dt;
+    }
+
+    function updateFrame() {
+      const dt = calcDeltaTime();
+      const needsInit = !dye || !velocity || !pressure || !curl || !divergence;
+      if (resizeCanvas() || needsInit) initFramebuffers();
+      updateColors(dt);
+      applyInputs();
+      step(dt);
+      render(null);
+      requestAnimationFrame(updateFrame);
     }
 
     function resizeCanvas() {

@@ -87,9 +87,9 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
         // המתנה לטעינת מטאדטה
         video.onloadedmetadata = () => {
           console.log('📊 מטאדטה של הוידאו נטענה');
-          // במובייל - אם זה רק מטאדטה, נחשב מוכן
+          // במובייל - אם זה רק מטאדטה, נחשב מוכן אבל נמתין עוד קצת
           if (isMobile && video.preload === 'metadata') {
-            resolveOnce();
+            setTimeout(() => safeResolveOnce(), 1000); // ממתין שנייה לוודא שהמטאדטה נטענה
           }
         };
         
@@ -101,26 +101,56 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
         // המתנה לטעינה מלאה
         video.oncanplaythrough = () => {
           console.log('🎬 הוידאו מוכן לנגינה מלאה');
-          resolveOnce();
+          safeResolveOnce();
         };
         
         // המתנה לטעינה מלאה (גיבוי)
         video.oncanplay = () => {
           console.log('🎬 הוידאו מוכן לנגינה');
           // בדיקה אם יש מספיק נתונים לנגינה
-          if (video.readyState >= 4) {
-            resolveOnce();
+          if (video.readyState >= 3) { // שינוי מ-4 ל-3 לטעינה מהירה יותר
+            safeResolveOnce();
+          } else {
+            // אם אין מספיק נתונים, נמתין עוד קצת
+            setTimeout(() => {
+              if (video.readyState >= 2) { // אפילו עם נתונים חלקיים
+                safeResolveOnce();
+              }
+            }, 2000);
           }
         };
         
         video.onerror = () => {
-          rejectOnce(new Error('שגיאה בטעינת הוידאו'));
+          safeRejectOnce(new Error('שגיאה בטעינת הוידאו'));
         };
         
-        // timeout למקרה שהטעינה נתקעת
-        setTimeout(() => {
-          rejectOnce(new Error('זמן הטעינה פג'));
-        }, isMobile ? 15000 : 30000); // 15 שניות במובייל, 30 שניות בדסקטופ
+        // timeout מוארך למקרה שהטעינה נתקעת - נותן זמן רב יותר לטעינה
+        let timeoutId: NodeJS.Timeout | null = null;
+        
+        // פונקציה לניקוי timeout
+        const clearVideoTimeout = () => {
+          if (timeoutId) {
+            clearTimeout(timeoutId);
+            timeoutId = null;
+          }
+        };
+        
+        // שימוש בפונקציות שמנקות timeout ללא reassignment
+        const safeResolveOnce = () => {
+          clearVideoTimeout();
+          resolveOnce();
+        };
+        
+        const safeRejectOnce = (error: Error) => {
+          clearVideoTimeout();
+          rejectOnce(error);
+        };
+        
+        // הגדרת timeout אחרי שהפונקציות מוכנות
+        timeoutId = setTimeout(() => {
+          console.warn('⚠️ טעינת וידאו ארוכה - ממשיך ברקע...');
+          // לא נכשיל את הטעינה, רק נדפיס אזהרה
+        }, isMobile ? 45000 : 60000); // 45 שניות במובייל, 60 שניות בדסקטופ
       });
       
       setMainVideo({

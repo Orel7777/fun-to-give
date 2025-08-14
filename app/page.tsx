@@ -6,6 +6,7 @@ import { SplashCursor } from './components';
 import NavigationBar from './pages/Navbar';
 import HeroSection from './pages/HeroSection';
 import LoadPage from './components/loadpage/LoadPage';
+import Footer from './pages/Footer';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -40,6 +41,7 @@ export default function Home() {
       {/* className="pt-32" */}
         <HeroSection showTextAnimation={showTextAnimation} />
       </main>
+      <Footer />
     </div>
   );
 }

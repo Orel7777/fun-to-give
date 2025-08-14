@@ -255,7 +255,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
         {/* רקע מונפש מסביב ללוגו */}
         <div 
           ref={logoBgRef}
-          className="absolute w-40 h-40 sm:w-56 sm:h-56 bg-gradient-to-r from-white via-gray-100 to-gray-200 rounded-full opacity-30 blur-sm"
+          className="absolute w-40 h-40 bg-gradient-to-r from-white via-gray-100 to-gray-200 rounded-full opacity-30 blur-sm sm:w-56 sm:h-56"
           style={{ 
             background: 'conic-gradient(from 0deg, #ffffff, #f8fafc, #e2e8f0, #ffffff)'
           }}
