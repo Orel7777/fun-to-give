@@ -16,6 +16,9 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
   // מונה שמוצג למשתמש - מתקדם במספרים שלמים 1,2,3...
   const [displayedProgress, setDisplayedProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  // גישה חדשה: טיימר חזותי שמבטיח תצוגה במובייל
+  const [visualProgress, setVisualProgress] = useState(0);
+  const [allVideosReady, setAllVideosReady] = useState(false);
 
   const { mainVideo, preloadVideo, preloadVideos, overallProgress } = useVideo();
   const videoStatusRef = useRef({ isReady: false, loading: false });
@@ -88,36 +91,74 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
     });
   }, []);
 
-  // עדכון התקדמות אמיתי: משלב את הווידאו הראשי + יתר המניפסט על בסיס ספירה
+  // גישה חדשה: טיימר חזותי שמתחיל מיד במובייל
+  useEffect(() => {
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    if (!isMobile) return;
+
+    // במובייל: התחל טיימר חזותי מיד, ללא תלות בווידאו
+    const startTime = Date.now();
+    const targetDuration = 8000; // 8 שניות לטעינה חזותית
+    
+    const updateVisual = () => {
+      const elapsed = Date.now() - startTime;
+      const visualPercent = Math.min(95, (elapsed / targetDuration) * 100);
+      setVisualProgress(visualPercent);
+      
+      if (visualPercent < 95) {
+        requestAnimationFrame(updateVisual);
+      }
+    };
+    
+    requestAnimationFrame(updateVisual);
+  }, []);
+
+  // עדכון התקדמות אמיתי: משלב את הווידאו הראשי + יתר המניפסט
   useEffect(() => {
     const othersCount = Array.from(new Set(firebaseVideoKeys.filter(k => k && k !== videoPath))).length;
-    const total = othersCount + 1; // כולל הווידאו הראשי
+    const total = othersCount + 1;
     const done = (overallProgress * othersCount) + (mainVideo.isReady ? 1 : 0);
     const percent = Math.min(100, Math.round((done / total) * 100));
     setProgress(percent);
+    
+    // בדיקה אם הכל מוכן
+    if (percent >= 100 && mainVideo.isReady && overallProgress >= 1) {
+      setAllVideosReady(true);
+      setVisualProgress(100); // השלם את הטיימר החזותי
+    }
   }, [overallProgress, mainVideo.isReady, videoPath]);
 
-  // אנימציית מספור חלקה: התחלה מיידית עם אנימציה רציפה
+  // אנימציית תצוגה: משלב בין טיימר חזותי לאמיתי
   useEffect(() => {
-    // התחל אנימציה מיד, גם אם progress עדיין 0
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    const target = isMobile ? Math.max(visualProgress, progress) : progress;
+    
     let raf: number;
     const animate = () => {
       setDisplayedProgress(prev => {
-        const target = Math.max(progress, 1); // לפחות 1 כדי שיראו תנועה
         const diff = target - prev;
         if (Math.abs(diff) < 0.5) return target;
-        // אנימציה חלקה במקום קפיצות
-        return prev + (diff * 0.1);
+        return prev + (diff * 0.15);
       });
       raf = requestAnimationFrame(animate);
     };
     raf = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(raf);
-  }, [progress]);
+  }, [progress, visualProgress]);
 
-  // סגירה כשמוכנים: רק כאשר הווידאו הראשי מוכן וכל שאר הווידאוים הושלמו (overallProgress===1)
+  // סגירה כשמוכנים: במובייל חכה לטיימר החזותי + וידאוים, בדסקטופ רק וידאוים
   useEffect(() => {
-    const ready = progress >= 100 && videoStatusRef.current.isReady && overallProgress >= 1;
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    
+    let ready = false;
+    if (isMobile) {
+      // במובייל: חכה שהטיימר החזותי יגיע ל-100 וגם הווידאוים יהיו מוכנים
+      ready = allVideosReady && displayedProgress >= 99;
+    } else {
+      // בדסקטופ: רק וידאוים
+      ready = progress >= 100 && videoStatusRef.current.isReady && overallProgress >= 1;
+    }
+    
     if (!ready) return;
 
     // הטעינה הסתיימה - אפקטי GSAP
@@ -171,7 +212,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
 
     const timer = setTimeout(kickoff, 300);
     return () => clearTimeout(timer);
-  }, [progress, overallProgress, onLoadComplete]);
+  }, [progress, overallProgress, onLoadComplete, allVideosReady, displayedProgress]);
 
   // Fallback בטיחותי: אם אחרי זמן סביר עדיין מוצג המסך, נסגור כדי לא לתקוע מובייל
   useEffect(() => {
