@@ -130,102 +130,110 @@ export default function LoadPage({
     });
   }, []);
 
-  // טיימר ויזואלי משולב עם התקדמות הוידאו
+  // התקדמות חלקה ויציבה מ-000 עד 100
   useEffect(() => {
     const startTime = Date.now();
+    let animationId: number;
     
     const updateProgress = () => {
       const elapsed = Date.now() - startTime;
-      const timeProgress = Math.min(100, (elapsed / duration) * 100);
+      const newProgress = Math.min(100, (elapsed / duration) * 100);
       
-      // שילוב התקדמות הזמן עם התקדמות הוידאו
-      // נותנים משקל של 70% לזמן ו-30% לטעינת הוידאו
-      const combinedProgress = (timeProgress * 0.7) + (videoProgress * 0.3);
+      // עדכון רק אם המספר גדל (מונע קפיצות לאחור)
+      setProgress(prev => Math.max(prev, newProgress));
       
-      setProgress(combinedProgress);
-      
-      if (combinedProgress < 100) {
-        requestAnimationFrame(updateProgress);
+      if (newProgress < 100) {
+        animationId = requestAnimationFrame(updateProgress);
       }
     };
     
-    requestAnimationFrame(updateProgress);
-  }, [duration, videoProgress]);
+    animationId = requestAnimationFrame(updateProgress);
+    
+    return () => {
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+      }
+    };
+  }, [duration]);
 
   // סגירה כשהכל מוכן
   useEffect(() => {
-    // נחכה שגם הזמן יעבור וגם הוידאו יטען (או שיהיה timeout)
-    if (progress < 95) return; // נתן מרווח קטן
+    // נחכה שהמספר יגיע ל-100 והוידאו יטען
+    if (progress < 100) return;
     
-    const isVideoReady = videoLoaded || mainVideo.isReady;
-    
-    if (!isVideoReady) {
-      console.log('⏳ מחכים שהוידאו יסתיים לטעון...');
-      return;
-    }
-
-    let finished = false;
-    const closeWithAnimation = () => {
-      if (finished) return;
-      finished = true;
+    // נתן זמן קצר נוסף לוודא שהוידאו מוכן
+    const timer = setTimeout(() => {
+      const isVideoReady = videoLoaded || mainVideo.isReady;
       
-      console.log('🚀 סוגרים את מסך הטעינה - הוידאו מוכן!');
-      
-      // אנימציית סגירה
-      gsap.to([numberRef.current, logoRef.current, logoBgRef.current, progressBarRef.current], {
-        opacity: 0,
-        duration: 0.2,
-        ease: "power2.out",
-      });
+      if (!isVideoReady) {
+        console.log('⏳ מחכים שהוידאו יסתיים לטעון...');
+        return;
+      }
 
-      const kickoff = () => {
-        gsap.set(circleRef.current, {
-          width: "50px",
-          height: "50px",
-          left: "50%",
-          top: "50%",
-          xPercent: -50,
-          yPercent: -50,
-          scale: 0,
-          opacity: 1,
-          borderRadius: "50%",
-          backgroundColor: "#fdf6ed",
-          position: "fixed",
-          zIndex: 9999,
-          display: "block",
+      let finished = false;
+      const closeWithAnimation = () => {
+        if (finished) return;
+        finished = true;
+        
+        console.log('🚀 סוגרים את מסך הטעינה - הוידאו מוכן!');
+        
+        // אנימציית סגירה
+        gsap.to([numberRef.current, logoRef.current, logoBgRef.current, progressBarRef.current], {
+          opacity: 0,
+          duration: 0.2,
+          ease: "power2.out",
         });
 
-        gsap.to(circleRef.current, {
-          scale: 1,
-          duration: 0.3,
-          ease: "back.out(1.7)",
-          onComplete: () => {
-            gsap.to(circleRef.current, {
-              scale: 50,
-              duration: 0.8,
-              ease: "power2.out",
-              onComplete: () => {
-                gsap.to(preloaderRef.current, {
-                  opacity: 0,
-                  duration: 0.3,
-                  ease: "power2.out",
-                  onComplete: () => {
-                    setIsVisible(false);
-                    onLoadComplete?.();
-                  },
-                });
-              },
-            });
-          },
-        });
+        const kickoff = () => {
+          gsap.set(circleRef.current, {
+            width: "50px",
+            height: "50px",
+            left: "50%",
+            top: "50%",
+            xPercent: -50,
+            yPercent: -50,
+            scale: 0,
+            opacity: 1,
+            borderRadius: "50%",
+            backgroundColor: "#fdf6ed",
+            position: "fixed",
+            zIndex: 9999,
+            display: "block",
+          });
+
+          gsap.to(circleRef.current, {
+            scale: 1,
+            duration: 0.3,
+            ease: "back.out(1.7)",
+            onComplete: () => {
+              gsap.to(circleRef.current, {
+                scale: 50,
+                duration: 0.8,
+                ease: "power2.out",
+                onComplete: () => {
+                  gsap.to(preloaderRef.current, {
+                    opacity: 0,
+                    duration: 0.3,
+                    ease: "power2.out",
+                    onComplete: () => {
+                      setIsVisible(false);
+                      onLoadComplete?.();
+                    },
+                  });
+                },
+              });
+            },
+          });
+        };
+
+        setTimeout(kickoff, 300);
       };
 
-      setTimeout(kickoff, 300);
-    };
+      // אם הכל מוכן - סגור מיד
+      closeWithAnimation();
+    }, 500); // המתן חצי שנייה לוודא יציבות
 
-    // אם הכל מוכן - סגור מיד
-    closeWithAnimation();
-
+    return () => clearTimeout(timer);
   }, [progress, videoLoaded, mainVideo.isReady, onLoadComplete]);
 
   // Fallback בטיחותי מורחב
@@ -282,18 +290,13 @@ export default function LoadPage({
         style={{ display: 'none' }}
       />
 
-      {/* מספר הטעינה */}
+      {/* מספר הטעינה - בצד שמאל */}
       <div 
         ref={numberRef}
         className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 text-[#fdf6ed] text-6xl sm:text-8xl font-bold"
         style={{ fontFamily: 'Aeonik, sans-serif' }}
       >
         {Math.round(progress).toString().padStart(3, '0')}
-      </div>
-
-      {/* אינדיקטור טעינת וידאו */}
-      <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-[#fdf6ed] text-sm sm:text-base">
-        🎬 {videoLoaded ? 'וידאו מוכן' : `טוען וידאו... ${Math.round(videoProgress)}%`}
       </div>
 
       {/* לוגו עם רקע מונפש */}
@@ -334,15 +337,6 @@ export default function LoadPage({
         />
       </div>
 
-      {/* הודעת סטטוס */}
-      <div className="mt-4 text-[#fdf6ed] text-center text-sm sm:text-base">
-        <div className="opacity-80">
-          {progress < 30 ? 'מכין את החוויה שלך...' :
-           progress < 60 ? 'טוען תכנים...' :
-           progress < 90 ? 'כמעט מוכן...' :
-           videoLoaded ? 'הכל מוכן! נכנס לאתר...' : 'מסיים טעינה...'}
-        </div>
-      </div>
     </div>
   );
 }
