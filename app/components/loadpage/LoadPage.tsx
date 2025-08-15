@@ -113,62 +113,63 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
     return () => cancelAnimationFrame(raf);
   }, [progress, displayedProgress]);
 
-  // סגירה כשמוכנים: כשהתקדמות 100% והוידאו הראשי מוכן
-  // שיפור: אם הטעינה של הווידאו הסתיימה (loading=false) גם במקרה של שגיאה, לא נחסום את האתר
+  // סגירה כשמוכנים: רק כאשר הווידאו הראשי מוכן וכל שאר הווידאוים הושלמו (overallProgress===1)
   useEffect(() => {
-    if (progress >= 100) {
-      if (videoStatusRef.current.isReady || !videoStatusRef.current.loading) {
-        // הטעינה הסתיימה - אפקטי GSAP
-        gsap.to([numberRef.current, logoRef.current, logoBgRef.current, progressBarRef.current], {
-          opacity: 0,
-          duration: 0.2,
-          ease: "power2.out"
-        });
+    const ready = progress >= 100 && videoStatusRef.current.isReady && overallProgress >= 1;
+    if (!ready) return;
 
-        setTimeout(() => {
-          gsap.set(circleRef.current, {
-            width: "50px",
-            height: "50px",
-            left: "50%",
-            top: "50%",
-            xPercent: -50,
-            yPercent: -50,
-            scale: 0,
-            opacity: 1,
-            borderRadius: "50%",
-            backgroundColor: "#fdf6ed",
-            position: "fixed",
-            zIndex: 9999,
-            display: "block"
-          });
+    // הטעינה הסתיימה - אפקטי GSAP
+    gsap.to([numberRef.current, logoRef.current, logoBgRef.current, progressBarRef.current], {
+      opacity: 0,
+      duration: 0.2,
+      ease: "power2.out",
+    });
 
+    const kickoff = () => {
+      gsap.set(circleRef.current, {
+        width: "50px",
+        height: "50px",
+        left: "50%",
+        top: "50%",
+        xPercent: -50,
+        yPercent: -50,
+        scale: 0,
+        opacity: 1,
+        borderRadius: "50%",
+        backgroundColor: "#fdf6ed",
+        position: "fixed",
+        zIndex: 9999,
+        display: "block",
+      });
+
+      gsap.to(circleRef.current, {
+        scale: 1,
+        duration: 0.3,
+        ease: "back.out(1.7)",
+        onComplete: () => {
           gsap.to(circleRef.current, {
-            scale: 1,
-            duration: 0.3,
-            ease: "back.out(1.7)",
+            scale: 50,
+            duration: 0.8,
+            ease: "power2.out",
             onComplete: () => {
-              gsap.to(circleRef.current, {
-                scale: 50,
-                duration: 0.8,
+              gsap.to(preloaderRef.current, {
+                opacity: 0,
+                duration: 0.3,
                 ease: "power2.out",
                 onComplete: () => {
-                  gsap.to(preloaderRef.current, {
-                    opacity: 0,
-                    duration: 0.3,
-                    ease: "power2.out",
-                    onComplete: () => {
-                      setIsVisible(false);
-                      onLoadComplete?.();
-                    }
-                  });
-                }
+                  setIsVisible(false);
+                  onLoadComplete?.();
+                },
               });
-            }
+            },
           });
-        }, 300);
-      }
-    }
-  }, [progress, onLoadComplete]);
+        },
+      });
+    };
+
+    const timer = setTimeout(kickoff, 300);
+    return () => clearTimeout(timer);
+  }, [progress, overallProgress, onLoadComplete]);
 
   // Fallback בטיחותי: אם אחרי זמן סביר עדיין מוצג המסך, נסגור כדי לא לתקוע מובייל
   useEffect(() => {
@@ -183,7 +184,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
         setIsVisible(false);
         onLoadComplete?.();
       }
-    }, 8000);
+    }, 25000);
     return () => clearTimeout(timeout);
   }, [isVisible, onLoadComplete]);
 

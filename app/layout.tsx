@@ -84,7 +84,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="he" dir="rtl" suppressHydrationWarning={true}>
-      <head>
+      <head suppressHydrationWarning={true}>
         {/* Speed up Firebase Storage connections for video preloading */}
         <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
         <link rel="preconnect" href="https://storage.googleapis.com" />
