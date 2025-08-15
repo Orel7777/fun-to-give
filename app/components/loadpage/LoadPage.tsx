@@ -114,9 +114,10 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
   }, [progress, displayedProgress]);
 
   // סגירה כשמוכנים: כשהתקדמות 100% והוידאו הראשי מוכן
+  // שיפור: אם הטעינה של הווידאו הסתיימה (loading=false) גם במקרה של שגיאה, לא נחסום את האתר
   useEffect(() => {
     if (progress >= 100) {
-      if (videoStatusRef.current.isReady) {
+      if (videoStatusRef.current.isReady || !videoStatusRef.current.loading) {
         // הטעינה הסתיימה - אפקטי GSAP
         gsap.to([numberRef.current, logoRef.current, logoBgRef.current, progressBarRef.current], {
           opacity: 0,
@@ -168,6 +169,23 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       }
     }
   }, [progress, onLoadComplete]);
+
+  // Fallback בטיחותי: אם אחרי זמן סביר עדיין מוצג המסך, נסגור כדי לא לתקוע מובייל
+  useEffect(() => {
+    if (!isVisible) return;
+    const timeout = setTimeout(() => {
+      if (!isVisible) return;
+      console.warn('⏱️ Safety fallback: closing preloader to avoid hang');
+      // סגירה מהירה ללא אנימציות ארוכות כדי לשמור על חוויה טובה
+      try {
+        gsap.to(preloaderRef.current, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+      } finally {
+        setIsVisible(false);
+        onLoadComplete?.();
+      }
+    }, 8000);
+    return () => clearTimeout(timeout);
+  }, [isVisible, onLoadComplete]);
 
   if (!isVisible) {
     return null;

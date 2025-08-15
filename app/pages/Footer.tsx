@@ -12,7 +12,7 @@ export default function Footer() {
         strategy="afterInteractive"
       />
       {/* Background texture overlay */}
-      <div className="absolute inset-0 bg-[url('/placeholder-gierp.png')] opacity-10 mix-blend-overlay"></div>
+      <div className="absolute inset-0 bg-[url('/tumbil.png')] opacity-10 mix-blend-overlay"></div>
 
       {/* Main content container */}
       <div className="flex relative z-10 flex-col min-h-screen">
@@ -27,7 +27,7 @@ export default function Footer() {
               {/* Contact section - moved to right */}
                              <motion.div
                   className="space-y-8 max-w-md"
-                  variants={SlidUp(0)}
+                  variants={SlidUp(0) as any}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true, amount: 0.2 }}

@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Link from "next/link";
 import { Playfair_Display } from "next/font/google";
 import "./globals.css";
@@ -15,11 +15,16 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "כיף לתת",
   description: "אפליקציית כיף לתת",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   icons: {
     icon: '/logo.png',
     apple: '/logo.png',
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 // WhatsApp Icon Component

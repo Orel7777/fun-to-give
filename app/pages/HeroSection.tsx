@@ -87,6 +87,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                   alt="כיף לתת - עם כל נתינה הלב מתמלא"
                   width={500}
                   height={200}
+                  sizes="(max-width: 640px) 200px, (max-width: 768px) 250px, 300px"
                   style={{ 
                     width: '100%',
                     height: 'auto'
@@ -219,6 +220,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                     alt="כיף לתת - עם כל נתינה הלב מתמלא"
                     width={300}
                     height={100}
+                    sizes="(max-width: 640px) 160px, (max-width: 768px) 250px, 300px"
                     className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
                     style={{
                       animation: 'glitch 3s ease-in-out infinite alternate',
