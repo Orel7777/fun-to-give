@@ -13,15 +13,9 @@ interface LoadPageProps {
 
 export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 'כיף לתת מקוצר.mp4' }: LoadPageProps) {
   const [progress, setProgress] = useState(0);
-  // מונה שמוצג למשתמש - מתקדם במספרים שלמים 1,2,3...
-  const [displayedProgress, setDisplayedProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-  // גישה חדשה: טיימר חזותי שמבטיח תצוגה במובייל
-  const [visualProgress, setVisualProgress] = useState(0);
-  const [allVideosReady, setAllVideosReady] = useState(false);
 
-  const { mainVideo, preloadVideo, preloadVideos, overallProgress } = useVideo();
-  const videoStatusRef = useRef({ isReady: false, loading: false });
+  const { mainVideo, preloadVideo } = useVideo();
   const videoLoadedRef = useRef(false);
   const preloaderRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
@@ -31,28 +25,14 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
   const logoRef = useRef<HTMLImageElement>(null);
   const logoBgRef = useRef<HTMLDivElement>(null);
 
-  // עדכון סטטוס הוידאו ב-ref
-  useEffect(() => {
-    videoStatusRef.current = { isReady: mainVideo.isReady, loading: mainVideo.loading };
-  }, [mainVideo.isReady, mainVideo.loading]);
-
-  // טעינת כל הווידאוים (פעם אחת): ראשי + יתר המניפסט
+  // טעינת הווידאו הראשי בלבד
   useEffect(() => {
     if (videoLoadedRef.current) return;
     videoLoadedRef.current = true;
 
-    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-    console.log(isMobile ? '📱 מתחיל טעינת וידאוים (מובייל)' : '💻 מתחיל טעינת וידאוים (דסקטופ)');
-
-    // 1) טען את הווידאו הראשי לתוך mainVideo כדי לשמר תאימות
+    console.log('🎬 מתחיל טעינת וידאו ראשי:', videoPath);
     preloadVideo(videoPath);
-
-    // 2) טען את שאר הווידאוים מהמניפסט (ללא כפילויות)
-    const others = Array.from(new Set(firebaseVideoKeys.filter(k => k && k !== videoPath)));
-    if (others.length > 0) {
-      preloadVideos(others);
-    }
-  }, [preloadVideo, preloadVideos, videoPath]);
+  }, [preloadVideo, videoPath]);
 
   // ניהול אנימציות פתיחה בלבד (ללא טיימר מזויף)
   useEffect(() => {
@@ -91,128 +71,80 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
     });
   }, []);
 
-  // גישה חדשה: טיימר חזותי שמתחיל מיד במובייל
+  // טיימר פשוט לטעינה חזותית
   useEffect(() => {
-    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-    if (!isMobile) return;
-
-    // במובייל: התחל טיימר חזותי מיד, ללא תלות בווידאו
     const startTime = Date.now();
-    const targetDuration = 8000; // 8 שניות לטעינה חזותית
+    const targetDuration = duration; // משתמש בפרמטר duration
     
-    const updateVisual = () => {
+    const updateProgress = () => {
       const elapsed = Date.now() - startTime;
-      const visualPercent = Math.min(95, (elapsed / targetDuration) * 100);
-      setVisualProgress(visualPercent);
+      const percent = Math.min(100, (elapsed / targetDuration) * 100);
+      setProgress(percent);
       
-      if (visualPercent < 95) {
-        requestAnimationFrame(updateVisual);
+      if (percent < 100) {
+        requestAnimationFrame(updateProgress);
       }
     };
     
-    requestAnimationFrame(updateVisual);
-  }, []);
+    requestAnimationFrame(updateProgress);
+  }, [duration]);
 
-  // עדכון התקדמות אמיתי: משלב את הווידאו הראשי + יתר המניפסט
+  // סגירה כשמוכנים: טיימר הגיע ל-100 והווידאו הראשי מוכן
   useEffect(() => {
-    const othersCount = Array.from(new Set(firebaseVideoKeys.filter(k => k && k !== videoPath))).length;
-    const total = othersCount + 1;
-    const done = (overallProgress * othersCount) + (mainVideo.isReady ? 1 : 0);
-    const percent = Math.min(100, Math.round((done / total) * 100));
-    setProgress(percent);
-    
-    // בדיקה אם הכל מוכן
-    if (percent >= 100 && mainVideo.isReady && overallProgress >= 1) {
-      setAllVideosReady(true);
-      setVisualProgress(100); // השלם את הטיימר החזותי
+    if (progress >= 100 && mainVideo.isReady) {
+      // הטעינה הסתיימה - אפקטי GSAP
+      gsap.to([numberRef.current, logoRef.current, logoBgRef.current, progressBarRef.current], {
+        opacity: 0,
+        duration: 0.2,
+        ease: "power2.out",
+      });
+
+      const kickoff = () => {
+        gsap.set(circleRef.current, {
+          width: "50px",
+          height: "50px",
+          left: "50%",
+          top: "50%",
+          xPercent: -50,
+          yPercent: -50,
+          scale: 0,
+          opacity: 1,
+          borderRadius: "50%",
+          backgroundColor: "#fdf6ed",
+          position: "fixed",
+          zIndex: 9999,
+          display: "block",
+        });
+
+        gsap.to(circleRef.current, {
+          scale: 1,
+          duration: 0.3,
+          ease: "back.out(1.7)",
+          onComplete: () => {
+            gsap.to(circleRef.current, {
+              scale: 50,
+              duration: 0.8,
+              ease: "power2.out",
+              onComplete: () => {
+                gsap.to(preloaderRef.current, {
+                  opacity: 0,
+                  duration: 0.3,
+                  ease: "power2.out",
+                  onComplete: () => {
+                    setIsVisible(false);
+                    onLoadComplete?.();
+                  },
+                });
+              },
+            });
+          },
+        });
+      };
+
+      const timer = setTimeout(kickoff, 300);
+      return () => clearTimeout(timer);
     }
-  }, [overallProgress, mainVideo.isReady, videoPath]);
-
-  // אנימציית תצוגה: משלב בין טיימר חזותי לאמיתי
-  useEffect(() => {
-    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-    const target = isMobile ? Math.max(visualProgress, progress) : progress;
-    
-    let raf: number;
-    const animate = () => {
-      setDisplayedProgress(prev => {
-        const diff = target - prev;
-        if (Math.abs(diff) < 0.5) return target;
-        return prev + (diff * 0.15);
-      });
-      raf = requestAnimationFrame(animate);
-    };
-    raf = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(raf);
-  }, [progress, visualProgress]);
-
-  // סגירה כשמוכנים: במובייל חכה לטיימר החזותי + וידאוים, בדסקטופ רק וידאוים
-  useEffect(() => {
-    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-    
-    let ready = false;
-    if (isMobile) {
-      // במובייל: חכה שהטיימר החזותי יגיע ל-100 וגם הווידאוים יהיו מוכנים
-      ready = allVideosReady && displayedProgress >= 99;
-    } else {
-      // בדסקטופ: רק וידאוים
-      ready = progress >= 100 && videoStatusRef.current.isReady && overallProgress >= 1;
-    }
-    
-    if (!ready) return;
-
-    // הטעינה הסתיימה - אפקטי GSAP
-    gsap.to([numberRef.current, logoRef.current, logoBgRef.current, progressBarRef.current], {
-      opacity: 0,
-      duration: 0.2,
-      ease: "power2.out",
-    });
-
-    const kickoff = () => {
-      gsap.set(circleRef.current, {
-        width: "50px",
-        height: "50px",
-        left: "50%",
-        top: "50%",
-        xPercent: -50,
-        yPercent: -50,
-        scale: 0,
-        opacity: 1,
-        borderRadius: "50%",
-        backgroundColor: "#fdf6ed",
-        position: "fixed",
-        zIndex: 9999,
-        display: "block",
-      });
-
-      gsap.to(circleRef.current, {
-        scale: 1,
-        duration: 0.3,
-        ease: "back.out(1.7)",
-        onComplete: () => {
-          gsap.to(circleRef.current, {
-            scale: 50,
-            duration: 0.8,
-            ease: "power2.out",
-            onComplete: () => {
-              gsap.to(preloaderRef.current, {
-                opacity: 0,
-                duration: 0.3,
-                ease: "power2.out",
-                onComplete: () => {
-                  setIsVisible(false);
-                  onLoadComplete?.();
-                },
-              });
-            },
-          });
-        },
-      });
-    };
-
-    const timer = setTimeout(kickoff, 300);
-    return () => clearTimeout(timer);
-  }, [progress, overallProgress, onLoadComplete, allVideosReady, displayedProgress]);
+  }, [progress, mainVideo.isReady, onLoadComplete]);
 
   // Fallback בטיחותי: אם אחרי זמן סביר עדיין מוצג המסך, נסגור כדי לא לתקוע מובייל
   useEffect(() => {
@@ -254,7 +186,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
         className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 text-[#fdf6ed] text-6xl sm:text-8xl font-bold"
         style={{ fontFamily: 'Aeonik, sans-serif' }}
       >
-        {Math.round(displayedProgress).toString().padStart(3, '0')}
+        {Math.round(progress).toString().padStart(3, '0')}
       </div>
 
 
@@ -288,7 +220,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
         <div 
           ref={progressFillRef}
           className="h-full bg-[#fdf6ed] transition-all duration-200 ease-out shadow-lg absolute top-0 left-0 z-10"
-          style={{ width: `${displayedProgress}%` }}
+          style={{ width: `${progress}%` }}
         />
       </div>
     </div>
