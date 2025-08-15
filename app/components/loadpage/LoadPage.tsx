@@ -97,21 +97,23 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
     setProgress(percent);
   }, [overallProgress, mainVideo.isReady, videoPath]);
 
-  // אנימציית מספור שלם: הגדלת המספר המוצג צעד-צעד עד היעד האמיתי
+  // אנימציית מספור חלקה: התחלה מיידית עם אנימציה רציפה
   useEffect(() => {
-    if (displayedProgress >= progress) return;
+    // התחל אנימציה מיד, גם אם progress עדיין 0
     let raf: number;
-    const step = () => {
+    const animate = () => {
       setDisplayedProgress(prev => {
-        if (prev >= progress) return prev;
-        // קפיצה של 1 כדי לשמור על 1,2,3...
-        return Math.min(progress, prev + 1);
+        const target = Math.max(progress, 1); // לפחות 1 כדי שיראו תנועה
+        const diff = target - prev;
+        if (Math.abs(diff) < 0.5) return target;
+        // אנימציה חלקה במקום קפיצות
+        return prev + (diff * 0.1);
       });
-      raf = requestAnimationFrame(step);
+      raf = requestAnimationFrame(animate);
     };
-    raf = requestAnimationFrame(step);
+    raf = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(raf);
-  }, [progress, displayedProgress]);
+  }, [progress]);
 
   // סגירה כשמוכנים: רק כאשר הווידאו הראשי מוכן וכל שאר הווידאוים הושלמו (overallProgress===1)
   useEffect(() => {

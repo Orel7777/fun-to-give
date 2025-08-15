@@ -137,7 +137,6 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
         <div className="flex absolute inset-0 justify-center items-center bg-black/50">
           <div className="flex flex-col gap-2 items-center">
             <div className="w-8 h-8 rounded-full border-2 animate-spin border-white/30 border-t-white"></div>
-            <p className="text-sm text-white font-staff">טוען וידאו...</p>
           </div>
         </div>
       )}

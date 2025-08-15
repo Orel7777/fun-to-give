@@ -249,12 +249,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         </div>
       </div>
 
-      {/* הוידאו מתחת לטקסט */}
-      {loading && (
-        <div className="flex justify-center items-center py-0 sm:py-1 md:py-2 lg:py-4 bg-[#fdf6ed]">
-          <div className="text-[#2a2b26] font-staff text-lg sm:text-xl">טוען וידאו...</div>
-        </div>
-      )}
+      {/* הוידאו מתחת לטקסט - ללא הודעת טעינה */}
       
       {error && (
         <div className="flex justify-center items-center py-1 sm:py-2 md:py-4 lg:py-6 bg-[#fdf6ed]">

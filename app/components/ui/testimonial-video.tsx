@@ -236,7 +236,6 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
           <div className="flex flex-col items-center gap-2">
             <div className="w-8 h-8 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-            <p className="text-white text-sm font-staff">טוען וידאו...</p>
           </div>
         </div>
       )}
