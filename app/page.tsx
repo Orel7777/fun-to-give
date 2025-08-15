@@ -35,13 +35,16 @@ export default function Home() {
       <SplashCursor />
       
       {isLoading && <LoadPage onLoadComplete={handleLoadComplete} duration={2500} videoPath="כיף לתת מקוצר.mp4" />}
-      {!isLoading && <NavigationBar />}
-
-      <main ref={mainContentRef}>
-      {/* className="pt-32" */}
-        <HeroSection showTextAnimation={showTextAnimation} />
-      </main>
-      <Footer />
+      
+      {!isLoading && (
+        <>
+          <NavigationBar />
+          <main ref={mainContentRef}>
+            <HeroSection showTextAnimation={showTextAnimation} />
+          </main>
+          <Footer />
+        </>
+      )}
     </div>
   );
 }
