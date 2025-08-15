@@ -9,7 +9,7 @@ const DonationsSection = dynamic(() => import('./Donations-section'), { ssr: fal
 const OrganizationPurpose = dynamic(() => import('./Organization-purpose'), { ssr: false });
 const OrganizationStory = dynamic(() => import('./Organization-story'), { ssr: false });
 import { useVideo } from '../contexts/VideoContext';
-import { PulseBeamsFirstDemo } from '../components/call to action/Demo';
+import { PulseBeamsFirstDemo } from '../components/call-to-action/Demo';
 import { motion } from 'framer-motion';
 import { SlidUp, SlidUpLeft, SlidUpRight } from '../lib/utils';
 
