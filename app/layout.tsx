@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Playfair_Display } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 import "./fonts/almoni.css";
 import "./fonts/quicksand.css";
-import { VideoProvider } from "./contexts/VideoContext";
+import { VideoProvider } from './contexts/VideoContext';
+import ScrollToTop from "./components/ScrollToTop";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -13,11 +15,16 @@ const playfair = Playfair_Display({
 export const metadata: Metadata = {
   title: "כיף לתת",
   description: "אפליקציית כיף לתת",
-  viewport: "width=device-width, initial-scale=1, maximum-scale=1",
   icons: {
     icon: '/logo.png',
     apple: '/logo.png',
   },
+};
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 // WhatsApp Icon Component
@@ -25,7 +32,7 @@ function WhatsAppIcon() {
   return (
     <div className="fixed right-4 bottom-4 z-50">
       <a
-        href="https://wa.me/972000000000" // Replace with actual WhatsApp number
+        href="https://wa.me/972532217895?text=%D7%A9%D7%9C%D7%95%D7%9D%2C%20%D7%90%D7%A0%D7%99%20%D7%9E%D7%A2%D7%95%D7%A0%D7%99%D7%99%D7%9F%20%D7%9C%D7%99%D7%A6%D7%95%D7%A8%20%D7%A7%D7%A9%D7%A8%20%D7%9E%D7%94%D7%90%D7%AA%D7%A8"
         target="_blank"
         rel="noopener noreferrer"
         className="block w-14 h-14 transition-all duration-300 ease-in-out group hover:scale-110 hover:rotate-12 active:scale-95"
@@ -51,12 +58,10 @@ function WhatsAppIcon() {
 function EmailIcon() {
   return (
     <div className="fixed bottom-4 left-4 z-50">
-      <a
-        href="mailto:info@example.com" // Replace with actual email
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        href="/contact-form"
         className="block w-14 h-14 transition-all duration-300 ease-in-out group hover:scale-110 hover:rotate-12 active:scale-95"
-        aria-label="שלח אימייל"
+        aria-label="לעמוד צור קשר"
       >
         <svg
           className="w-full h-full transition-colors duration-300 email-icon"
@@ -66,7 +71,7 @@ function EmailIcon() {
         >
           <path fillRule="evenodd" clipRule="evenodd" d="M3.75 5.25L3 6V18L3.75 18.75H20.25L21 18V6L20.25 5.25H3.75ZM4.5 7.6955V17.25H19.5V7.69525L11.9999 14.5136L4.5 7.6955ZM18.3099 6.75H5.68986L11.9999 12.4864L18.3099 6.75Z" fill="#f5a383"/>
         </svg>
-      </a>
+      </Link>
     </div>
   );
 }
@@ -78,11 +83,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="he" dir="rtl" suppressHydrationWarning={true}>
+      <head suppressHydrationWarning={true}>
+      </head>
       <body
         className={`${playfair.className} antialiased`}
         suppressHydrationWarning={true}
       >
         <VideoProvider>
+          <ScrollToTop />
           {children}
           <WhatsAppIcon />
           <EmailIcon />

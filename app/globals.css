@@ -60,6 +60,15 @@ html {
   }
 }
 
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-sans text-2xl font-bold;
+  }
+  p, span, li, a {
+    @apply font-sans text-base font-normal;
+  }
+}
+
 /* Ensure text is readable on all devices */
 h1, h2, h3, h4, h5, h6 {
   line-height: 1.2;

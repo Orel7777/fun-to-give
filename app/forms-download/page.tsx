@@ -1,7 +1,5 @@
-'use client';
-
-import FormsDownload from '../pages/FormsDownload';
+import OfficialForms from '../pages/Official-Forms';
 
 export default function FormsDownloadPage() {
-  return <FormsDownload />;
+  return <OfficialForms />;
 }

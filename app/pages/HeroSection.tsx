@@ -1,46 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Script from 'next/script';
-import { HorizontalScrollCarousel } from '../components';
+import dynamic from 'next/dynamic';
 import ScrollExpandMedia from '../components/ui/scroll-expansion-hero';
-import FamiliesTestimonials from './Testimonials';
 import { useVideo } from '../contexts/VideoContext';
-import { PulseBeamsFirstDemo } from '../components/call to action/demo';
+const HorizontalScrollCarousel = dynamic(() => import('../components').then(m => m.HorizontalScrollCarousel), { ssr: false });
+const FamiliesTestimonials = dynamic(() => import('./Testimonials'), { ssr: false });
+const DonationsSection = dynamic(() => import('./Donations-section'), { ssr: false });
+const OrganizationPurpose = dynamic(() => import('./Organization-purpose'), { ssr: false });
+const OrganizationStory = dynamic(() => import('./Organization-story'), { ssr: false });
+import { PulseBeamsFirstDemo } from '../components/call-to-action/Demo';
 import { motion } from 'framer-motion';
-import DonationsSection from './donations-section';
-import OrganizationPurpose from './organization-purpose';
-import OrganizationStory from './Organization-story';
+import { SlidUp, SlidUpLeft, SlidUpRight } from '../lib/utils';
 
-// Declare the custom element so TSX recognizes <lottie-player />
-/* eslint-disable @typescript-eslint/no-namespace */
-declare global {
-  namespace JSX {
-    interface IntrinsicElements {
-      'lottie-player': React.DetailedHTMLProps<
-        React.HTMLAttributes<HTMLElement>,
-        HTMLElement
-      > & {
-        src?: string;
-        background?: string;
-        speed?: string | number;
-        loop?: boolean;
-        autoplay?: boolean;
-        style?: React.CSSProperties;
-      };
-    }
-  }
-}
-/* eslint-enable @typescript-eslint/no-namespace */
+// Alias for custom element to satisfy TS without global typings
+const LottiePlayer: any = 'lottie-player';
 
 interface HeroSectionProps {
   showTextAnimation: boolean;
 }
 
 const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
-  // קבלת הוידאו מהקונטקסט (הוא נטען מראש בLoadPage)
-  const { mainVideo } = useVideo();
-  const { loading, error, isReady } = mainVideo;
-  
+  // Main video from Firebase via context
+  const { mainVideo, preloadVideo } = useVideo();
+
   // זיהוי גודל המסך
   const [isMobile, setIsMobile] = useState(false);
   
@@ -57,6 +40,8 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
     
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  // טעינת הווידאו נעשית בזמן מסך הטעינה (LoadPage). כאן רק משתמשים בערך המוכן.
   
   // We don't need animation state anymore since we're using a one-time animation
   // לוגיקת האנימציה - הערות מסבירות
@@ -103,6 +88,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                   alt="כיף לתת - עם כל נתינה הלב מתמלא"
                   width={500}
                   height={200}
+                  sizes="(max-width: 640px) 200px, (max-width: 768px) 250px, 300px"
                   style={{ 
                     width: '100%',
                     height: 'auto'
@@ -235,12 +221,12 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                     alt="כיף לתת - עם כל נתינה הלב מתמלא"
                     width={300}
                     height={100}
+                    sizes="(max-width: 640px) 160px, (max-width: 768px) 250px, 300px"
                     className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
                     style={{
                       animation: 'glitch 3s ease-in-out infinite alternate',
                       animationDelay: '0.5s'
                     }}
-                    priority
                   />
                 </div>
               </div>
@@ -264,34 +250,26 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         </div>
       </div>
 
-      {/* הוידאו מתחת לטקסט */}
-      {loading && (
-        <div className="flex justify-center items-center py-0 sm:py-1 md:py-2 lg:py-4 bg-[#fdf6ed]">
-          <div className="text-[#2a2b26] font-staff text-lg sm:text-xl">טוען וידאו...</div>
-        </div>
-      )}
-      
-      {error && (
-        <div className="flex justify-center items-center py-1 sm:py-2 md:py-4 lg:py-6 bg-[#fdf6ed]">
-          <div className="text-lg text-center text-red-600 sm:text-xl font-staff">
-            {error}
-          </div>
-        </div>
-      )}
-      
-      {!loading && !error && isReady && (
+      {/* הוידאו/תמונת-מקום מתחת לטקסט */}
+      {mainVideo.videoUrl ? (
         <ScrollExpandMedia
           mediaType="video"
           mediaSrc={mainVideo.videoUrl}
-          bgImageSrc="/pictures/1.JPG"
+          bgImageSrc="/pictures/1.webp"
           title="עמותת כיף לתת"
           date="כיף לתת"
           scrollToExpand="גלול/י להרחבה"
           textBlend
         >
-          <div className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8 -pt-16 sm:pt-0 md:pt-2 lg:pt-8">
+          <div id="organization-activities" className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8 -pt-16 sm:pt-0 md:pt-2 lg:pt-8">
             {/* תמונה עם אנימציה */}
-            <div className="flex justify-center mb-0 sm:mb-2">
+            <motion.div 
+              variants={SlidUp(0.1)}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="flex justify-center mb-0 sm:mb-2"
+            >
               <div className="relative group">
                 {/* רקע זוהר */}
                 <div className="absolute inset-0 bg-gradient-to-r from-[#f5a383] to-[#9acdbe] rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500 animate-pulse"></div>
@@ -322,62 +300,133 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                   <div className="absolute -bottom-4 -left-4 w-3 h-3 bg-[#9acdbe] rounded-full opacity-60 animate-ping" style={{ animationDelay: '3s' }}></div>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-3 sm:mb-4">
+            <motion.h2 
+              variants={SlidUpLeft(0.3)}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-3 sm:mb-4"
+            >
               עמותת כיף לתת
-            </h2>
-            <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+            </motion.h2>
+            <motion.p 
+              variants={SlidUpRight(0.5)}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed"
+            >
               מעניקה בשר, עופות, דגים ביצים ויין למאות משפחות באופן קבוע.
-            </p>
-            <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+            </motion.p>
+            <motion.p 
+              variants={SlidUpLeft(0.7)}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed"
+            >
               בנוסף, כיף לתת עוזרת לילדים עם מוגבלויות ומשמחת ילדים בבתי חולים.
-            </p>
-            <p className="text-lg sm:text-xl md:text-2xl mt-2 mb-2 sm:mt-3 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+            </motion.p>
+            <motion.p 
+              variants={SlidUpRight(0.9)}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="text-lg sm:text-xl md:text-2xl mt-2 mb-2 sm:mt-3 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed"
+            >
               הפעילות שלנו מבוצעת מתוך אמונה עמוקה בעקרונות של נתינה, אהבת הזולת ורצון לשמח את האחר.
-            </p>
-            <p className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-relaxed font-semibold">
+            </motion.p>
+            <motion.p 
+              variants={SlidUpLeft(1.1)}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-relaxed font-semibold"
+            >
               כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
-            </p>
+            </motion.p>
 
             {/* Lottie animations row */}
-            <div className="flex flex-row gap-4 justify-center items-center mt-6 sm:mt-8 sm:gap-6 md:gap-10 lg:gap-12">
+            <motion.div 
+              variants={SlidUp(1.3)}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              className="flex flex-row gap-4 justify-center items-center mt-6 sm:mt-8 sm:gap-6 md:gap-10 lg:gap-12"
+            >
               {/* Load Lottie web component once on client */}
               <Script
                 src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
-                strategy="afterInteractive"
+                strategy="lazyOnload"
               />
 
-              <lottie-player
-                src="/animation-json/Donation.json"
-                background="transparent"
-                speed="1"
-                loop
-                autoplay
-                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
-                style={{ width: 'auto', height: 'auto' }}
-              ></lottie-player>
+              <motion.div
+                variants={SlidUpLeft(1.5)}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+              >
+                <LottiePlayer
+                  src="/animation-json/Donation.json"
+                  background="transparent"
+                  speed="1"
+                  loop
+                  autoplay
+                  className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
+                  style={{ width: 'auto', height: 'auto' }}
+                ></LottiePlayer>
+              </motion.div>
 
-              <lottie-player
-                src="/animation-json/handshake%20blue.json"
-                background="transparent"
-                speed="1"
-                loop
-                autoplay
-                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
-                style={{ width: 'auto', height: 'auto' }}
-              ></lottie-player>
+              <motion.div
+                variants={SlidUp(1.7)}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+              >
+                <LottiePlayer
+                  src="/animation-json/handshake%20blue.json"
+                  background="transparent"
+                  speed="1"
+                  loop
+                  autoplay
+                  className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
+                  style={{ width: 'auto', height: 'auto' }}
+                ></LottiePlayer>
+              </motion.div>
 
-              <lottie-player
-                src="/animation-json/Heart.json"
-                background="transparent"
-                speed="1"
-                loop
-                autoplay
-                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
-                style={{ width: 'auto', height: 'auto' }}
-              ></lottie-player>
-            </div>
+              <motion.div
+                variants={SlidUpRight(1.9)}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+              >
+                <LottiePlayer
+                  src="/animation-json/Heart.json"
+                  background="transparent"
+                  speed="1"
+                  loop
+                  autoplay
+                  className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
+                  style={{ width: 'auto', height: 'auto' }}
+                ></LottiePlayer>
+              </motion.div>
+            </motion.div>
+          </div>
+        </ScrollExpandMedia>
+      ) : (
+        <ScrollExpandMedia
+          mediaType="image"
+          mediaSrc="/pictures/1.webp"
+          bgImageSrc="/pictures/1.webp"
+          title="עמותת כיף לתת"
+          date="כיף לתת"
+          scrollToExpand="גלול/י להרחבה"
+          textBlend
+        >
+          <div id="organization-activities" className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8 -pt-16 sm:pt-0 md:pt-2 lg:pt-8">
+            {/* כאן מוצג פלייסהולדר עד שהווידאו נטען מפיירבייס */}
           </div>
         </ScrollExpandMedia>
       )}
@@ -406,36 +455,42 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         </h2>
       </div>
       
+      <div id="photos-videos">
       <HorizontalScrollCarousel
         images={[
-          "/pictures/1.JPG",
-          "/pictures/2.JPG",
-          "/pictures/3.jpeg",
-          "/pictures/4.JPG",
-          "/pictures/5.JPG",
-          "/pictures/6.JPG",
-          "/pictures/7.JPG",
-          "/pictures/8.png",
-          "/pictures/9.png",
-          "/pictures/10.png",
-          "/pictures/11.jpeg",
-          "/pictures/12.jpeg",
-          // "/pictures/13.jpeg", // הוסתר לסדר יפה של 4 תמונות בכל שורה
-          // "/pictures/14.jpeg"  // הוסתר לסדר יפה של 4 תמונות בכל שורה
+          "/pictures/1.webp",
+          "/pictures/2.webp",
+          "/pictures/3.webp",
+          "/pictures/4.webp",
+          "/pictures/13.webp",
+          "/pictures/6.webp",
+          "/pictures/7.webp",
+          "/pictures/8.webp",
+          "/pictures/9.webp",
+          "/pictures/10.webp",
+          "/pictures/11.webp",
+          "/pictures/12.webp",
+          // "/pictures/13.webp", // הוסתר לסדר יפה של 4 תמונות בכל שורה
+          // "/pictures/14.webp"  // הוסתר לסדר יפה של 4 תמונות בכל שורה
         ]}
       />
+      </div>
 
       {/* מרווח בין גלריית התמונות למשפחות מספרות */}
       <div className="py-4 sm:py-8 md:py-12 lg:py-20"></div>
 
       {/* סיפורי משפחות עם עדויות אודיו */}
+      <div id="family-testimonials">
       <FamiliesTestimonials />
+      </div>
 
       {/* תרומה - מוצג מיד אחרי משפחות מספרות */}
       <DonationsSection />
 
       {/* ייעוד העמותה - מוצג אחרי סעיף התרומה ללא מרווח */}
+      <div id="organization-purpose">
       <OrganizationPurpose />
+      </div>
 
       {/* סיפור העמותה - מוצג אחרי ייעוד העמותה */}
       <OrganizationStory />

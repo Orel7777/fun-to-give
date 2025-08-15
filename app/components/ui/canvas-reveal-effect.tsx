@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { useInView } from 'framer-motion';
 
 export const CanvasRevealEffect = ({
-  animationSpeed = 4,
+  animationSpeed = 4, // Used for canvas animation timing
   containerClassName,
   colors = [[125, 211, 252]],
   dotSize = 2,

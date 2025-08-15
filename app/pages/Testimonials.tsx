@@ -7,6 +7,7 @@ import Image from "next/image";
 import TestimonialCard from "../components/ui/testimonial-card";
 import TestimonialVideo from "../components/ui/testimonial-video";
 import { TestimonialVideoProvider } from "../contexts/TestimonialVideoContext";
+import { SlidUp, SlidUpLeft, SlidUpRight } from "../lib/utils";
 
 const testimonials = [
   {
@@ -148,10 +149,10 @@ const FamiliesTestimonials = () => {
       <section className="relative min-h-screen bg-gradient-to-br from-[#fdf6ed] via-[#fdf6ed] to-[#f5f0e8] py-8 sm:py-12 md:py-16 lg:py-20 overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
+            variants={SlidUp(0.1)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
             className="flex flex-col items-center justify-center max-w-[640px] mx-auto"
           >
             <div className="flex items-center justify-center gap-3 mb-1 sm:mb-2">
@@ -179,7 +180,13 @@ const FamiliesTestimonials = () => {
             </div>
           </motion.div>
 
-        <div className="mt-1 sm:mt-2 md:mt-4">
+        <motion.div 
+          variants={SlidUpLeft(0.3)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="mt-1 sm:mt-2 md:mt-4"
+        >
           {/* תצוגה אחידה למובייל ודסקטופ - קרוסלה */}
           <div className="mx-auto max-w-sm md:max-w-md lg:max-w-lg">
             <AnimatePresence mode="wait">
@@ -221,20 +228,38 @@ const FamiliesTestimonials = () => {
               </button>
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* סרטונים נוספים */}
-        <div className="mt-8 sm:mt-12 md:mt-16">
-          <div className="text-center mb-6 sm:mb-8">
+        <motion.div 
+          variants={SlidUpRight(0.5)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          className="mt-8 sm:mt-12 md:mt-16"
+        >
+          <motion.div 
+            variants={SlidUp(0.6)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="text-center mb-6 sm:mb-8"
+          >
             <h3 className="text-2xl sm:text-3xl font-bold text-[#2a2b26] font-staff mb-2">
               סרטונים נוספים
             </h3>
             <p className="text-[#2a2b26]/70 font-staff text-sm sm:text-base">
               עוד סיפורים מרגשים ממשפחות שקיבלו עזרה
             </p>
-          </div>
+          </motion.div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-4xl mx-auto px-4">
+          <motion.div 
+            variants={SlidUpLeft(0.8)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-4xl mx-auto px-4"
+          >
             <TestimonialVideo 
               videoPath="סרטון1.mp4"
               className="w-full"
@@ -245,8 +270,8 @@ const FamiliesTestimonials = () => {
               className="w-full"
               videoId="testimonial-video-2"
             />
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
         
           {/* רקע דקורטיבי */}
           <div className="overflow-hidden absolute inset-0 pointer-events-none">

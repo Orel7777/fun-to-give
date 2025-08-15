@@ -121,7 +121,7 @@ const ScrollExpandMedia = ({
         await video.msRequestFullscreen();
         return;
       }
-    } catch (error) {
+    } catch {
       console.log('Native fullscreen failed, using modal fallback');
     }
     
@@ -149,8 +149,8 @@ const ScrollExpandMedia = ({
           await doc.msExitFullscreen();
           return;
         }
-      } catch (error) {
-        console.log('Native fullscreen exit failed');
+      } catch {
+        console.log('Exit fullscreen failed');
       }
     }
     

@@ -2,6 +2,7 @@
 import { Card } from "../components/ui/card"
 import { motion } from "framer-motion"
 import Image from "next/image"
+import { scrollToDonationForm, SlidUp, SlidUpLeft, SlidUpRight } from "../lib/utils"
 
 export default function OrganizationStory() {
   const fadeInUp = {
@@ -19,15 +20,13 @@ export default function OrganizationStory() {
   }
 
   const iconBounce = {
-    animate: {
-      y: [0, -10, 0],
-      transition: {
-        duration: 2,
-        repeat: Number.POSITIVE_INFINITY,
-        ease: "easeInOut",
-      },
+    y: [0, -10, 0],
+    transition: {
+      duration: 2,
+      repeat: Infinity,
+      ease: "easeInOut",
     },
-  }
+  } as any
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: "#fdf6ed" }}>
@@ -35,9 +34,10 @@ export default function OrganizationStory() {
         {/* Main Title */}
         <motion.div
           className="mb-16 text-center"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
+          variants={SlidUp(0.1)}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
         >
                                                                                        <motion.h1
                className="flex gap-3 justify-center items-baseline mb-4 text-4xl font-bold tracking-tighter text-center md:text-5xl"
@@ -89,7 +89,12 @@ export default function OrganizationStory() {
 
         <motion.div variants={staggerContainer} initial="initial" animate="animate">
           {/* Why we named it "Fun to Give" */}
-          <motion.div variants={fadeInUp}>
+          <motion.div 
+            variants={SlidUpLeft(0.3)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+          >
             <Card className="p-8 mb-12 border-0 shadow-lg" style={{ backgroundColor: "rgba(151, 202, 188, 0.1)" }}>
               <div className="flex gap-4 items-start mb-6" dir="rtl">
                 <motion.div variants={iconBounce} animate="animate" className="flex-shrink-0 mt-1">
@@ -136,7 +141,12 @@ export default function OrganizationStory() {
           </motion.div>
 
           {/* Foundation Story */}
-          <motion.div variants={fadeInUp}>
+          <motion.div 
+            variants={SlidUpRight(0.5)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+          >
             <Card className="p-8 mb-12 border-0 shadow-lg" style={{ backgroundColor: "rgba(242, 162, 131, 0.1)" }}>
               <div className="flex gap-4 items-start mb-6" dir="rtl">
                 <motion.div variants={iconBounce} animate="animate" className="flex-shrink-0 mt-1">
@@ -168,7 +178,7 @@ export default function OrganizationStory() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
                   >
-                    העמותה הוקמה על שם של יוסף ומסעדה כנפו ז"ל, שעלו לארץ הקדישו את חייהם לגידול 14 ילדים, שאיתם הם
+                    העמותה הוקמה על שם של יוסף ומסעדה כנפו ז&quot;ל, שעלו לארץ הקדישו את חייהם לגידול 14 ילדים, שאיתם הם
                     חינכו לערכים של אהבת הזולת ואהבת הארץ.
                   </motion.p>
                 </div>
@@ -177,7 +187,13 @@ export default function OrganizationStory() {
           </motion.div>
 
           {/* Memorial Section */}
-          <motion.div variants={fadeInUp} className="mb-16">
+          <motion.div 
+            variants={SlidUp(0.7)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="mb-16"
+          >
                          <motion.h2
                className="mb-8 text-2xl font-bold tracking-tighter text-center"
                style={{ color: "#2a2b26" }}
@@ -198,25 +214,27 @@ export default function OrganizationStory() {
               >
                                  <Card className="p-6 h-full border-0 shadow-lg" style={{ backgroundColor: "rgba(151, 202, 188, 0.1)" }}>
                    <div className="flex flex-col items-center text-center" dir="rtl">
-                     <motion.div
-                       className="flex overflow-hidden justify-center items-center mb-4 w-32 h-32 rounded-full"
+                                         <motion.div
+                       className="flex gap-2 mb-4 overflow-hidden rounded-lg shadow-md"
                        whileHover={{ scale: 1.05 }}
                        transition={{ duration: 0.3 }}
                      >
-                       <div className="flex w-full h-full">
+                       <div className="relative w-16 h-20">
                          <Image
                            src="/picture-personal/women1.jpg"
                            alt="מרים אלמליח ז״ל"
-                           width={64}
-                           height={128}
-                           className="object-cover w-1/2 h-full"
+                           fill
+                           sizes="64px"
+                           className="object-cover rounded-l-lg"
                          />
+                       </div>
+                       <div className="relative w-16 h-20">
                          <Image
                            src="/picture-personal/women2.jpeg"
                            alt="מרים אלמליח ז״ל"
-                           width={64}
-                           height={128}
-                           className="object-cover w-1/2 h-full"
+                           fill
+                           sizes="64px"
+                           className="object-cover rounded-r-lg"
                          />
                        </div>
                      </motion.div>
@@ -226,7 +244,7 @@ export default function OrganizationStory() {
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.6, delay: 0.4 }}
                     >
-                      את זכרה של <strong>מרים אלמליח ז"ל</strong>, שהקדישה את חייה לגידול ילדיה ושמשה כוח עוז בבית
+                      את זכרה של <strong>מרים אלמליח ז&quot;ל</strong>, שהקדישה את חייה לגידול ילדיה ושמשה כוח עוז בבית
                       החולים סורוקה במסירות לב ואהבת אדם.
                     </motion.p>
                   </div>
@@ -241,25 +259,27 @@ export default function OrganizationStory() {
               >
                                  <Card className="p-6 h-full border-0 shadow-lg" style={{ backgroundColor: "rgba(242, 162, 131, 0.1)" }}>
                    <div className="flex flex-col items-center text-center" dir="rtl">
-                     <motion.div
-                       className="flex overflow-hidden justify-center items-center mb-4 w-32 h-32 rounded-full"
+                                         <motion.div
+                       className="flex gap-2 mb-4 overflow-hidden rounded-lg shadow-md"
                        whileHover={{ scale: 1.05 }}
                        transition={{ duration: 0.3 }}
                      >
-                       <div className="flex w-full h-full">
+                       <div className="relative w-16 h-20">
                          <Image
                            src="/picture-personal/man1.jpeg"
                            alt="פרופסור יעקב ביכלר ז״ל"
-                           width={64}
-                           height={128}
-                           className="object-cover w-1/2 h-full"
+                           fill
+                           sizes="64px"
+                           className="object-cover rounded-l-lg"
                          />
+                       </div>
+                       <div className="relative w-16 h-20">
                          <Image
                            src="/picture-personal/man2.png"
                            alt="פרופסור יעקב ביכלר ז״ל"
-                           width={64}
-                           height={128}
-                           className="object-cover w-1/2 h-full"
+                           fill
+                           sizes="64px"
+                           className="object-cover rounded-r-lg"
                          />
                        </div>
                      </motion.div>
@@ -269,8 +289,8 @@ export default function OrganizationStory() {
                       animate={{ opacity: 1 }}
                       transition={{ duration: 0.6, delay: 0.6 }}
                     >
-                      את זכרו של <strong>פרופסור יעקב ביכלר ז"ל</strong>, ששירת את ישראל בכבוד ונתן בסתר לנצרכים ביחד עם
-                      אשתו יהודית ביכלר ז"ל.
+                      את זכרו של <strong>פרופסור יעקב ביכלר ז&quot;ל</strong>, ששירת את ישראל בכבוד ונתן בסתר לנצרכים ביחד עם
+                      אשתו יהודית ביכלר ז&quot;ל.
                     </motion.p>
                   </div>
                 </Card>
@@ -279,7 +299,12 @@ export default function OrganizationStory() {
           </motion.div>
 
           {/* Mission Statement */}
-          <motion.div variants={fadeInUp}>
+          <motion.div 
+            variants={SlidUpLeft(0.9)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+          >
             <Card className="p-8 mb-12 border-0 shadow-lg" style={{ backgroundColor: "rgba(151, 202, 188, 0.1)" }}>
               <div className="text-center" dir="rtl">
                                  <motion.h2
@@ -289,7 +314,7 @@ export default function OrganizationStory() {
                    animate={{ opacity: 1, scale: 1 }}
                    transition={{ duration: 0.6, delay: 0.2 }}
                  >
-                   "ואהבת לרעך כמוך"
+                   &quot;ואהבת לרעך כמוך&quot;
                  </motion.h2>
                                  <motion.div
                    className="space-y-4 text-lg leading-relaxed text-gray-800"
@@ -309,11 +334,14 @@ export default function OrganizationStory() {
              </Card>
            </motion.div>
 
-           {/* Call to Action Button */}
-           <motion.div
-             variants={fadeInUp}
-             className="mt-8 text-center"
-           >
+                     {/* Call to Action Button */}
+          <motion.div
+            variants={SlidUpRight(1.1)}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-100px" }}
+            className="mt-8 text-center"
+          >
                            <motion.button
                 className="px-8 py-4 text-lg font-bold text-white rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl cursor-pointer"
                 style={{
@@ -325,8 +353,7 @@ export default function OrganizationStory() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
                 onClick={() => {
-                  // כאן אפשר להוסיף לוגיקה לניווט או פעולה
-                  console.log("הכפתור נלחץ - הצטרפו לנתניה");
+                  scrollToDonationForm();
                 }}
               >
                <div className="flex gap-3 justify-center items-center" dir="rtl">

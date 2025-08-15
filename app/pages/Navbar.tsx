@@ -1,8 +1,16 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { Menu } from "lucide-react";
 import { motion } from "framer-motion";
+import { 
+  scrollToDonationForm, 
+  scrollToOrganizationActivities, 
+  scrollToPhotosVideos, 
+  scrollToFamilyTestimonials, 
+  scrollToOrganizationPurpose 
+} from "../lib/utils";
 
 interface NavigationBarProps {
   className?: string;
@@ -11,6 +19,7 @@ interface NavigationBarProps {
 
 
 export default function NavigationBar({ className = "" }: NavigationBarProps) {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isMobileMenuDropdownOpen, setIsMobileMenuDropdownOpen] = useState<boolean>(false);
   const [isMenuButtonHovered, setIsMenuButtonHovered] = useState<boolean>(false);
@@ -107,6 +116,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     { 
       title: "הפעילות שלנו", 
       url: "#הפעילות-שלנו",
+      onClick: () => scrollToOrganizationActivities(),
       icon: (
         <motion.svg 
           width="20" 
@@ -138,6 +148,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     { 
       title: "תמונות ווידאו", 
       url: "#תמונות-ווידאו",
+      onClick: () => scrollToPhotosVideos(),
       icon: (
         <motion.svg 
           width="20" 
@@ -166,6 +177,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     { 
       title: "משפחות מספרות", 
       url: "#משפחות-מספרות",
+      onClick: () => scrollToFamilyTestimonials(),
       icon: (
         <motion.svg 
           width="20" 
@@ -205,6 +217,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     { 
       title: "תרומה", 
       url: "#תרומה",
+      onClick: () => scrollToDonationForm(),
       icon: (
         <motion.svg 
           width="20" 
@@ -235,6 +248,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     { 
       title: "ייעוד העמותה", 
       url: "#ייעוד-העמותה",
+      onClick: () => scrollToOrganizationPurpose(),
       icon: (
         <motion.svg 
           width="20" 
@@ -306,7 +320,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     },
     { 
       title: "דרושים", 
-      url: "#דרושים",
+      url: "/drushim",
       icon: (
         <motion.svg 
           width="20" 
@@ -363,8 +377,14 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
             <motion.img
               src="/logo.png"
               alt="כיף לתת"
-              className="w-auto h-16"
+              className="w-auto h-16 cursor-pointer"
               loading="eager"
+              onClick={() => {
+                window.scrollTo({
+                  top: 0,
+                  behavior: 'smooth'
+                });
+              }}
               whileHover={{ 
                 scale: 1.1,
                 rotate: 5,
@@ -383,7 +403,10 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               </Link>
             </div>
             
-            <button className="px-[14px] py-2 font-semibold text-[#2b2e3a] bg-[#f4a282] rounded-lg transition-all duration-300 hover:scale-105 hover:bg-[#e0ccbc] flex items-center gap-2 relative overflow-hidden group cursor-pointer">
+            <button 
+              className="px-[14px] py-2 font-semibold text-[#2b2e3a] bg-[#f4a282] rounded-lg transition-all duration-300 hover:scale-105 hover:bg-[#e0ccbc] flex items-center gap-2 relative overflow-hidden group cursor-pointer"
+              onClick={() => scrollToDonationForm()}
+            >
                               <span className="relative z-10">הצטרפו לנתינה</span>
               <div className="relative z-10 w-4 h-4 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110">
                 {/* Default icon (click icon) */}
@@ -518,9 +541,15 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               <div className="absolute right-0 top-full invisible z-50 mt-2 w-72 rounded-xl border shadow-2xl opacity-0 backdrop-blur-xl transition-all duration-500 ease-out scale-95 bg-white/95 border-gray-200/50 group-hover:opacity-100 group-hover:visible group-hover:scale-100">
                 <div className="p-3">
               {menuItems.map((item, index) => (
-                <a
+                <div
                   key={index}
-                      href={item.url}
+                  onClick={() => {
+                    if (item.onClick) {
+                      item.onClick();
+                    } else if (item.url) {
+                      router.push(item.url);
+                    }
+                  }}
                                              className="block px-4 py-4 text-base font-medium text-gray-700 rounded-lg transition-all duration-300 cursor-pointer hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:shadow-md hover:scale-105 hover:translate-x-1 active:scale-95 menu-item"
                       style={{
                         animationDelay: `${index * 100}ms`,
@@ -550,7 +579,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                           )}
                         </div>
                       </div>
-                </a>
+                </div>
               ))}
                 </div>
                 {/* Decorative bottom border */}
@@ -717,11 +746,17 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                   }`}
                 >
             {menuItems.map((item, index) => (
-              <a
+              <div
                 key={index}
-                      href={item.url}
+                onClick={() => {
+                  if (item.onClick) {
+                    item.onClick();
+                  } else if (item.url) {
+                    router.push(item.url);
+                  }
+                  closeMenu();
+                }}
                                              className="block px-4 py-3 text-base text-gray-600 rounded-lg transition-all duration-300 cursor-pointer hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:shadow-sm hover:scale-105 active:scale-95 menu-item"
-                onClick={closeMenu}
                       style={{
                         animationDelay: `${index * 100}ms`,
                       }}
@@ -739,7 +774,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                           )}
                         </div>
                       </div>
-              </a>
+              </div>
             ))}
                 </div>
               </div>
@@ -795,6 +830,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               </Link>
               <motion.button 
                 className="px-4 py-3 w-full font-semibold text-[#2b2e3a] bg-[#f5a383] rounded-lg hover:scale-105 hover:bg-[#e0ccbc] transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group cursor-pointer"
+                onClick={() => scrollToDonationForm()}
                 whileHover={{
                   scale: 1.05,
                   transition: { 

@@ -22,7 +22,23 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
     const video = videoRef.current;
     if (!video || !videoUrl) return;
 
+    // כאשר ה-URL מתעדכן (blob מוכן), נכריח רענון של הנגן
+    try {
+      video.load();
+    } catch {}
+
+    let fallbackTimer: number | undefined;
+
     const handleLoadedData = () => {
+      // נעדיף canplaythrough, אך נייצר פועל יוצא לאחר השהיה כדי לא להיתקע
+      if (fallbackTimer) window.clearTimeout(fallbackTimer);
+      fallbackTimer = window.setTimeout(() => {
+        setIsVideoLoaded(true);
+        setShowThumbnail(true);
+      }, 1500);
+    };
+
+    const handleCanPlayThrough = () => {
       setIsVideoLoaded(true);
       setShowThumbnail(true);
     };
@@ -46,15 +62,18 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
     };
 
     video.addEventListener('loadeddata', handleLoadedData);
+    video.addEventListener('canplaythrough', handleCanPlayThrough);
     video.addEventListener('pause', handlePause);
     video.addEventListener('ended', handleEnded);
     video.addEventListener('error', handleError);
 
     return () => {
       video.removeEventListener('loadeddata', handleLoadedData);
+      video.removeEventListener('canplaythrough', handleCanPlayThrough);
       video.removeEventListener('pause', handlePause);
       video.removeEventListener('ended', handleEnded);
       video.removeEventListener('error', handleError);
+      if (fallbackTimer) window.clearTimeout(fallbackTimer);
     };
   }, [videoUrl, isToggling]);
 
@@ -103,7 +122,7 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
         <video
           ref={videoRef}
           className="object-cover w-full h-full"
-          preload={window.innerWidth <= 768 ? "auto" : "metadata"}
+          preload="auto"
           playsInline
           muted={false}
           controls={false}
@@ -118,7 +137,6 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
         <div className="flex absolute inset-0 justify-center items-center bg-black/50">
           <div className="flex flex-col gap-2 items-center">
             <div className="w-8 h-8 rounded-full border-2 animate-spin border-white/30 border-t-white"></div>
-            <p className="text-sm text-white font-staff">טוען וידאו...</p>
           </div>
         </div>
       )}

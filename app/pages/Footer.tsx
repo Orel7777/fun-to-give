@@ -1,5 +1,7 @@
-import { Clock, Mail, MapPin, Phone, MessageCircle } from "lucide-react"
+import { Mail, MapPin, Phone } from "lucide-react"
 import Script from "next/script"
+import { motion } from "framer-motion"
+import { SlidUp } from "../lib/utils"
 
 export default function Footer() {
   return (
@@ -10,7 +12,7 @@ export default function Footer() {
         strategy="afterInteractive"
       />
       {/* Background texture overlay */}
-      <div className="absolute inset-0 bg-[url('/placeholder-gierp.png')] opacity-10 mix-blend-overlay"></div>
+      <div className="absolute inset-0 bg-[url('/tumbil.png')] opacity-10 mix-blend-overlay"></div>
 
       {/* Main content container */}
       <div className="flex relative z-10 flex-col min-h-screen">
@@ -23,7 +25,13 @@ export default function Footer() {
           <div className="container px-6 mx-auto">
             <div className="flex justify-start" style={{ marginTop: '100px' }}>
               {/* Contact section - moved to right */}
-                             <div className="space-y-8 max-w-md">
+                             <motion.div
+                  className="space-y-8 max-w-md"
+                  variants={SlidUp(0) as any}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
+                >
                  <h2 className="text-4xl md:text-5xl font-light text-[#f5a383] tracking-wide text-right mt-8 flex items-center justify-start gap-4" dir="rtl">
                    צור קשר
                    <div className="flex justify-center items-center w-12 h-12 md:w-16 md:h-16">
@@ -82,7 +90,7 @@ export default function Footer() {
                      </div>
                    </div>
                 </div>
-              </div>
+              </motion.div>
             </div>
 
 

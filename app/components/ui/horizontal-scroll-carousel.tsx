@@ -147,6 +147,8 @@ const Card: React.FC<{ src: string; index: number; onClick: () => void }> = ({ s
             ? 'scale-110' 
             : isHovered ? 'scale-105' : 'scale-100'
         }`}
+        loading="lazy"
+        sizes="(max-width: 640px) 160px, (max-width: 768px) 200px, (max-width: 1024px) 280px, 360px"
       />
       
       {/* אוברליי עם גרדיאנט */}
