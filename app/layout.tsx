@@ -6,6 +6,7 @@ import "./fonts/almoni.css";
 import "./fonts/quicksand.css";
 import { VideoProvider } from "./contexts/VideoContext";
 import ScrollToTop from "./components/ScrollToTop";
+import EarlyVideoWarmup from "./components/EarlyVideoWarmup";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -83,11 +84,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="he" dir="rtl" suppressHydrationWarning={true}>
+      <head>
+        {/* Speed up Firebase Storage connections for video preloading */}
+        <link rel="preconnect" href="https://firebasestorage.googleapis.com" />
+        <link rel="preconnect" href="https://storage.googleapis.com" />
+        <link rel="dns-prefetch" href="//firebasestorage.googleapis.com" />
+        <link rel="dns-prefetch" href="//storage.googleapis.com" />
+      </head>
       <body
         className={`${playfair.className} antialiased`}
         suppressHydrationWarning={true}
       >
         <VideoProvider>
+          <EarlyVideoWarmup />
           <ScrollToTop />
           {children}
           <WhatsAppIcon />

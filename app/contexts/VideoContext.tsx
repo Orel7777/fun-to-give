@@ -271,21 +271,31 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
       return next;
     });
 
-    await Promise.all(unique.map(async (p) => {
+    // On mobile, limit concurrency to avoid choking the connection
+    const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
+    const concurrency = isMobile ? 2 : unique.length; // 2 at a time on mobile, all in parallel on desktop
+
+    const queue = unique.slice();
+    const runNext = async (): Promise<void> => {
+      const p = queue.shift();
+      if (!p) return;
       // Skip if already ready
       if (videos[p]?.isReady) {
         completed += 1;
         const prog = completed / unique.length;
         setOverallProgress(prog);
         onProgress?.(prog);
-        return;
+        return runNext();
       }
       await preloadSingleIntoMap(p);
       completed += 1;
       const prog = completed / unique.length;
       setOverallProgress(prog);
       onProgress?.(prog);
-    }));
+      return runNext();
+    };
+
+    await Promise.all(Array.from({ length: concurrency }, () => runNext()));
   }, [preloadSingleIntoMap, videos]);
 
   return (
