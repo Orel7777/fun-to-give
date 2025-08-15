@@ -7,16 +7,21 @@ import { firebaseVideoKeys } from '../../lib/videoManifest';
 
 interface LoadPageProps {
   onLoadComplete?: () => void;
-  duration?: number; // משך הטעינה במילישניות
-  videoPath?: string; // נתיב הוידאו לטעינה מוקדמת
+  duration?: number;
+  videoPath?: string;
 }
 
-export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 'כיף לתת מקוצר.mp4' }: LoadPageProps) {
+export default function LoadPage({ 
+  onLoadComplete, 
+  duration = 4000, // הגדלתי את הזמן כדי לוודא טעינה מלאה
+  videoPath = 'כיף לתת מקוצר.mp4' 
+}: LoadPageProps) {
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
-
-  const { mainVideo, preloadVideo } = useVideo();
-  const videoLoadedRef = useRef(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoProgress, setVideoProgress] = useState(0);
+  
+  // רפרנסים לאלמנטים
   const preloaderRef = useRef<HTMLDivElement>(null);
   const progressBarRef = useRef<HTMLDivElement>(null);
   const progressFillRef = useRef<HTMLDivElement>(null);
@@ -24,19 +29,73 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
   const numberRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const logoBgRef = useRef<HTMLDivElement>(null);
+  const hiddenVideoRef = useRef<HTMLVideoElement>(null);
 
-  // טעינת הווידאו הראשי בלבד
+  const { preloadVideo, mainVideo } = useVideo();
+
+  // טעינת הווידאו עם מעקב אחר ההתקדמות
   useEffect(() => {
-    if (videoLoadedRef.current) return;
-    videoLoadedRef.current = true;
+    const loadVideoWithProgress = async () => {
+      try {
+        console.log('🎬 מתחיל לטעון וידאו:', videoPath);
+        
+        // התחל את תהליך הטעינה מהקונטקסט
+        preloadVideo(videoPath);
+        
+        // יצירת אלמנט וידאו נסתר לטעינה מלאה
+        const video = hiddenVideoRef.current;
+        if (video && mainVideo.videoUrl) {
+          video.src = mainVideo.videoUrl;
+          
+          const handleProgress = () => {
+            if (video.buffered.length > 0) {
+              const bufferedEnd = video.buffered.end(video.buffered.length - 1);
+              const duration = video.duration;
+              if (duration > 0) {
+                const videoLoadPercent = (bufferedEnd / duration) * 100;
+                setVideoProgress(Math.min(videoLoadPercent, 100));
+                console.log('📊 התקדמות טעינת וידאו:', Math.round(videoLoadPercent) + '%');
+              }
+            }
+          };
+          
+          const handleCanPlayThrough = () => {
+            console.log('✅ וידאו נטען במלואו!');
+            setVideoLoaded(true);
+            setVideoProgress(100);
+          };
+          
+          const handleError = (e: Event) => {
+            console.error('❌ שגיאה בטעינת הוידאו:', e);
+            setVideoLoaded(true); // ממשיכים גם במקרה של שגיאה
+          };
+          
+          video.addEventListener('progress', handleProgress);
+          video.addEventListener('canplaythrough', handleCanPlayThrough);
+          video.addEventListener('error', handleError);
+          
+          // התחל לטעון
+          video.load();
+          
+          return () => {
+            video.removeEventListener('progress', handleProgress);
+            video.removeEventListener('canplaythrough', handleCanPlayThrough);
+            video.removeEventListener('error', handleError);
+          };
+        }
+      } catch (error) {
+        console.error('💥 שגיאה בטעינת הוידאו:', error);
+        setVideoLoaded(true); // ממשיכים גם במקרה של שגיאה
+      }
+    };
 
-    console.log('🎬 מתחיל טעינת וידאו ראשי:', videoPath);
-    preloadVideo(videoPath);
-  }, [preloadVideo, videoPath]);
+    // המתן קצת לפני תחילת הטעינה כדי שה-URL יהיה מוכן
+    const timer = setTimeout(loadVideoWithProgress, 500);
+    return () => clearTimeout(timer);
+  }, [preloadVideo, videoPath, mainVideo.videoUrl]);
 
-  // ניהול אנימציות פתיחה בלבד (ללא טיימר מזויף)
+  // אנימציות פתיחה
   useEffect(() => {
-    // אנימציה ראשונית
     gsap.fromTo(preloaderRef.current, 
       { opacity: 0, scale: 1.1 },
       { opacity: 1, scale: 1, duration: 0.8, ease: "power2.out" }
@@ -71,28 +130,48 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
     });
   }, []);
 
-  // טיימר פשוט לטעינה חזותית
+  // טיימר ויזואלי משולב עם התקדמות הוידאו
   useEffect(() => {
     const startTime = Date.now();
-    const targetDuration = duration; // משתמש בפרמטר duration
     
     const updateProgress = () => {
       const elapsed = Date.now() - startTime;
-      const percent = Math.min(100, (elapsed / targetDuration) * 100);
-      setProgress(percent);
+      const timeProgress = Math.min(100, (elapsed / duration) * 100);
       
-      if (percent < 100) {
+      // שילוב התקדמות הזמן עם התקדמות הוידאו
+      // נותנים משקל של 70% לזמן ו-30% לטעינת הוידאו
+      const combinedProgress = (timeProgress * 0.7) + (videoProgress * 0.3);
+      
+      setProgress(combinedProgress);
+      
+      if (combinedProgress < 100) {
         requestAnimationFrame(updateProgress);
       }
     };
     
     requestAnimationFrame(updateProgress);
-  }, [duration]);
+  }, [duration, videoProgress]);
 
-  // סגירה כשמוכנים: טיימר הגיע ל-100 והווידאו הראשי מוכן
+  // סגירה כשהכל מוכן
   useEffect(() => {
-    if (progress >= 100 && mainVideo.isReady) {
-      // הטעינה הסתיימה - אפקטי GSAP
+    // נחכה שגם הזמן יעבור וגם הוידאו יטען (או שיהיה timeout)
+    if (progress < 95) return; // נתן מרווח קטן
+    
+    const isVideoReady = videoLoaded || mainVideo.isReady;
+    
+    if (!isVideoReady) {
+      console.log('⏳ מחכים שהוידאו יסתיים לטעון...');
+      return;
+    }
+
+    let finished = false;
+    const closeWithAnimation = () => {
+      if (finished) return;
+      finished = true;
+      
+      console.log('🚀 סוגרים את מסך הטעינה - הוידאו מוכן!');
+      
+      // אנימציית סגירה
       gsap.to([numberRef.current, logoRef.current, logoBgRef.current, progressBarRef.current], {
         opacity: 0,
         duration: 0.2,
@@ -141,25 +220,39 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
         });
       };
 
-      const timer = setTimeout(kickoff, 300);
-      return () => clearTimeout(timer);
-    }
-  }, [progress, mainVideo.isReady, onLoadComplete]);
+      setTimeout(kickoff, 300);
+    };
 
-  // Fallback בטיחותי: אם אחרי זמן סביר עדיין מוצג המסך, נסגור כדי לא לתקוע מובייל
+    // אם הכל מוכן - סגור מיד
+    closeWithAnimation();
+
+  }, [progress, videoLoaded, mainVideo.isReady, onLoadComplete]);
+
+  // Fallback בטיחותי מורחב
   useEffect(() => {
     if (!isVisible) return;
+    
     const timeout = setTimeout(() => {
       if (!isVisible) return;
-      console.warn('⏱️ Safety fallback: closing preloader to avoid hang');
-      // סגירה מהירה ללא אנימציות ארוכות כדי לשמור על חוויה טובה
+      console.warn('⏱️ Safety fallback: סוגרים את מסך הטעינה כדי לא לתקוע');
+      
       try {
-        gsap.to(preloaderRef.current, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-      } finally {
+        gsap.to(preloaderRef.current, { 
+          opacity: 0, 
+          duration: 0.3, 
+          ease: 'power2.out',
+          onComplete: () => {
+            setIsVisible(false);
+            onLoadComplete?.();
+          }
+        });
+      } catch (error) {
+        // במקרה של שגיאה - סגירה מהירה
         setIsVisible(false);
         onLoadComplete?.();
       }
-    }, 25000);
+    }, 30000); // 30 שניות חירום
+    
     return () => clearTimeout(timeout);
   }, [isVisible, onLoadComplete]);
 
@@ -173,6 +266,15 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       className="fixed inset-0 z-[9999] bg-[#f5a383] flex flex-col items-center justify-center"
       suppressHydrationWarning
     >
+      {/* וידאו נסתר לטעינה מלאה */}
+      <video 
+        ref={hiddenVideoRef}
+        style={{ display: 'none' }}
+        preload="auto"
+        muted
+        playsInline
+      />
+
       {/* עיגול הפיזור */}
       <div 
         ref={circleRef}
@@ -180,7 +282,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
         style={{ display: 'none' }}
       />
 
-      {/* מספר הטעינה בפינה שמאלית תחתונה */}
+      {/* מספר הטעינה */}
       <div 
         ref={numberRef}
         className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 text-[#fdf6ed] text-6xl sm:text-8xl font-bold"
@@ -189,11 +291,13 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
         {Math.round(progress).toString().padStart(3, '0')}
       </div>
 
+      {/* אינדיקטור טעינת וידאו */}
+      <div className="absolute bottom-4 right-4 sm:bottom-6 sm:right-6 text-[#fdf6ed] text-sm sm:text-base">
+        🎬 {videoLoaded ? 'וידאו מוכן' : `טוען וידאו... ${Math.round(videoProgress)}%`}
+      </div>
 
-
-      {/* לוגו מעל הסרגל עם רקע מונפש */}
+      {/* לוגו עם רקע מונפש */}
       <div className="flex relative justify-center items-center mb-8 sm:mb-16">
-        {/* רקע מונפש מסביב ללוגו */}
         <div 
           ref={logoBgRef}
           className="absolute w-40 h-40 bg-gradient-to-r from-white via-gray-100 to-gray-200 rounded-full opacity-30 blur-sm sm:w-56 sm:h-56"
@@ -212,7 +316,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
         />
       </div>
 
-      {/* סרגל הטעינה העבה באמצע */}
+      {/* סרגל הטעינה */}
       <div 
         ref={progressBarRef}
         className="w-64 h-3 sm:w-80 sm:h-4 md:w-96 bg-[#9acdbe] overflow-hidden shadow-2xl relative"
@@ -222,7 +326,23 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
           className="h-full bg-[#fdf6ed] transition-all duration-200 ease-out shadow-lg absolute top-0 left-0 z-10"
           style={{ width: `${progress}%` }}
         />
+        
+        {/* אינדיקטור מיוחד לטעינת וידאו */}
+        <div 
+          className="h-full bg-[#f5a383] transition-all duration-200 ease-out shadow-lg absolute top-0 left-0 z-5 opacity-60"
+          style={{ width: `${videoProgress * 0.3}%` }}
+        />
+      </div>
+
+      {/* הודעת סטטוס */}
+      <div className="mt-4 text-[#fdf6ed] text-center text-sm sm:text-base">
+        <div className="opacity-80">
+          {progress < 30 ? 'מכין את החוויה שלך...' :
+           progress < 60 ? 'טוען תכנים...' :
+           progress < 90 ? 'כמעט מוכן...' :
+           videoLoaded ? 'הכל מוכן! נכנס לאתר...' : 'מסיים טעינה...'}
+        </div>
       </div>
     </div>
   );
-} 
+}

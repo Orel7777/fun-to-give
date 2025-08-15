@@ -3,12 +3,12 @@ import Image from 'next/image';
 import Script from 'next/script';
 import dynamic from 'next/dynamic';
 import ScrollExpandMedia from '../components/ui/scroll-expansion-hero';
+import { useVideo } from '../contexts/VideoContext';
 const HorizontalScrollCarousel = dynamic(() => import('../components').then(m => m.HorizontalScrollCarousel), { ssr: false });
 const FamiliesTestimonials = dynamic(() => import('./Testimonials'), { ssr: false });
 const DonationsSection = dynamic(() => import('./Donations-section'), { ssr: false });
 const OrganizationPurpose = dynamic(() => import('./Organization-purpose'), { ssr: false });
 const OrganizationStory = dynamic(() => import('./Organization-story'), { ssr: false });
-import { useVideo } from '../contexts/VideoContext';
 import { PulseBeamsFirstDemo } from '../components/call-to-action/Demo';
 import { motion } from 'framer-motion';
 import { SlidUp, SlidUpLeft, SlidUpRight } from '../lib/utils';
@@ -21,10 +21,9 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
-  // קבלת הוידאו מהקונטקסט (הוא נטען מראש בLoadPage)
-  const { mainVideo } = useVideo();
-  const { loading, error, isReady } = mainVideo;
-  
+  // Main video from Firebase via context
+  const { mainVideo, preloadVideo } = useVideo();
+
   // זיהוי גודל המסך
   const [isMobile, setIsMobile] = useState(false);
   
@@ -41,6 +40,8 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
     
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  // טעינת הווידאו נעשית בזמן מסך הטעינה (LoadPage). כאן רק משתמשים בערך המוכן.
   
   // We don't need animation state anymore since we're using a one-time animation
   // לוגיקת האנימציה - הערות מסבירות
@@ -249,17 +250,8 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         </div>
       </div>
 
-      {/* הוידאו מתחת לטקסט - ללא הודעת טעינה */}
-      
-      {error && (
-        <div className="flex justify-center items-center py-1 sm:py-2 md:py-4 lg:py-6 bg-[#fdf6ed]">
-          <div className="text-lg text-center text-red-600 sm:text-xl font-staff">
-            {error}
-          </div>
-        </div>
-      )}
-      
-      {!loading && !error && isReady && (
+      {/* הוידאו/תמונת-מקום מתחת לטקסט */}
+      {mainVideo.videoUrl ? (
         <ScrollExpandMedia
           mediaType="video"
           mediaSrc={mainVideo.videoUrl}
@@ -421,6 +413,20 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                 ></LottiePlayer>
               </motion.div>
             </motion.div>
+          </div>
+        </ScrollExpandMedia>
+      ) : (
+        <ScrollExpandMedia
+          mediaType="image"
+          mediaSrc="/pictures/1.webp"
+          bgImageSrc="/pictures/1.webp"
+          title="עמותת כיף לתת"
+          date="כיף לתת"
+          scrollToExpand="גלול/י להרחבה"
+          textBlend
+        >
+          <div id="organization-activities" className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8 -pt-16 sm:pt-0 md:pt-2 lg:pt-8">
+            {/* כאן מוצג פלייסהולדר עד שהווידאו נטען מפיירבייס */}
           </div>
         </ScrollExpandMedia>
       )}
