@@ -207,7 +207,7 @@ export default function OrganizationPurpose() {
                         {purpose.title}
                       </Reveal>
 
-                      <Reveal as="p" type="paragraph" className="text-[10px] sm:text-[10px] md:text-xs lg:text-sm xl:text-base 2xl:text-lg text-[#f5a383] leading-tight sm:leading-relaxed text-center px-1">
+                      <Reveal as="p" type="paragraph" className="text-[10px] sm:text-[10px] md:text-xs lg:text-sm xl:text-base 2xl:text-lg text-[#2a2b26] leading-tight sm:leading-relaxed text-center px-1">
                         {purpose.description}
                       </Reveal>
                     </div>
