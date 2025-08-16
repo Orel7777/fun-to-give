@@ -70,17 +70,31 @@ const Card = ({
   className?: string;
 }) => {
   const [hovered, setHovered] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkMobile = () => {
+      const coarse = typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+      const smallWidth = typeof window !== 'undefined' && window.innerWidth <= 768;
+      setIsMobile(Boolean(coarse || smallWidth));
+    };
+    checkMobile();
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', checkMobile);
+      return () => window.removeEventListener('resize', checkMobile);
+    }
+  }, []);
   
   return (
     <div
       role="button"
       tabIndex={0}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
-      onTouchStart={() => setHovered(true)}
-      onTouchEnd={() => setHovered(false)}
-      onFocus={() => setHovered(true)}
-      onBlur={() => setHovered(false)}
+      onMouseEnter={() => !isMobile && setHovered(true)}
+      onMouseLeave={() => !isMobile && setHovered(false)}
+      onTouchStart={() => !isMobile && setHovered(true)}
+      onTouchEnd={() => !isMobile && setHovered(false)}
+      onFocus={() => !isMobile && setHovered(true)}
+      onBlur={() => !isMobile && setHovered(false)}
       className={`border-2 group/canvas-card flex items-center justify-center min-w-[120px] w-[120px] sm:w-[130px] md:w-[150px] lg:w-[180px] xl:w-[220px] p-2 sm:p-3 relative h-32 sm:h-36 md:h-40 lg:h-44 xl:h-48 rounded-xl overflow-hidden shadow-sm transition-all duration-300 cursor-pointer ${
         hovered ? 'bg-[#f5a383] border-[#f5a383]' : 'bg-white border-[#f5a383]'
       } hover:bg-[#f5a383] hover:border-[#f5a383] ${className ?? ''}`}
@@ -90,17 +104,20 @@ const Card = ({
       <CornerIcon className={`absolute h-4 w-4 -top-2 -right-2 ${hovered ? 'text-white' : 'text-[#f5a383]'} group-hover/canvas-card:text-white`} />
       <CornerIcon className={`absolute h-4 w-4 -bottom-2 -right-2 ${hovered ? 'text-white' : 'text-[#f5a383]'} group-hover/canvas-card:text-white`} />
 
-      <AnimatePresence>
-        {hovered && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.35 }}
-            className="h-full w-full absolute inset-0 pointer-events-none"
-          >
-            {children}
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Disable animated reveal on mobile */}
+      {!isMobile && (
+        <AnimatePresence>
+          {hovered && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.35 }}
+              className="h-full w-full absolute inset-0 pointer-events-none"
+            >
+              {children}
+            </motion.div>
+          )}
+        </AnimatePresence>
+      )}
 
       <div className="relative z-20 p-2 sm:p-3 md:p-4 text-center w-full h-full flex flex-col justify-between">
         <div className="text-center transition-all duration-300 w-full mx-auto flex items-center justify-center mb-2 sm:mb-3">

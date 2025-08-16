@@ -202,6 +202,20 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
     }
   };
 
+  // עצירה מלאה והחזרה להתחלה
+  const stopPlayback = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    try {
+      video.pause();
+      video.currentTime = 0;
+    } catch {}
+    setIsPlaying(false);
+    setCurrentPlayingVideo(null);
+    userPausedRef.current = true;
+    userWantsPlayRef.current = false;
+  };
+
   if (error) {
     return (
       <div className={`relative aspect-video bg-gray-200 rounded-lg flex items-center justify-center ${className}`}>
@@ -220,11 +234,10 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
         <video
           ref={videoRef}
           className="w-full h-full object-cover"
-          preload={window.innerWidth <= 768 ? "auto" : "metadata"}
+          preload={typeof window !== 'undefined' && window.innerWidth <= 768 ? "auto" : "metadata"}
           playsInline
           muted={false}
           controls={false}
-          onClick={isPlaying ? togglePlay : undefined}
         >
           <source src={videoUrl} type="video/mp4" />
           הדפדפן שלך לא תומך בתגית video.
@@ -242,18 +255,29 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
       )}
 
       {/* כפתור play/stop - מוסתר כשהוידאו מתנגן */}
-      {isVideoLoaded && !firebaseLoading && !isPlaying && (
+      {!isPlaying && (
         <motion.button
           onClick={togglePlay}
-          className={`absolute inset-0 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-all duration-200 ${isStarting ? 'pointer-events-none opacity-90' : ''}`}
+          className={`absolute inset-0 z-10 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-all duration-200 ${isStarting ? 'pointer-events-none opacity-90' : ''}`}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          disabled={isStarting}
+          disabled={isStarting || !isVideoLoaded || firebaseLoading}
         >
           <div className="bg-white/90 hover:bg-white rounded-full p-4 shadow-lg transition-all duration-200">
             <Play size={32} className="text-gray-800 ml-1" />
           </div>
         </motion.button>
+      )}
+
+      {/* כפתור Stop קטן בזמן ניגון */}
+      {isPlaying && (
+        <button
+          onClick={stopPlayback}
+          className="absolute top-2 left-2 z-10 rounded-full bg-white/90 text-gray-800 shadow-md px-3 py-1 text-xs font-medium hover:bg-white focus:outline-none focus:ring-2 focus:ring-white/70"
+          aria-label="עצור וידאו"
+        >
+          Stop
+        </button>
       )}
       
       {/* עצרנו שימוש באוברליי לחיצה בזמן ניגון כדי למנוע פאוזה מיידית לאחר התחלה */}
