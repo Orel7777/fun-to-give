@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import Reveal from "../components/Reveal";
 
 import TestimonialCard from "../components/ui/testimonial-card";
 import TestimonialVideo from "../components/ui/testimonial-video";
@@ -45,8 +46,6 @@ const testimonials = [
     audioPath: "/Families_tell_stories/7 - בזכות זה יכלנו להכניס אורחים בפורים.mp4"
   }
 ];
-
-
 
 const FamiliesTestimonials = () => {
   const [playingAudio, setPlayingAudio] = useState<string | null>(null);
@@ -147,39 +146,35 @@ const FamiliesTestimonials = () => {
     <TestimonialVideoProvider>
       <section className="relative min-h-screen bg-gradient-to-br from-[#fdf6ed] via-[#fdf6ed] to-[#f5f0e8] py-8 sm:py-12 md:py-16 lg:py-20 overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            viewport={{ once: true }}
-            className="flex flex-col items-center justify-center max-w-[640px] mx-auto"
-          >
+          <div className="flex flex-col items-center justify-center max-w-[640px] mx-auto">
             <div className="flex items-center justify-center gap-3 mb-1 sm:mb-2">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff">
+              <Reveal as="h2" type="heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff">
                 סיפורי משפחות מרגשים
-              </h2>
-              <Image 
-                src="/hibuk.png" 
-                alt="חיבוק" 
-                width={64}
-                height={64}
-                className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 object-contain"
-              />
+              </Reveal>
+              <Reveal type="media" className="inline-flex">
+                <Image 
+                  src="/hibuk.png" 
+                  alt="חיבוק" 
+                  width={64}
+                  height={64}
+                  className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16 object-contain"
+                />
+              </Reveal>
             </div>
-            <p className="text-center mt-1 sm:mt-2 md:mt-3 opacity-75 text-lg sm:text-xl md:text-2xl text-[#2a2b26] font-staff">
-              שמעו מה משפחות אומרות על הפעילות שלנו -
-              <span className="block">כל עדות מלווה בהקלטה אמיתית</span>
-            </p>
-            
+            <div>
+              <Reveal as="p" type="paragraph" className="text-center mt-1 sm:mt-2 md:mt-3 opacity-75 text-lg sm:text-xl md:text-2xl text-[#2a2b26] font-staff">
+                שמעו מה משפחות אומרות על הפעילות שלנו -
+                <span className="block">כל עדות מלווה בהקלטה אמיתית</span>
+              </Reveal>
+            </div>
             <div className="flex items-center gap-2 mt-1 sm:mt-2 text-[#f5a383]">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
               </svg>
               <span className="text-sm font-staff">לחצו על הסמל כדי לשמוע</span>
             </div>
-          </motion.div>
+          </div>
 
-        <div className="mt-1 sm:mt-2 md:mt-4">
           {/* תצוגה אחידה למובייל ודסקטופ - קרוסלה */}
           <div className="mx-auto max-w-sm md:max-w-md lg:max-w-lg">
             <AnimatePresence mode="wait">
@@ -226,15 +221,15 @@ const FamiliesTestimonials = () => {
         {/* סרטונים נוספים */}
         <div className="mt-8 sm:mt-12 md:mt-16">
           <div className="text-center mb-6 sm:mb-8">
-            <h3 className="text-2xl sm:text-3xl font-bold text-[#2a2b26] font-staff mb-2">
+            <Reveal as="h3" type="heading" className="text-2xl sm:text-3xl font-bold text-[#2a2b26] font-staff mb-2">
               סרטונים נוספים
-            </h3>
-            <p className="text-[#2a2b26]/70 font-staff text-sm sm:text-base">
+            </Reveal>
+            <Reveal as="p" type="paragraph" className="text-[#2a2b26]/70 font-staff text-sm sm:text-base">
               עוד סיפורים מרגשים ממשפחות שקיבלו עזרה
-            </p>
+            </Reveal>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-4xl mx-auto px-4">
+          <Reveal type="media" className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-4xl mx-auto px-4">
             <TestimonialVideo 
               videoPath="סרטון1.mp4"
               className="w-full"
@@ -245,7 +240,7 @@ const FamiliesTestimonials = () => {
               className="w-full"
               videoId="testimonial-video-2"
             />
-          </div>
+          </Reveal>
         </div>
         
           {/* רקע דקורטיבי */}
@@ -254,9 +249,8 @@ const FamiliesTestimonials = () => {
             <div className="absolute bottom-10 right-10 w-32 h-32 bg-[#9acdbe]/10 rounded-full blur-xl"></div>
             <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-[#f5a383]/5 rounded-full blur-lg"></div>
           </div>
-        </div>
-      </section>
-    </TestimonialVideoProvider>
+        </section>
+      </TestimonialVideoProvider>
   );
 };
 

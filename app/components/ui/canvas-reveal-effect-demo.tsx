@@ -77,12 +77,18 @@ const Card = ({
       tabIndex={0}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
-      className={`border-2 border-[#f5a383] group/canvas-card flex items-center justify-center min-w-[120px] w-[120px] sm:w-[130px] md:w-[150px] lg:w-[180px] xl:w-[220px] p-2 sm:p-3 relative h-32 sm:h-36 md:h-40 lg:h-44 xl:h-48 rounded-xl overflow-hidden bg-white shadow-sm transition-all duration-300 cursor-pointer hover:bg-[#f5a383] hover:border-[#f5a383] ${className ?? ''}`}
+      onTouchStart={() => setHovered(true)}
+      onTouchEnd={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
+      className={`border-2 group/canvas-card flex items-center justify-center min-w-[120px] w-[120px] sm:w-[130px] md:w-[150px] lg:w-[180px] xl:w-[220px] p-2 sm:p-3 relative h-32 sm:h-36 md:h-40 lg:h-44 xl:h-48 rounded-xl overflow-hidden shadow-sm transition-all duration-300 cursor-pointer ${
+        hovered ? 'bg-[#f5a383] border-[#f5a383]' : 'bg-white border-[#f5a383]'
+      } hover:bg-[#f5a383] hover:border-[#f5a383] ${className ?? ''}`}
     >
-      <CornerIcon className="absolute h-4 w-4 -top-2 -left-2 text-[#f5a383] group-hover/canvas-card:text-white" />
-      <CornerIcon className="absolute h-4 w-4 -bottom-2 -left-2 text-[#f5a383] group-hover/canvas-card:text-white" />
-      <CornerIcon className="absolute h-4 w-4 -top-2 -right-2 text-[#f5a383] group-hover/canvas-card:text-white" />
-      <CornerIcon className="absolute h-4 w-4 -bottom-2 -right-2 text-[#f5a383] group-hover/canvas-card:text-white" />
+      <CornerIcon className={`absolute h-4 w-4 -top-2 -left-2 ${hovered ? 'text-white' : 'text-[#f5a383]'} group-hover/canvas-card:text-white`} />
+      <CornerIcon className={`absolute h-4 w-4 -bottom-2 -left-2 ${hovered ? 'text-white' : 'text-[#f5a383]'} group-hover/canvas-card:text-white`} />
+      <CornerIcon className={`absolute h-4 w-4 -top-2 -right-2 ${hovered ? 'text-white' : 'text-[#f5a383]'} group-hover/canvas-card:text-white`} />
+      <CornerIcon className={`absolute h-4 w-4 -bottom-2 -right-2 ${hovered ? 'text-white' : 'text-[#f5a383]'} group-hover/canvas-card:text-white`} />
 
       <AnimatePresence>
         {hovered && (
@@ -101,10 +107,10 @@ const Card = ({
           {icon}
         </div>
         <div className="flex-1 flex flex-col justify-center">
-          <h2 className="font-bold text-[#f5a383] mb-2 sm:mb-3 transition-all duration-300 group-hover/canvas-card:text-white text-[12px] sm:text-[14px] md:text-sm lg:text-base xl:text-lg">
+          <h2 className={`font-bold mb-2 sm:mb-3 transition-all duration-300 text-[12px] sm:text-[14px] md:text-sm lg:text-base xl:text-lg ${hovered ? 'text-white' : 'text-[#f5a383]'} group-hover/canvas-card:text-white`}>
             {title}
           </h2>
-          <p className="text-[#f5a383] transition-all duration-300 group-hover/canvas-card:text-white/95 text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base leading-tight">
+          <p className={`transition-all duration-300 text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base leading-tight ${hovered ? 'text-white/95' : 'text-[#f5a383]'} group-hover/canvas-card:text-white/95`}>
             {description}
           </p>
         </div>

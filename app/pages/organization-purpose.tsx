@@ -9,6 +9,7 @@ import animationA from "../../public/animation-json/A.json"
 import animationB from "../../public/animation-json/B.json"
 import animationC from "../../public/animation-json/C.json"
 import { useRef, useState, useEffect } from "react"
+import Reveal from "../components/Reveal"
 
 export default function OrganizationPurpose() {
   const ref = useRef(null)
@@ -108,25 +109,13 @@ export default function OrganizationPurpose() {
       `}</style>
       <div className="mx-auto max-w-4xl disable-animations">
         {/* Header */}
-        <motion.div
+        <div
           className="pt-16 mb-12 text-center"
-          variants={isInView ? titleVariants : undefined}
-          initial={isInView ? "visible" : "hidden"}
-          animate={isInView ? "visible" : "hidden"}
         >
           {/* מרווח במקום האייקון - שומר על אותו מרחק */}
   
 
-          <motion.h2
-            className="mb-4 text-2xl font-bold tracking-tighter text-[#2a2b26] font-staff sm:text-3xl md:text-4xl lg:text-5xl flex items-center justify-center gap-3"
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.5 }}
-            transition={{
-              type: "spring",
-              stiffness: 100,
-              delay: 0.3,
-            }}
-          >
+          <Reveal as="h2" type="heading" className="mb-4 text-2xl font-bold tracking-tighter text-[#2a2b26] font-staff sm:text-3xl md:text-4xl lg:text-5xl flex items-center justify-center gap-3">
             ייעוד העמותה
             <motion.svg 
               xmlns="http://www.w3.org/2000/svg" 
@@ -162,15 +151,12 @@ export default function OrganizationPurpose() {
               <path d="M14 17.75V21"/>
               <path d="M7 18a6 6 0 0 0 3.84-10.61"/>
             </motion.svg>
-          </motion.h2>
+          </Reveal>
 
-          <motion.div
+          <div
             className="w-24 h-1 bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] mx-auto rounded-full"
-            initial={{ width: 0, opacity: 0 }}
-            animate={isInView ? { width: 96, opacity: 1 } : { width: 0, opacity: 0 }}
-            transition={{ duration: 1.2, delay: 0.6, ease: "easeOut" }}
           />
-        </motion.div>
+        </div>
 
         {/* Purpose Cards */}
         <motion.div
@@ -205,60 +191,25 @@ export default function OrganizationPurpose() {
                   className="flex-1 text-black dark:text-white border-neutral-200 dark:border-slate-800 h-full min-h-[150px] sm:min-h-[200px] md:min-h-[250px] lg:min-h-[300px]"
                 >
                   <div className="flex flex-col gap-1 justify-between items-center p-1 py-2 h-full sm:p-1 sm:py-2 md:p-2 md:py-3 lg:p-3 xl:p-6 sm:gap-1 md:gap-2">
-                    <motion.div
-                      className="flex justify-center mb-2 sm:mb-2 md:mb-3 lg:mb-4"
-                      animate={{
-                        y: [0, -12, 0],
-                        rotate: [0, 8, -8, 0],
-                      }}
-                      transition={{
-                        duration: 4 + index * 0.5,
-                        repeat: Number.POSITIVE_INFINITY,
-                        ease: "easeInOut",
-                        delay: index * 0.6,
-                      }}
-                      whileHover={{
-                        scale: 1.3,
-                        rotate: 180,
-                        transition: { duration: 0.4 },
-                      }}
-                    >
-                      <motion.div
-                        whileHover={{
-                          boxShadow: "0 15px 30px rgba(245, 163, 131, 0.3)",
-                        }}
-                      >
+                    <div className="flex justify-center mb-2 sm:mb-2 md:mb-3 lg:mb-4">
+                      <Reveal type="media" as="div">
                         <Lottie
                           animationData={purpose.animation}
                           loop={true}
                           autoplay={true}
                           className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16"
                         />
-                      </motion.div>
-                    </motion.div>
+                      </Reveal>
+                    </div>
 
                     <div className="flex flex-col flex-1 justify-center items-center w-full">
-                      <motion.h3
-                        className="text-[12px] sm:text-xs md:text-sm lg:text-lg xl:text-xl 2xl:text-2xl font-bold tracking-tighter text-[#2a2b26] font-staff mb-2 sm:mb-2 md:mb-3 lg:mb-4 text-center"
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                        transition={{ delay: 0.8 + index * 0.2 }}
-                      >
+                      <Reveal as="h3" type="heading" className="text-[12px] sm:text-xs md:text-sm lg:text-lg xl:text-xl 2xl:text-2xl font-bold tracking-tighter text-[#2a2b26] font-staff mb-2 sm:mb-2 md:mb-3 lg:mb-4 text-center">
                         {purpose.title}
-                      </motion.h3>
+                      </Reveal>
 
-                      <motion.p
-                        className="text-[10px] sm:text-[10px] md:text-xs lg:text-sm xl:text-base 2xl:text-lg text-[#f5a383] leading-tight sm:leading-relaxed text-center px-1"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                        transition={{
-                          delay: 1 + index * 0.2,
-                          type: "spring",
-                          stiffness: 80,
-                        }}
-                      >
+                      <Reveal as="p" type="paragraph" className="text-[10px] sm:text-[10px] md:text-xs lg:text-sm xl:text-base 2xl:text-lg text-[#f5a383] leading-tight sm:leading-relaxed text-center px-1">
                         {purpose.description}
-                      </motion.p>
+                      </Reveal>
                     </div>
                   </div>
                 </Button>

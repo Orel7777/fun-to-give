@@ -9,6 +9,7 @@ import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
 import { Textarea } from "../components/ui/textarea"
 import { CanvasRevealEffectDemo } from "../components/ui/canvas-reveal-effect-demo"
+import Reveal from "../components/Reveal"
 import Lottie from "lottie-react"
 import paymentSuccessAnimation from "../../public/animation-json/Payment Success.json"
 import AiChildVideo from "../components/ui/ai-child-video"
@@ -79,15 +80,15 @@ export default function DonationsSection() {
               <Heart className="w-8 h-8 text-white" />
             </div>
           </motion.div>
-          <h2 className="mb-4 text-4xl font-bold tracking-tighter text-[#2a2b26] font-staff">הצטרפו אלינו לעשות שינוי</h2>
+          <Reveal as="h2" type="heading" className="mb-4 text-4xl font-bold tracking-tighter text-[#2a2b26] font-staff">הצטרפו אלינו לעשות שינוי</Reveal>
           <div className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-600" style={{ textAlign: 'center' }}>
-            <p style={{ marginBottom: '8px' }}>
+            <Reveal as="p" type="paragraph" className="mb-2">
               התרומה שלכם מאפשרת לנו להמשיך בפעילותנו החשובה.
-            </p>
-            <p>
+            </Reveal>
+            <Reveal as="p" type="paragraph">
               <span className="font-semibold text-[#9dd0bf]">רק שם ושם משפחה נדרשים</span> - כל השדות האחרים הם
               אופציונליים לנוחותכם.
-            </p>
+            </Reveal>
           </div>
         </motion.div>
 
@@ -103,13 +104,13 @@ export default function DonationsSection() {
         >
           <Card className="border-0 shadow-xl backdrop-blur-sm bg-white/80">
             <CardHeader className="pb-6">
-              <CardTitle className="text-2xl text-center text-gray-800">פרטי התרומה</CardTitle>
+              <Reveal as="h3" type="heading" className="text-2xl text-center text-gray-800">פרטי התרומה</Reveal>
             </CardHeader>
 
             <CardContent className="space-y-8">
               {/* Amount Selection */}
               <div className="space-y-4">
-                <h3 className="text-lg font-semibold text-center text-gray-800" style={{ marginBottom: '20px' }}>בחרו סכום לתרומה (₪)</h3>
+                <Reveal as="h3" type="heading" className="text-lg font-semibold text-center text-gray-800" style={{ marginBottom: '20px' }}>בחרו סכום לתרומה (₪)</Reveal>
                 <motion.div
                   className="grid grid-cols-2 gap-4 sm:flex sm:flex-wrap sm:justify-center sm:items-center"
                   initial={{ opacity: 0 }}
@@ -239,14 +240,14 @@ export default function DonationsSection() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.8, delay: 1.0 }}
               >
-                <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28">
+                <Reveal type="media" className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28">
                   <Lottie
                     animationData={paymentSuccessAnimation}
                     loop={true}
                     autoplay={true}
                     style={{ width: '100%', height: '100%' }}
                   />
-                </div>
+                </Reveal>
               </motion.div>
 
               {/* CTA Button */}
@@ -299,7 +300,9 @@ export default function DonationsSection() {
           transition={{ duration: 0.6, delay: 0.6 }}
         >
           <div className="mx-auto max-w-4xl">
-            <AiChildVideo className="w-full" />
+            <Reveal type="media">
+              <AiChildVideo className="w-full" />
+            </Reveal>
           </div>
         </motion.div>
       </div>

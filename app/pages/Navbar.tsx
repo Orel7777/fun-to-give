@@ -641,14 +641,14 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                   <g fill="#f5a383">
                     <path d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472
                       c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"/>
-                    <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594ל233.938,233.938
+                    <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594l233.938,233.938
                       c4.312,4.312,11.297,4.312,15.594,0C385.078,376.469,385.078,369.484,380.766,365.172z"/>
                     <g>
                       <path d="M352,325.094V166.109c0-19.75-3.828-27.797-20.859-17.812l-97.266,58.672L352,325.094z"/>
-                      <path d="M181.094,208H168c-4.422,0-8,3.578-8,8v80c0,4.422,3.578,8,8,8h67.5ל95.641,59.719c3.891,2.281,7.031,3.5,9.656,3.984
+                      <path d="M181.094,208H168c-4.422,0-8,3.578-8,8v80c0,4.422,3.578,8,8,8h67.5l95.641,59.719c3.891,2.281,7.031,3.5,9.656,3.984
                         L181.094,208z"/>
                     </g>
-                    <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594ל233.938,233.938
+                    <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594l233.938,233.938
                       c4.312,4.312,11.297,4.312,15.594,0C385.078,376.469,385.078,369.484,380.766,365.172z"/>
                   </g>
                 )}
@@ -659,7 +659,35 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               className="text-gray-800 transition-colors duration-200 cursor-pointer hover:text-[#f5a383] focus:outline-none focus:text-[#f5a383]"
               aria-label={isMenuOpen ? "סגור תפריט" : "פתח תפריט"}
             >
-              <Menu className="w-7 h-7" />
+              <motion.div
+                className="w-7 h-7 flex flex-col justify-center items-center"
+                animate={isMenuOpen ? "open" : "closed"}
+              >
+                <motion.span
+                  className="w-6 h-0.5 bg-current block rounded-full"
+                  variants={{
+                    closed: { rotate: 0, y: 0 },
+                    open: { rotate: 45, y: 6 }
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
+                <motion.span
+                  className="w-6 h-0.5 bg-current block rounded-full mt-1.5"
+                  variants={{
+                    closed: { opacity: 1 },
+                    open: { opacity: 0 }
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
+                <motion.span
+                  className="w-6 h-0.5 bg-current block rounded-full mt-1.5"
+                  variants={{
+                    closed: { rotate: 0, y: 0 },
+                    open: { rotate: -45, y: -6 }
+                  }}
+                  transition={{ duration: 0.3 }}
+                />
+              </motion.div>
             </button>
           </div>
         </div>
@@ -794,7 +822,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                 </motion.button>
               </Link>
               <motion.button 
-                className="px-4 py-3 w-full font-semibold text-[#2b2e3a] bg-[#f5a383] rounded-lg hover:scale-105 hover:bg-[#e0ccbc] transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group cursor-pointer"
+                className="px-4 py-3 w-full font-semibold text-[#2b2e3a] bg-[#f5a383] rounded-lg hover:scale-105 hover:bg-[#e0ccbc] transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group cursor-pointer mt-4"
                 whileHover={{
                   scale: 1.05,
                   transition: { 

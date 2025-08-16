@@ -10,6 +10,7 @@ import { motion } from 'framer-motion';
 import DonationsSection from './donations-section';
 import OrganizationPurpose from './organization-purpose';
 import OrganizationStory from './Organization-story';
+import Reveal from '../components/Reveal';
 
 // Declare the custom element so TSX recognizes <lottie-player />
 /* eslint-disable @typescript-eslint/no-namespace */
@@ -58,38 +59,6 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
   
-  // We don't need animation state anymore since we're using a one-time animation
-  // לוגיקת האנימציה - הערות מסבירות
-  // הערה: האנימציה תופעל רק בביקור הראשון באתר
-  // מערכת הלוקל סטורג' תשמור את המידע שהמשתמש כבר ביקר באתר
-  useEffect(() => {
-    // בדיקה האם זהו הביקור הראשון של המשתמש באתר
-    // בגרסה סופית נבדוק את הערך הזה
-    
-    /* 
-    כאן יש שתי אפשרויות:
-    
-    1. למצב פיתוח - תמיד להציג את האנימציה (מחיקת הדגל):
-    localStorage.removeItem('hasVisitedBefore');
-    
-    2. לגרסה סופית - להראות את האנימציה רק בפעם הראשונה:
-    if (!hasVisited) {
-      // האנימציה תופעל רק אם זה ביקור ראשון
-      // הלבבות יוצגו בסיבוב סביב הכותרת והכפתור
-    }
-    */
-    
-    // במצב פיתוח - תמיד להציג את האנימציה
-    localStorage.removeItem('hasVisitedBefore');
-    
-    // לאחר שהאנימציה הסתיימה, נרשום שהמשתמש כבר ביקר באתר
-    const timer = setTimeout(() => {
-      localStorage.setItem('hasVisitedBefore', 'true');
-    }, 6000); // 6 שניות - משך האנימציה
-    
-    return () => clearTimeout(timer);
-  }, []);
-  
   // Only show the futuristic hero when text animation should be visible
   if (!showTextAnimation) {
     return (
@@ -97,7 +66,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         <div className="relative mx-auto max-w-7xl text-center">
           <div className="mb-8">
             <div className="flex justify-center">
-              <div className="w-[200px] sm:w-[250px] md:w-[300px] transition-all duration-300">
+              <Reveal type="media" as="div" className="w-[200px] sm:w-[250px] md:w-[300px] transition-all duration-300">
                 <Image
                   src="/title.png"
                   alt="כיף לתת - עם כל נתינה הלב מתמלא"
@@ -109,7 +78,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                   }}
                   className="object-fill"
                 />
-              </div>
+              </Reveal>
             </div>
           </div>
         </div>
@@ -229,7 +198,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               {/* Title Image - תמונת הכותרת */}
               <div className="flex relative z-20 justify-center items-center -mt-1 sm:-mt-6 md:-mt-4 lg:-mt-8"
               >
-                <div className="w-[160px] sm:w-[250px] md:w-[300px] transition-all duration-300">
+                <Reveal type="media" as="div" className="w-[160px] sm:w-[250px] md:w-[300px] transition-all duration-300">
                   <Image
                     src="/title.png"
                     alt="כיף לתת - עם כל נתינה הלב מתמלא"
@@ -242,7 +211,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                     }}
                     priority
                   />
-                </div>
+                </Reveal>
               </div>
 
               {/* Call to Action Button */}
@@ -267,15 +236,15 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       {/* הוידאו מתחת לטקסט */}
       {loading && (
         <div className="flex justify-center items-center py-0 sm:py-1 md:py-2 lg:py-4 bg-[#fdf6ed]">
-          <div className="text-[#2a2b26] font-staff text-lg sm:text-xl">טוען וידאו...</div>
+          <Reveal as="p" type="paragraph" className="text-[#2a2b26] font-staff text-lg sm:text-xl">טוען וידאו...</Reveal>
         </div>
       )}
       
       {error && (
         <div className="flex justify-center items-center py-1 sm:py-2 md:py-4 lg:py-6 bg-[#fdf6ed]">
-          <div className="text-lg text-center text-red-600 sm:text-xl font-staff">
+          <Reveal as="p" type="paragraph" className="text-lg text-center text-red-600 sm:text-xl font-staff">
             {error}
-          </div>
+          </Reveal>
         </div>
       )}
       
@@ -297,7 +266,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                 <div className="absolute inset-0 bg-gradient-to-r from-[#f5a383] to-[#9acdbe] rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500 animate-pulse"></div>
                 
                 {/* מיכל התמונה עם אנימציה */}
-                <div className="relative transition-all duration-700 transform hover:scale-110 hover:rotate-3 active:scale-95"
+                <Reveal type="media" as="div" className="relative transition-all duration-700 transform hover:scale-110 hover:rotate-3 active:scale-95"
                      style={{
                        animation: 'coinGlow 4s ease-in-out infinite',
                      }}>
@@ -320,25 +289,25 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                   <div className="absolute -top-4 -right-4 w-3 h-3 bg-[#9acdbe] rounded-full opacity-60 animate-ping" style={{ animationDelay: '1s' }}></div>
                   <div className="absolute -bottom-2 -right-2 w-2 h-2 bg-[#f5a383] rounded-full opacity-60 animate-ping" style={{ animationDelay: '2s' }}></div>
                   <div className="absolute -bottom-4 -left-4 w-3 h-3 bg-[#9acdbe] rounded-full opacity-60 animate-ping" style={{ animationDelay: '3s' }}></div>
-                </div>
+                </Reveal>
               </div>
             </div>
 
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-3 sm:mb-4">
+            <Reveal as="h2" type="heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-3 sm:mb-4">
               עמותת כיף לתת
-            </h2>
-            <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+            </Reveal>
+            <Reveal as="p" type="paragraph" className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
               מעניקה בשר, עופות, דגים ביצים ויין למאות משפחות באופן קבוע.
-            </p>
-            <p className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+            </Reveal>
+            <Reveal as="p" type="paragraph" className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
               בנוסף, כיף לתת עוזרת לילדים עם מוגבלויות ומשמחת ילדים בבתי חולים.
-            </p>
-            <p className="text-lg sm:text-xl md:text-2xl mt-2 mb-2 sm:mt-3 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+            </Reveal>
+            <Reveal as="p" type="paragraph" className="text-lg sm:text-xl md:text-2xl mt-2 mb-2 sm:mt-3 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
               הפעילות שלנו מבוצעת מתוך אמונה עמוקה בעקרונות של נתינה, אהבת הזולת ורצון לשמח את האחר.
-            </p>
-            <p className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-relaxed font-semibold">
+            </Reveal>
+            <Reveal as="p" type="paragraph" className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-relaxed font-semibold">
               כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
-            </p>
+            </Reveal>
 
             {/* Lottie animations row */}
             <div className="flex flex-row gap-4 justify-center items-center mt-6 sm:mt-8 sm:gap-6 md:gap-10 lg:gap-12">
@@ -348,35 +317,41 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                 strategy="afterInteractive"
               />
 
-              <lottie-player
-                src="/animation-json/Donation.json"
-                background="transparent"
-                speed="1"
-                loop
-                autoplay
-                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
-                style={{ width: 'auto', height: 'auto' }}
-              ></lottie-player>
+              <Reveal type="media" as="div" className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32">
+                <lottie-player
+                  src="/animation-json/Donation.json"
+                  background="transparent"
+                  speed="1"
+                  loop
+                  autoplay
+                  className="w-full h-full"
+                  style={{ width: 'auto', height: 'auto' }}
+                ></lottie-player>
+              </Reveal>
 
-              <lottie-player
-                src="/animation-json/handshake%20blue.json"
-                background="transparent"
-                speed="1"
-                loop
-                autoplay
-                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
-                style={{ width: 'auto', height: 'auto' }}
-              ></lottie-player>
+              <Reveal type="media" as="div" className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32">
+                <lottie-player
+                  src="/animation-json/handshake%20blue.json"
+                  background="transparent"
+                  speed="1"
+                  loop
+                  autoplay
+                  className="w-full h-full"
+                  style={{ width: 'auto', height: 'auto' }}
+                ></lottie-player>
+              </Reveal>
 
-              <lottie-player
-                src="/animation-json/Heart.json"
-                background="transparent"
-                speed="1"
-                loop
-                autoplay
-                className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
-                style={{ width: 'auto', height: 'auto' }}
-              ></lottie-player>
+              <Reveal type="media" as="div" className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32">
+                <lottie-player
+                  src="/animation-json/Heart.json"
+                  background="transparent"
+                  speed="1"
+                  loop
+                  autoplay
+                  className="w-full h-full"
+                  style={{ width: 'auto', height: 'auto' }}
+                ></lottie-player>
+              </Reveal>
             </div>
           </div>
         </ScrollExpandMedia>
@@ -387,7 +362,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
 
       {/* גלריה של תמונות פעילות העמותה */}
       <div className="bg-[#fdf6ed] py-2 sm:py-4 md:py-6 lg:py-8 text-center">
-        <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-6 sm:mb-8 md:mb-10 flex items-center justify-center gap-3">
+        <Reveal as="h2" type="heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-6 sm:mb-8 md:mb-10 flex items-center justify-center gap-3">
           תמונות מפעילות העמותה
           <svg 
             width="40" 
@@ -397,13 +372,13 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
             fill="currentColor"
           >
             <path d="M 794.965 466.603 c 0 -87.3813 -70.8835 -158.265 -158.265 -158.265 c -48.2418 0 -91.4773 21.6178 -120.491 55.7511 c -29.0133 -34.1333 -72.2489 -55.7511 -120.491 -55.7511 c -87.3813 0 -158.265 70.8835 -158.265 158.265 c 0 45.8525 21.0489 84.3093 50.7449 116.167 l 228.807 219.819 L 741.831 585.159 c 28.2169 -29.696 53.1342 -71.3387 53.1342 -118.557 Z" fill="#ffa9b1" />
-            <path d="M 457.387 709.632 c -3.18578 -55.7511 -18.2045 -106.041 -18.7733 -108.089 l -13.6533 4.096 c 0.113778 0.341333 2.048 7.05422 4.66489 17.8631 L 361.813 588.117 c 5.12 -5.46133 8.192 -8.64711 8.41955 -8.76089 l -5.00622 -5.12 l -5.00622 -5.12 c -2.95822 2.84445 -72.5902 71.1111 -91.8187 151.211 c -19.3422 80.896 4.66489 123.904 5.68889 125.725 l 12.4018 -7.05422 c -0.113778 -0.113778 -3.75467 -6.71289 -6.82667 -19.456 l 142.905 -3.86845 c 7.28178 9.78489 16.7253 17.408 28.7858 22.1867 l 5.12 13.312 c 24.1209 -9.32978 41.0738 -28.7858 50.5173 -57.7991 c 7.168 -22.4142 9.89867 -50.6311 7.96445 -83.7405 Z" fill="#9fc8fe" />
+            <path d="M 457.387 709.632 c -3.18578 -55.7511 -18.2045 -106.041 -18.7733 -108.089 l -13.6533 4.096 c 0.113778 0.341333 2.048 7.05422 4.66489 17.8631 L 361.813 588.117 c 5.12 -5.46133 8.192 -8.64711 8.41955 -8.76089 l -5.00622 -5.12 l -5.00622 -5.12 c -2.95822 2.84445 -72.5902 71.1111 -91.8187 151.211 c -19.3422 80.896 4.66489 123.904 5.68889 125.725 l 12.4018 -7.05422 c -0.113778 -0.113778 3.75467 -6.71289 6.82667 -19.456 l 142.905 -3.86845 c 7.28178 9.78489 16.7253 17.408 28.7858 22.1867 l 5.12 13.312 c 24.1209 -9.32978 41.0738 -28.7858 50.5173 -57.7991 c 7.168 -22.4142 9.89867 -50.6311 7.96445 -83.7405 Z" fill="#9fc8fe" />
             <path d="M 402.773 553.074 m -88.9742 0 a 88.9742 88.9742 0 1 0 177.949 0 a 88.9742 88.9742 0 1 0 -177.949 0 Z" fill="#81b6fe" />
             <path d="M 566.613 709.632 c 3.18578 -55.7511 18.2045 -106.041 18.7733 -108.089 l 13.6533 4.096 c -0.113778 0.341333 -2.048 7.05422 -4.66489 17.8631 l 67.8115 -35.3849 c -5.12 -5.46133 -8.192 -8.64711 -8.41955 -8.76089 l 5.00622 -5.12 l 5.00622 -5.12 c 2.95822 2.84445 72.5902 71.1111 91.8187 151.211 c 19.3422 80.896 -4.66489 123.904 -5.68889 125.725 l -12.4018 -7.05422 c 0.113778 -0.113778 3.75467 -6.71289 6.82667 -19.456 l -142.905 -3.86845 c 7.28178 9.78489 16.7253 17.408 28.7858 22.1867 l -5.12 13.312 c -24.1209 -9.32978 -41.0738 -28.7858 -50.5173 -57.7991 c -7.168 -22.4142 -9.89867 -50.6311 -7.96445 -83.7405 Z" fill="#ff8882" />
             <path d="M 621.227 553.074 m -88.9742 0 a 88.9742 88.9742 0 1 0 177.949 0 a 88.9742 88.9742 0 1 0 -177.949 0 Z" fill="#ff6b6a" />
             <path d="M 9.78503 148.48 v 798.72 h 1012.62 v -798.72 h -1012.62 Z m 943.559 654.677 h -873.813 v -582.542 h 873.813 v 582.542 Z" fill="#e5f1ff" />
           </svg>
-        </h2>
+        </Reveal>
       </div>
       
       <HorizontalScrollCarousel
