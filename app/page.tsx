@@ -7,6 +7,7 @@ import NavigationBar from './pages/Navbar';
 import HeroSection from './pages/HeroSection';
 import LoadPage from './components/loadpage/LoadPage';
 import Footer from './pages/Footer';
+import Script from 'next/script';
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -31,6 +32,23 @@ export default function Home() {
 
   return (
     <div suppressHydrationWarning>
+      {/* Eruda devtools: mobile-only (enabled in all environments) */}
+      <Script id="eruda-loader" strategy="afterInteractive">
+        {`
+          try {
+            if (typeof window !== 'undefined') {
+              var ua = navigator.userAgent || '';
+              var isMobile = /iPhone|iPad|iPod|Android/i.test(ua);
+              if (isMobile) {
+                var s = document.createElement('script');
+                s.src = 'https://cdn.jsdelivr.net/npm/eruda';
+                s.onload = function () { try { eruda.init(); } catch (e) { console.warn('Eruda init failed', e); } };
+                document.body.appendChild(s);
+              }
+            }
+          } catch (e) { console.warn('Eruda load failed', e); }
+        `}
+      </Script>
       {/* SplashCursor פעיל תמיד */}
       <SplashCursor />
       

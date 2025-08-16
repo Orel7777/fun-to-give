@@ -6,11 +6,11 @@ import ScrollExpandMedia from '../components/ui/scroll-expansion-hero';
 import FamiliesTestimonials from './Testimonials';
 import { useVideo } from '../contexts/VideoContext';
 import { PulseBeamsFirstDemo } from '../components/call to action/demo';
-import { motion } from 'framer-motion';
 import DonationsSection from './donations-section';
 import OrganizationPurpose from './organization-purpose';
 import OrganizationStory from './Organization-story';
 import Reveal from '../components/Reveal';
+import { motion } from 'framer-motion';
 
 // Declare the custom element so TSX recognizes <lottie-player />
 /* eslint-disable @typescript-eslint/no-namespace */
@@ -65,20 +65,19 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       <div className="flex flex-col justify-center items-center px-4 min-h-screen bg-[#fdf6ed] sm:px-6 lg:px-8">
         <div className="relative mx-auto max-w-7xl text-center">
           <div className="mb-8">
-            <div className="flex justify-center">
-              <Reveal type="media" as="div" className="w-[200px] sm:w-[250px] md:w-[300px] transition-all duration-300">
-                <Image
-                  src="/title.png"
-                  alt="כיף לתת - עם כל נתינה הלב מתמלא"
-                  width={500}
-                  height={200}
-                  style={{ 
-                    width: '100%',
-                    height: 'auto'
-                  }}
-                  className="object-fill"
-                />
-              </Reveal>
+            <div className="flex justify-center w-[200px] sm:w-[250px] md:w-[300px] transition-all duration-300">
+              <Image
+                src="/title.png"
+                alt="כיף לתת - עם כל נתינה הלב מתמלא"
+                width={500}
+                height={200}
+                style={{ 
+                  width: '100%',
+                  height: 'auto'
+                }}
+                className="object-fill"
+                priority
+              />
             </div>
           </div>
         </div>
@@ -196,22 +195,19 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               </div>
 
               {/* Title Image - תמונת הכותרת */}
-              <div className="flex relative z-20 justify-center items-center -mt-1 sm:-mt-6 md:-mt-4 lg:-mt-8"
-              >
-                <Reveal type="media" as="div" className="w-[160px] sm:w-[250px] md:w-[300px] transition-all duration-300">
-                  <Image
-                    src="/title.png"
-                    alt="כיף לתת - עם כל נתינה הלב מתמלא"
-                    width={300}
-                    height={100}
-                    className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
-                    style={{
-                      animation: 'glitch 3s ease-in-out infinite alternate',
-                      animationDelay: '0.5s'
-                    }}
-                    priority
-                  />
-                </Reveal>
+              <div className="flex relative z-20 justify-center items-center -mt-1 sm:-mt-6 md:-mt-4 lg:-mt-8 w-[160px] sm:w-[250px] md:w-[300px] transition-all duration-300">
+                <Image
+                  src="/title.png"
+                  alt="כיף לתת - עם כל נתינה הלב מתמלא"
+                  width={300}
+                  height={100}
+                  className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
+                  style={{
+                    animation: 'glitch 3s ease-in-out infinite alternate',
+                    animationDelay: '0.5s'
+                  }}
+                  priority
+                />
               </div>
 
               {/* Call to Action Button */}
