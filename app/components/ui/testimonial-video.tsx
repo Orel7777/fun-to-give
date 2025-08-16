@@ -261,7 +261,7 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
           className={`absolute inset-0 z-10 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-all duration-200 ${isStarting ? 'pointer-events-none opacity-90' : ''}`}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          disabled={isStarting || !isVideoLoaded || firebaseLoading}
+          disabled={isStarting || firebaseLoading}
         >
           <div className="bg-white/90 hover:bg-white rounded-full p-4 shadow-lg transition-all duration-200">
             <Play size={32} className="text-gray-800 ml-1" />

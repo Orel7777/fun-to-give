@@ -71,6 +71,22 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
         setShowThumbnail(true);
       } else {
         setShowThumbnail(false);
+        // במובייל נחכה ל-canplay אם הוידאו עדיין לא מוכן
+        if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+          if (video.readyState < 3) {
+            await new Promise((resolve) => {
+              const onCanPlay = () => {
+                video.removeEventListener('canplay', onCanPlay);
+                resolve(void 0);
+              };
+              video.addEventListener('canplay', onCanPlay);
+              setTimeout(() => {
+                video.removeEventListener('canplay', onCanPlay);
+                resolve(void 0);
+              }, 3000);
+            });
+          }
+        }
         await video.play();
         setIsPlaying(true);
       }
@@ -103,7 +119,7 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
         <video
           ref={videoRef}
           className="object-cover w-full h-full"
-          preload={window.innerWidth <= 768 ? "auto" : "metadata"}
+          preload={typeof window !== 'undefined' && window.innerWidth <= 768 ? "auto" : "metadata"}
           playsInline
           muted={false}
           controls={false}
@@ -124,7 +140,7 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
       )}
 
       {/* Thumbnail וכפתור Play */}
-      {showThumbnail && isVideoLoaded && !firebaseLoading && (
+      {showThumbnail && !firebaseLoading && (
         <motion.button
           onClick={togglePlay}
           disabled={isToggling}
