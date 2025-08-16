@@ -2,10 +2,13 @@ import { useState, useEffect } from 'react';
 import { storage } from '../lib/firebase.config';
 import { ref, getDownloadURL } from 'firebase/storage';
 
-export const useFirebaseVideo = (videoPath: string) => {
+type Options = { enabled?: boolean };
+
+export const useFirebaseVideo = (videoPath: string, options: Options = {}) => {
   const [videoUrl, setVideoUrl] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { enabled = true } = options;
 
   useEffect(() => {
     const getVideoUrl = async () => {
@@ -30,10 +33,16 @@ export const useFirebaseVideo = (videoPath: string) => {
       }
     };
 
-    if (videoPath) {
+    if (!enabled) {
+      // דחיית טעינה עד שיאושר (למשל כשהאלמנט נכנס לפריים)
+      setLoading(false);
+      return;
+    }
+
+    if (videoPath && enabled) {
       getVideoUrl();
     }
-  }, [videoPath]);
+  }, [videoPath, enabled]);
 
   return { videoUrl, loading, error };
 };

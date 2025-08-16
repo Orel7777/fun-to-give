@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { useFirebaseVideo } from '../../hooks/useFirebaseVideo';
 
@@ -15,8 +15,10 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
   const [showThumbnail, setShowThumbnail] = useState(true);
   const [isToggling, setIsToggling] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(containerRef, { once: true, margin: '0px 0px -20% 0px' });
 
-  const { videoUrl, loading: firebaseLoading, error } = useFirebaseVideo('aiChild.mp4');
+  const { videoUrl, loading: firebaseLoading, error } = useFirebaseVideo('aiChild.mp4', { enabled: inView });
 
   useEffect(() => {
     const video = videoRef.current;
@@ -113,7 +115,7 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
   }
 
   return (
-    <div className={`overflow-hidden relative mx-auto bg-gray-900 rounded-lg shadow-lg max-w-[400px] aspect-[9/16] ${className}`}>
+    <div ref={containerRef} className={`overflow-hidden relative mx-auto bg-gray-900 rounded-lg shadow-lg max-w-[400px] aspect-[9/16] ${className}`}>
       {/* וידאו */}
       {videoUrl && (
         <video
@@ -143,7 +145,7 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
       {showThumbnail && !firebaseLoading && (
         <motion.button
           onClick={togglePlay}
-          disabled={isToggling}
+          disabled={isToggling || !videoUrl}
           className={`flex absolute inset-0 justify-center items-center transition-all duration-200 bg-black/30 hover:bg-black/40 ${
             isToggling ? 'cursor-wait' : 'cursor-pointer'
           }`}

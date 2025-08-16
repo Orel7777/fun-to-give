@@ -99,18 +99,7 @@ export default function OrganizationPurpose() {
       dir="rtl"
       style={{ opacity: opacityTransform }}
     >
-      <style jsx>{`
-        @media (max-width: 768px) {
-          .disable-animations * {
-            animation: none !important;
-            transition: none !important;
-            transform: none !important;
-            opacity: 1 !important;
-            will-change: auto !important;
-          }
-        }
-      `}</style>
-      <div className="mx-auto max-w-4xl disable-animations">
+      <div className="mx-auto max-w-4xl">
         {/* Header */}
         <div
           className="pt-16 mb-12 text-center"
@@ -163,7 +152,7 @@ export default function OrganizationPurpose() {
 
         {/* Purpose Cards */}
         <motion.div
-          className="grid grid-cols-1 gap-2 h-full sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 lg:gap-6"
+          className="grid grid-cols-1 gap-4 h-full sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 lg:gap-6"
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
@@ -182,6 +171,7 @@ export default function OrganizationPurpose() {
                 }}
                 whileTap={{ scale: 0.98 }}
                 style={{ y: yTransform }}
+                className="w-full"
               >
                 <Button
                   duration={Math.floor(Math.random() * 10000) + 10000}
@@ -190,27 +180,57 @@ export default function OrganizationPurpose() {
                     background: "#ffffff",
                     borderRadius: `calc(1.75rem* 0.96)`,
                     border: "2px solid #9acdbe",
+                    width: "100%",
                   }}
-                  className="flex-1 text-black dark:text-white border-neutral-200 dark:border-slate-800 h-full min-h-[150px] sm:min-h-[200px] md:min-h-[250px] lg:min-h-[300px]"
+                  className="!w-full block text-black dark:text-white border-neutral-200 dark:border-slate-800 min-h-[220px] h-[220px] sm:h-[210px] md:h-[260px] lg:h-[300px]"
                 >
-                  <div className="flex flex-col gap-1 justify-between items-center p-1 py-2 h-full sm:p-1 sm:py-2 md:p-2 md:py-3 lg:p-3 xl:p-6 sm:gap-1 md:gap-2">
-                    <div className="flex justify-center mb-2 sm:mb-2 md:mb-3 lg:mb-4">
+                  <div className="flex flex-col gap-2 justify-between items-center p-3 py-4 h-full sm:p-1 sm:py-2 md:p-2 md:py-3 lg:p-3 xl:p-6 sm:gap-1 md:gap-2">
+                    <div className="flex justify-center mb-3">
                       <Reveal type="media" as="div">
-                        <Lottie
-                          animationData={purpose.animation}
-                          loop={true}
-                          autoplay={true}
-                          className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16"
-                        />
+                        <motion.div
+                          animate={{
+                            scale: [1, 1.1, 1],
+                            rotate: [0, 5, -5, 0],
+                          }}
+                          transition={{
+                            duration: 4,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                            delay: index * 0.5,
+                          }}
+                          whileHover={{
+                            scale: 1.2,
+                            rotate: 15,
+                            transition: { duration: 0.3 },
+                          }}
+                        >
+                          <Lottie
+                            animationData={purpose.animation}
+                            loop={true}
+                            autoplay={true}
+                            className="w-12 h-12 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-14 lg:h-14 xl:w-16 xl:h-16"
+                          />
+                        </motion.div>
                       </Reveal>
                     </div>
 
-                    <div className="flex flex-col flex-1 justify-center items-center w-full">
-                      <Reveal as="h3" type="heading" className="text-[12px] sm:text-xs md:text-sm lg:text-lg xl:text-xl 2xl:text-2xl font-bold tracking-tighter text-[#2a2b26] font-staff mb-2 sm:mb-2 md:mb-3 lg:mb-4 text-center">
-                        {purpose.title}
+                    <div className="flex flex-col flex-1 justify-center items-center w-full space-y-2">
+                      <Reveal as="h3" type="heading" className="text-sm sm:text-xs md:text-sm lg:text-lg xl:text-xl 2xl:text-2xl font-bold tracking-tighter text-[#2a2b26] font-staff text-center">
+                        <motion.span
+                          animate={{
+                            color: ["#2a2b26", "#9dd0bf", "#2a2b26"],
+                          }}
+                          transition={{
+                            duration: 3,
+                            repeat: Infinity,
+                            delay: index * 0.7,
+                          }}
+                        >
+                          {purpose.title}
+                        </motion.span>
                       </Reveal>
 
-                      <Reveal as="p" type="paragraph" className="text-[10px] sm:text-[10px] md:text-xs lg:text-sm xl:text-base 2xl:text-lg text-[#2a2b26] leading-tight sm:leading-relaxed text-center px-1">
+                      <Reveal as="p" type="paragraph" className="text-xs sm:text-[10px] md:text-xs lg:text-sm xl:text-base 2xl:text-lg text-[#2a2b26] leading-relaxed text-center px-2 flex-1 flex items-center">
                         {purpose.description}
                       </Reveal>
                     </div>

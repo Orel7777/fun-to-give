@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { motion, useInView } from 'framer-motion';
 import { Play } from 'lucide-react';
 import { useFirebaseVideo } from '../../hooks/useFirebaseVideo';
 import { useTestimonialVideo } from '../../contexts/TestimonialVideoContext';
@@ -23,7 +23,9 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
   const userPausedRef = useRef(false);
   const resumeScheduledRef = useRef<null | (() => void)>(null);
   
-  const { videoUrl, loading: firebaseLoading, error } = useFirebaseVideo(videoPath);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const inView = useInView(containerRef, { once: true, margin: '0px 0px -20% 0px' });
+  const { videoUrl, loading: firebaseLoading, error } = useFirebaseVideo(videoPath, { enabled: inView });
   const { currentPlayingVideo, setCurrentPlayingVideo } = useTestimonialVideo();
 
   // טיפול בטעינת הוידאו
@@ -228,7 +230,7 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
   }
 
   return (
-    <div className={`relative aspect-video bg-gray-900 rounded-lg overflow-hidden shadow-lg ${className}`}>
+    <div ref={containerRef} className={`relative aspect-video bg-gray-900 rounded-lg overflow-hidden shadow-lg ${className}`}>
       {/* וידאו */}
       {videoUrl && (
         <video
@@ -261,7 +263,7 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
           className={`absolute inset-0 z-10 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-all duration-200 ${isStarting ? 'pointer-events-none opacity-90' : ''}`}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          disabled={isStarting || firebaseLoading}
+          disabled={isStarting || firebaseLoading || !videoUrl}
         >
           <div className="bg-white/90 hover:bg-white rounded-full p-4 shadow-lg transition-all duration-200">
             <Play size={32} className="text-gray-800 ml-1" />
