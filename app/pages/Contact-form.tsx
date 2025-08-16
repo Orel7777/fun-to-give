@@ -18,9 +18,46 @@ export function ContactForm() {
     notifications: false,
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [submitting, setSubmitting] = useState(false)
+  const [sent, setSent] = useState<null | boolean>(null)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Form submitted:", formData)
+    setSubmitting(true)
+    setSent(null)
+    setError(null)
+    try {
+      // Basic client validation
+      if (!formData.email && !formData.phone) {
+        throw new Error("נא למלא אימייל או טלפון ליצירת קשר")
+      }
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error(data?.error || 'שליחה נכשלה, אנא נסו שוב')
+      }
+      setSent(true)
+      // Reset form on success
+      setFormData({
+        subject: "",
+        firstName: "",
+        lastName: "",
+        phone: "",
+        email: "",
+        message: "",
+        notifications: false,
+      })
+    } catch (err: any) {
+      setSent(false)
+      setError(err?.message || 'שליחה נכשלה, אנא נסו שוב')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -28,6 +65,13 @@ export function ContactForm() {
       <div className="text-center mb-8">
         <h2 className="text-xl font-semibold text-gray-700">נשמח לחבר</h2>
       </div>
+
+      {sent === true && (
+        <p className="text-center text-green-600">הטופס נשלח בהצלחה!</p>
+      )}
+      {sent === false && error && (
+        <p className="text-center text-red-600">{error}</p>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Subject Dropdown */}
@@ -37,7 +81,7 @@ export function ContactForm() {
             value={formData.subject}
             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
           >
-            <option value="">שם פרטי</option>
+            <option value="">בחר נושא</option>
             <option value="general">כללי</option>
             <option value="support">תמיכה</option>
             <option value="donation">תרומה</option>
@@ -48,7 +92,7 @@ export function ContactForm() {
         <div>
           <Input
             type="text"
-            placeholder="נושא הפנייה"
+            placeholder="שם פרטי"
             className="text-right"
             value={formData.firstName}
             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
@@ -119,9 +163,10 @@ export function ContactForm() {
       <div className="flex justify-center pt-4">
         <Button
           type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white px-12 py-3 rounded-full text-lg font-medium"
+          disabled={submitting}
+          className="bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-white px-12 py-3 rounded-full text-lg font-medium"
         >
-          שליחה
+          {submitting ? 'שולח…' : 'שליחה'}
         </Button>
       </div>
     </form>

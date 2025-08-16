@@ -254,7 +254,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
           scrollToExpand="גלול/י להרחבה"
           textBlend
         >
-          <div className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8 -pt-16 sm:pt-0 md:pt-2 lg:pt-8">
+          <div id="הפעילות-שלנו" className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8 -pt-16 sm:pt-0 md:pt-2 lg:pt-8">
             {/* תמונה עם אנימציה */}
             <div className="flex justify-center mb-0 sm:mb-2">
               <div className="relative group">
@@ -357,7 +357,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       
 
       {/* גלריה של תמונות פעילות העמותה */}
-      <div className="bg-[#fdf6ed] py-2 sm:py-4 md:py-6 lg:py-8 text-center">
+      <div id="תמונות-ווידאו" className="bg-[#fdf6ed] py-2 sm:py-4 md:py-6 lg:py-8 text-center">
         <Reveal as="h2" type="heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-6 sm:mb-8 md:mb-10 flex items-center justify-center gap-3">
           תמונות מפעילות העמותה
           <svg 

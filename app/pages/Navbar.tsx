@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -17,11 +18,33 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
   const [isContactButtonHovered, setIsContactButtonHovered] = useState<boolean>(false);
   const [isMobileMenuButtonHovered, setIsMobileMenuButtonHovered] = useState<boolean>(false);
   const [isMobileContactButtonHovered, setIsMobileContactButtonHovered] = useState<boolean>(false);
-  
+
   // בדיקה אם זה מובייל
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
   const [isSoundOn, setIsSoundOn] = useState<boolean>(true);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const router = useRouter();
+  const pathname = usePathname();
+
+  // Scroll/Navigate to donations section
+  const goToDonationSection = (): void => {
+    try {
+      const el = typeof document !== 'undefined' ? document.getElementById('תרומה') : null;
+      if (el && pathname === '/') {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        router.push('/#תרומה', { scroll: true });
+      }
+    } catch {}
+  };
+
+  // Force scroll to top on initial load/refresh
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+    }
+  }, []);
 
   // Initialize audio and attempt autoplay on mount
   useEffect(() => {
@@ -204,7 +227,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     },
     { 
       title: "תרומה", 
-      url: "#תרומה",
+      url: "/#תרומה",
       icon: (
         <motion.svg 
           width="20" 
@@ -335,6 +358,18 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     },
   ];
 
+  // Generic smooth scroll or navigate for any hash id
+  const goToSectionById = (id: string): void => {
+    try {
+      const el = typeof document !== 'undefined' ? document.getElementById(id) : null;
+      if (el && pathname === '/') {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        router.push(`/#${id}`, { scroll: true });
+      }
+    } catch {}
+  };
+
   const toggleMenu = (): void => {
     setIsMenuOpen(!isMenuOpen);
     if (isMenuOpen) {
@@ -351,6 +386,22 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     setIsMobileMenuDropdownOpen(!isMobileMenuDropdownOpen);
   };
 
+  // Handle logo click: scroll to top if already on home, otherwise navigate home and ensure scroll top
+  const handleLogoClick: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
+    try {
+      if (pathname === "/") {
+        e.preventDefault();
+        if (typeof window !== 'undefined') {
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      } else {
+        e.preventDefault();
+        router.push("/", { scroll: true });
+        // After navigation, Next.js will scroll to top when scroll: true
+      }
+    } catch {}
+  };
+
   return (
     <nav className={`fixed top-0 right-0 left-0 border-b shadow-lg backdrop-blur-xl z-[999999] bg-white/30 border-gray-200/40 ${className}`}>
       <div className="px-6 mx-auto max-w-7xl sm:px-8 lg:px-12">
@@ -359,7 +410,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
           <div className="flex items-center space-x-4">
             {/* Logo - הכי ימין */}
           <div className="flex-shrink-0">
-              <Link href="/" className="flex gap-2 items-center">
+              <Link href="/" className="flex gap-2 items-center" onClick={handleLogoClick} scroll>
             <motion.img
               src="/logo.png"
               alt="כיף לתת"
@@ -383,7 +434,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               </Link>
             </div>
             
-            <button className="px-[14px] py-2 font-semibold text-[#2b2e3a] bg-[#f4a282] rounded-lg transition-all duration-300 hover:scale-105 hover:bg-[#e0ccbc] flex items-center gap-2 relative overflow-hidden group cursor-pointer">
+            <button onClick={goToDonationSection} className="px-[14px] py-2 font-semibold text-[#2b2e3a] bg-[#f4a282] rounded-lg transition-all duration-300 hover:scale-105 hover:bg-[#e0ccbc] flex items-center gap-2 relative overflow-hidden group cursor-pointer">
                               <span className="relative z-10">הצטרפו לנתינה</span>
               <div className="relative z-10 w-4 h-4 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110">
                 {/* Default icon (click icon) */}
@@ -407,7 +458,8 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                 >
                   <path d="M114.799,168.906c-1.582,0-5.261-0.716-5.261-7.383v-30.624H8.181
 					c-0.279,0.043-0.655,0.082-1.102,0.082c-1.8,0-3.464-0.68-4.688-1.933C0.805,127.427,0,124.947,0,121.686V74.614
-					c0-6.51,4.617-8.231,7.057-8.231h100.34V38.317c0-7.848,3.736-9.019,5.962-9.019c3.572,0,7.129,3.396,7.805,4.08
+					c0-6.51,4.617-8.231,7.057-8.231h100.34V38.317
+					c0-7.848,3.736-9.019,5.962-9.019c3.572,0,7.129,3.396,7.805,4.08
 					c2.441,1.8,66.982,50.455,74.075,57.541c2.577,2.58,3.028,5.175,2.956,6.893c-0.172,4.134-3.357,6.947-3.715,7.258
 				l-71.792,59.413C121.91,165.334,118.267,168.906,114.799,168.906z M7.437,125.215l0.476,0.004h107.301v36.3
 				c0,0.716,0.057,1.21,0.118,1.535c0.916-0.437,2.426-1.585,3.493-2.716l72.01-59.624c0.426-0.372,1.646-1.75,1.7-3.16
@@ -521,7 +573,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                 <a
                   key={index}
                       href={item.url}
-                                             className="block px-4 py-4 text-base font-medium text-gray-700 rounded-lg transition-all duration-300 cursor-pointer hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:shadow-md hover:scale-105 hover:translate-x-1 active:scale-95 menu-item"
+                       className="block px-4 py-4 text-base font-medium text-gray-700 rounded-lg transition-all duration-300 cursor-pointer hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:shadow-md hover:scale-105 hover:translate-x-1 active:scale-95 menu-item"
                       style={{
                         animationDelay: `${index * 100}ms`,
                          transform: 'translateX(0)'
@@ -535,7 +587,15 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                          if (!isMobile) {
                            e.currentTarget.style.removeProperty('color');
                          }
-                      }}
+                       }}
+                       onClick={(e) => {
+                         if (item.url.startsWith('#') || item.url.startsWith('/#')) {
+                           e.preventDefault();
+                           const id = item.url.replace('/#', '').replace('#', '');
+                           goToSectionById(id);
+                           closeMenu();
+                         }
+                       }}
                     >
                       <div className="flex justify-between items-center">
                         <span className="font-bold text-gray-800 transition-all duration-300">{item.title}</span>

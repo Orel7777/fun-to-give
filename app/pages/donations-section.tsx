@@ -46,6 +46,7 @@ export default function DonationsSection() {
 
   return (
     <motion.section
+      id="תרומה"
       className="px-4 pt-16 pb-0"
       // style={{
       //   background: 'linear-gradient(135deg, #e2cdbd 0%, #f5f5f5 15%, #f5f5f5 85%, #9dd0bf 100%)',

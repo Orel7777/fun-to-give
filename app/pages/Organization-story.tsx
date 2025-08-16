@@ -291,8 +291,14 @@ export default function OrganizationStory() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
               onClick={() => {
-                // כאן אפשר להוסיף לוגיקה לניווט או פעולה
-                console.log("הכפתור נלחץ - הצטרפו לנתניה");
+                try {
+                  const el = typeof document !== 'undefined' ? document.getElementById('תרומה') : null;
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  } else if (typeof window !== 'undefined') {
+                    window.location.href = '/#תרומה';
+                  }
+                } catch {}
               }}
             >
               <div className="flex gap-3 justify-center items-center" dir="rtl">

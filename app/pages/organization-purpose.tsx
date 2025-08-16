@@ -93,6 +93,7 @@ export default function OrganizationPurpose() {
 
   return (
     <motion.section
+      id="ייעוד-העמותה"
       ref={ref}
       className="overflow-hidden px-4 pt-0 pb-16"
       dir="rtl"
@@ -104,6 +105,8 @@ export default function OrganizationPurpose() {
             animation: none !important;
             transition: none !important;
             transform: none !important;
+            opacity: 1 !important;
+            will-change: auto !important;
           }
         }
       `}</style>
@@ -160,7 +163,7 @@ export default function OrganizationPurpose() {
 
         {/* Purpose Cards */}
         <motion.div
-          className="grid grid-cols-3 gap-2 h-full sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 lg:gap-6"
+          className="grid grid-cols-1 gap-2 h-full sm:grid-cols-2 lg:grid-cols-3 sm:gap-4 lg:gap-6"
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
