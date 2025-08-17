@@ -56,6 +56,7 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
       setShowVideoLoading(false);
       setIsStarting(false);
       startGuardRef.current = false;
+      userWantsPlayRef.current = true;
     };
 
     const handlePause = () => {
@@ -63,6 +64,7 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
       if (startGuardRef.current) return;
       console.log('⏹️ וידאו נעצר:', videoPath);
       setIsPlaying(false);
+      setShowVideoLoading(false);
       // אם המשתמש עדיין רוצה לנגן (לא לחץ pause), ננסה לחדש ברגע שאפשר
       if (userWantsPlayRef.current && !userPausedRef.current) {
         const v = videoRef.current;
@@ -186,19 +188,40 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
               // הגדרת src אם לא קיים
               if (currentVideo.src !== currentVideoUrl) {
                 currentVideo.src = currentVideoUrl;
+                currentVideo.load();
               }
               
+              // במובייל - המתן לטעינה לפני ניגון
+              const playVideo = async () => {
+                try {
+                  if (typeof window !== 'undefined' && window.innerWidth <= 768) {
+                    if (currentVideo.readyState < 3) {
+                      await new Promise((resolve) => {
+                        const onCanPlay = () => {
+                          currentVideo.removeEventListener('canplay', onCanPlay);
+                          resolve(void 0);
+                        };
+                        currentVideo.addEventListener('canplay', onCanPlay);
+                        setTimeout(() => {
+                          currentVideo.removeEventListener('canplay', onCanPlay);
+                          resolve(void 0);
+                        }, 5000);
+                      });
+                    }
+                  }
+                  
+                  await currentVideo.play();
+                  // הניגון הצליח - הסרטון יתחיל לנגן והאירועים יטופלו
+                } catch (err) {
+                  console.error('שגיאה בניגון:', err);
+                  setShowVideoLoading(false);
+                  setIsStarting(false);
+                  startGuardRef.current = false;
+                }
+              };
+              
               setShowVideoLoading(false);
-              // כשהווידאו מוכן, ננסה לנגן
-              currentVideo.play().then(() => {
-                setIsPlaying(true);
-                setCurrentPlayingVideo(videoId);
-              }).catch((err) => {
-                console.error('שגיאה בניגון:', err);
-                setShowVideoLoading(false);
-                setIsStarting(false);
-                startGuardRef.current = false;
-              });
+              playVideo();
               return true;
             }
             return false;
@@ -244,7 +267,7 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
               setTimeout(() => {
                 video.removeEventListener('canplay', onCanPlay);
                 resolve(void 0);
-              }, 3000);
+              }, 5000);
             });
           }
         }
@@ -252,12 +275,13 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
         try {
           await video.play();
           setShowVideoLoading(false);
+          // הניגון הצליח - האירועים יטופלו אוטומטית
         } catch (err: unknown) {
           // טיפול בטוח בשגיאת AbortError
           if (err instanceof DOMException && err.name === 'AbortError') {
             console.warn('play() נקטע עקב pause() - מתעלם באופן בטוח');
           } else {
-            throw err;
+            console.error('שגיאה בניגון וידאו:', err);
           }
           setShowVideoLoading(false);
         }
