@@ -34,6 +34,12 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
     const video = videoRef.current;
     if (!video || !videoUrl) return;
 
+    // הגדרת src כשיש videoUrl
+    if (video.src !== videoUrl) {
+      video.src = videoUrl;
+      video.load(); // אילוץ טעינה מחדש
+    }
+
     const handleLoadedData = () => {
       console.log('📹 וידאו נטען:', videoPath);
       setIsVideoLoaded(true);
@@ -48,6 +54,8 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
       setIsPlaying(true);
       setCurrentPlayingVideo(videoId);
       setShowVideoLoading(false);
+      setIsStarting(false);
+      startGuardRef.current = false;
     };
 
     const handlePause = () => {
@@ -170,28 +178,51 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
         if (!videoUrl) {
           setShowVideoLoading(true);
           // ממתינים ל-videoUrl להיטען
-          const waitForVideo = setInterval(() => {
-            if (videoUrl && video.src) {
-              clearInterval(waitForVideo);
+          const checkVideoUrl = () => {
+            const currentVideo = videoRef.current;
+            const currentVideoUrl = videoUrl;
+            
+            if (currentVideoUrl && currentVideo) {
+              // הגדרת src אם לא קיים
+              if (currentVideo.src !== currentVideoUrl) {
+                currentVideo.src = currentVideoUrl;
+              }
+              
+              setShowVideoLoading(false);
               // כשהווידאו מוכן, ננסה לנגן
-              video.play().catch((err) => {
+              currentVideo.play().then(() => {
+                setIsPlaying(true);
+                setCurrentPlayingVideo(videoId);
+              }).catch((err) => {
                 console.error('שגיאה בניגון:', err);
                 setShowVideoLoading(false);
                 setIsStarting(false);
                 startGuardRef.current = false;
               });
+              return true;
             }
-          }, 100);
+            return false;
+          };
           
-          // timeout אחרי 10 שניות
-          setTimeout(() => {
-            clearInterval(waitForVideo);
-            if (!videoUrl) {
-              setShowVideoLoading(false);
-              setIsStarting(false);
-              startGuardRef.current = false;
-            }
-          }, 10000);
+          // בדיקה מיידית
+          if (!checkVideoUrl()) {
+            // אם לא מוכן, נמשיך לבדוק
+            const waitForVideo = setInterval(() => {
+              if (checkVideoUrl()) {
+                clearInterval(waitForVideo);
+              }
+            }, 200);
+            
+            // timeout אחרי 15 שניות
+            setTimeout(() => {
+              clearInterval(waitForVideo);
+              if (!videoUrl) {
+                setShowVideoLoading(false);
+                setIsStarting(false);
+                startGuardRef.current = false;
+              }
+            }, 15000);
+          }
           return;
         }
         
@@ -272,19 +303,18 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
   return (
     <div ref={containerRef} className={`relative aspect-video bg-gray-900 rounded-lg overflow-hidden shadow-lg ${className}`}>
       {/* וידאו */}
-      {videoUrl && (
-        <video
-          ref={videoRef}
-          className="w-full h-full object-cover"
-          preload={typeof window !== 'undefined' && window.innerWidth <= 768 ? "auto" : "metadata"}
-          playsInline
-          muted={false}
-          controls={false}
-        >
-          <source src={videoUrl} type="video/mp4" />
-          הדפדפן שלך לא תומך בתגית video.
-        </video>
-      )}
+      <video
+        ref={videoRef}
+        className="w-full h-full object-cover"
+        preload={typeof window !== 'undefined' && window.innerWidth <= 768 ? "auto" : "metadata"}
+        playsInline
+        muted={false}
+        controls={false}
+        src={videoUrl || ''}
+      >
+        {videoUrl && <source src={videoUrl} type="video/mp4" />}
+        הדפדפן שלך לא תומך בתגית video.
+      </video>
 
       {/* אוברליי טעינה - רק בטעינה ראשונית */}
       {firebaseLoading && (
