@@ -57,6 +57,11 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
       setIsStarting(false);
       startGuardRef.current = false;
       userWantsPlayRef.current = true;
+      // השבתת MUTE אחרי התחלת ניגון בפועל
+      const v = videoRef.current;
+      if (v) {
+        try { v.muted = false; } catch {}
+      }
     };
 
     const handlePause = () => {
@@ -179,6 +184,11 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
         // אם אין videoUrl עדיין, נראה טעינה בתוך הווידאו
         if (!videoUrl) {
           setShowVideoLoading(true);
+          // קריאת play מיידית כדי לשמר "מחווה" ב-iOS
+          try {
+            video.muted = true; // נדרש במכשירי iOS לניגון בטוח
+            video.play().catch(() => {/* נתעלם כאן - ננסה שוב כשיהיה src */});
+          } catch {}
           // ממתינים ל-videoUrl להיטען
           const checkVideoUrl = () => {
             const currentVideo = videoRef.current;
@@ -191,37 +201,17 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
                 currentVideo.load();
               }
               
-              // במובייל - המתן לטעינה לפני ניגון
-              const playVideo = async () => {
-                try {
-                  if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-                    if (currentVideo.readyState < 3) {
-                      await new Promise((resolve) => {
-                        const onCanPlay = () => {
-                          currentVideo.removeEventListener('canplay', onCanPlay);
-                          resolve(void 0);
-                        };
-                        currentVideo.addEventListener('canplay', onCanPlay);
-                        setTimeout(() => {
-                          currentVideo.removeEventListener('canplay', onCanPlay);
-                          resolve(void 0);
-                        }, 5000);
-                      });
-                    }
-                  }
-                  
-                  await currentVideo.play();
-                  // הניגון הצליח - הסרטון יתחיל לנגן והאירועים יטופלו
-                } catch (err) {
-                  console.error('שגיאה בניגון:', err);
+              // קריאת play מיידית בתוך מחוות המשתמש (ללא המתנה ל-canplay)
+              setShowVideoLoading(false);
+              const playPromise = currentVideo.play();
+              if (playPromise && typeof playPromise.then === 'function') {
+                playPromise.catch((err: unknown) => {
+                  console.error('שגיאה בניסיון ניגון (לא חוסם מחווה):', err);
                   setShowVideoLoading(false);
                   setIsStarting(false);
                   startGuardRef.current = false;
-                }
-              };
-              
-              setShowVideoLoading(false);
-              playVideo();
+                });
+              }
               return true;
             }
             return false;
@@ -252,37 +242,27 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
         // אם יש videoUrl, נמשיך כרגיל
         setShowVideoLoading(true);
         
-        // במובייל - המתן לטעינה לפני ניגון
-        if (typeof window !== 'undefined' && window.innerWidth <= 768) {
-          if (video.readyState < 3) {
-            console.log('📱 מובייל: ממתין לטעינת וידאו...');
-            await new Promise((resolve) => {
-              const onCanPlay = () => {
-                video.removeEventListener('canplay', onCanPlay);
-                resolve(void 0);
-              };
-              video.addEventListener('canplay', onCanPlay);
-              
-              // timeout למקרה שהוידאו לא נטען
-              setTimeout(() => {
-                video.removeEventListener('canplay', onCanPlay);
-                resolve(void 0);
-              }, 5000);
-            });
-          }
-        }
-        
+        // קריאת play מיידית בתוך מחוות המשתמש (ללא המתנות)
         try {
-          await video.play();
-          setShowVideoLoading(false);
-          // הניגון הצליח - האירועים יטופלו אוטומטית
-        } catch (err: unknown) {
-          // טיפול בטוח בשגיאת AbortError
-          if (err instanceof DOMException && err.name === 'AbortError') {
-            console.warn('play() נקטע עקב pause() - מתעלם באופן בטוח');
+          const playPromise = video.play();
+          if (playPromise && typeof playPromise.then === 'function') {
+            playPromise
+              .then(() => {
+                setShowVideoLoading(false);
+              })
+              .catch((err: unknown) => {
+                if (err instanceof DOMException && err.name === 'AbortError') {
+                  console.warn('play() נקטע עקב pause() - מתעלם באופן בטוח');
+                } else {
+                  console.error('שגיאה בניגון וידאו:', err);
+                }
+                setShowVideoLoading(false);
+              });
           } else {
-            console.error('שגיאה בניגון וידאו:', err);
+            setShowVideoLoading(false);
           }
+        } catch (err) {
+          console.error('שגיאה בניגון וידאו:', err);
           setShowVideoLoading(false);
         }
       }
@@ -332,8 +312,10 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
         className="w-full h-full object-cover"
         preload={typeof window !== 'undefined' && window.innerWidth <= 768 ? "auto" : "metadata"}
         playsInline
-        muted={false}
+        muted={true}
         controls={false}
+        controlsList="nodownload noplaybackrate"
+        disablePictureInPicture
         src={videoUrl || ''}
       >
         {videoUrl && <source src={videoUrl} type="video/mp4" />}
@@ -351,7 +333,7 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
       )}
 
       {/* כפתור play/stop - מוסתר כשהוידאו מתנגן */}
-      {!isPlaying && (
+      {!isPlaying && !isStarting && (
         <motion.button
           onClick={togglePlay}
           className={`absolute inset-0 z-10 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-all duration-200 ${isStarting ? 'pointer-events-none opacity-90' : ''}`}
