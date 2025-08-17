@@ -17,6 +17,7 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
   const [isPlaying, setIsPlaying] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
+  const [showVideoLoading, setShowVideoLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const startGuardRef = useRef(false);
   const userWantsPlayRef = useRef(false);
@@ -46,6 +47,7 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
       console.log('✅ אירוע playing - ניגון בפועל התחיל:', videoPath);
       setIsPlaying(true);
       setCurrentPlayingVideo(videoId);
+      setShowVideoLoading(false);
     };
 
     const handlePause = () => {
@@ -143,7 +145,9 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
 
   const togglePlay = async () => {
     const video = videoRef.current;
-    if (!video || !videoUrl) return;
+    
+    // אפשר לחיצה גם בלי videoUrl - נתחיל טעינה
+    if (!video) return;
 
     try {
       if (isPlaying) {
@@ -151,6 +155,7 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
         video.pause();
         setIsPlaying(false);
         setCurrentPlayingVideo(null);
+        setShowVideoLoading(false);
       } else {
         // הימנע מקריאות כפולות לניגון שעלולות ליצור AbortError
         if (startGuardRef.current) {
@@ -161,8 +166,40 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
         userWantsPlayRef.current = true;
         userPausedRef.current = false;
         
+        // אם אין videoUrl עדיין, נראה טעינה בתוך הווידאו
+        if (!videoUrl) {
+          setShowVideoLoading(true);
+          // ממתינים ל-videoUrl להיטען
+          const waitForVideo = setInterval(() => {
+            if (videoUrl && video.src) {
+              clearInterval(waitForVideo);
+              // כשהווידאו מוכן, ננסה לנגן
+              video.play().catch((err) => {
+                console.error('שגיאה בניגון:', err);
+                setShowVideoLoading(false);
+                setIsStarting(false);
+                startGuardRef.current = false;
+              });
+            }
+          }, 100);
+          
+          // timeout אחרי 10 שניות
+          setTimeout(() => {
+            clearInterval(waitForVideo);
+            if (!videoUrl) {
+              setShowVideoLoading(false);
+              setIsStarting(false);
+              startGuardRef.current = false;
+            }
+          }, 10000);
+          return;
+        }
+        
+        // אם יש videoUrl, נמשיך כרגיל
+        setShowVideoLoading(true);
+        
         // במובייל - המתן לטעינה לפני ניגון
-        if (window.innerWidth <= 768) {
+        if (typeof window !== 'undefined' && window.innerWidth <= 768) {
           if (video.readyState < 3) {
             console.log('📱 מובייל: ממתין לטעינת וידאו...');
             await new Promise((resolve) => {
@@ -183,6 +220,7 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
         
         try {
           await video.play();
+          setShowVideoLoading(false);
         } catch (err: unknown) {
           // טיפול בטוח בשגיאת AbortError
           if (err instanceof DOMException && err.name === 'AbortError') {
@@ -190,12 +228,14 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
           } else {
             throw err;
           }
+          setShowVideoLoading(false);
         }
       }
     } catch (error) {
       console.error('שגיאה בניגון וידאו:', error);
       setCurrentPlayingVideo(null);
       setIsPlaying(false);
+      setShowVideoLoading(false);
     }
     finally {
       setIsStarting(false);
@@ -263,12 +303,22 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
           className={`absolute inset-0 z-10 flex items-center justify-center bg-black/30 hover:bg-black/40 transition-all duration-200 ${isStarting ? 'pointer-events-none opacity-90' : ''}`}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          disabled={isStarting || firebaseLoading || !videoUrl}
+          disabled={false}
         >
           <div className="bg-white/90 hover:bg-white rounded-full p-4 shadow-lg transition-all duration-200">
             <Play size={32} className="text-gray-800 ml-1" />
           </div>
         </motion.button>
+      )}
+
+      {/* אוברליי טעינה בתוך הווידאו */}
+      {showVideoLoading && (
+        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-20">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-12 h-12 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+            <p className="text-white text-sm font-staff">טוען וידאו...</p>
+          </div>
+        </div>
       )}
 
       {/* כפתור Stop קטן בזמן ניגון */}

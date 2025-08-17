@@ -14,6 +14,7 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [showThumbnail, setShowThumbnail] = useState(true);
   const [isToggling, setIsToggling] = useState(false);
+  const [showVideoLoading, setShowVideoLoading] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const inView = useInView(containerRef, { once: true, margin: '0px 0px -20% 0px' });
@@ -62,7 +63,7 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
 
   const togglePlay = async () => {
     const video = videoRef.current;
-    if (!video || !videoUrl || isToggling) return;
+    if (!video || isToggling) return;
 
     setIsToggling(true);
 
@@ -71,8 +72,45 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
         await video.pause();
         setIsPlaying(false);
         setShowThumbnail(true);
+        setShowVideoLoading(false);
       } else {
         setShowThumbnail(false);
+        
+        // אם אין videoUrl עדיין, נראה טעינה בתוך הווידאו
+        if (!videoUrl) {
+          setShowVideoLoading(true);
+          // ממתינים ל-videoUrl להיטען
+          const waitForVideo = setInterval(() => {
+            if (videoUrl && video.src) {
+              clearInterval(waitForVideo);
+              // כשהווידאו מוכן, ננסה לנגן
+              video.play().then(() => {
+                setIsPlaying(true);
+                setShowVideoLoading(false);
+              }).catch((err) => {
+                console.error('שגיאה בניגון:', err);
+                setShowVideoLoading(false);
+                setShowThumbnail(true);
+                setIsToggling(false);
+              });
+            }
+          }, 100);
+          
+          // timeout אחרי 10 שניות
+          setTimeout(() => {
+            clearInterval(waitForVideo);
+            if (!videoUrl) {
+              setShowVideoLoading(false);
+              setShowThumbnail(true);
+              setIsToggling(false);
+            }
+          }, 10000);
+          return;
+        }
+        
+        // אם יש videoUrl, נמשיך כרגיל
+        setShowVideoLoading(true);
+        
         // במובייל נחכה ל-canplay אם הוידאו עדיין לא מוכן
         if (typeof window !== 'undefined' && window.innerWidth <= 768) {
           if (video.readyState < 3) {
@@ -89,13 +127,16 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
             });
           }
         }
+        
         await video.play();
         setIsPlaying(true);
+        setShowVideoLoading(false);
       }
     } catch (error) {
       console.error('שגיאה בניגון וידאו aiChild:', error);
       setShowThumbnail(true);
       setIsPlaying(false);
+      setShowVideoLoading(false);
     } finally {
       setTimeout(() => {
         setIsToggling(false);
@@ -145,7 +186,7 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
       {showThumbnail && !firebaseLoading && (
         <motion.button
           onClick={togglePlay}
-          disabled={isToggling || !videoUrl}
+          disabled={false}
           className={`flex absolute inset-0 justify-center items-center transition-all duration-200 bg-black/30 hover:bg-black/40 ${
             isToggling ? 'cursor-wait' : 'cursor-pointer'
           }`}
@@ -157,6 +198,16 @@ const AiChildVideo = ({ className = '' }: AiChildVideoProps) => {
             <Play size={40} className="ml-1 text-gray-800" />
           </div>
         </motion.button>
+      )}
+
+      {/* אוברליי טעינה בתוך הווידאו */}
+      {showVideoLoading && (
+        <div className="absolute inset-0 bg-black/60 flex items-center justify-center z-20">
+          <div className="flex flex-col items-center gap-3">
+            <div className="w-12 h-12 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
+            <p className="text-white text-sm font-staff">טוען וידאו...</p>
+          </div>
+        </div>
       )}
 
       {/* אזור עצירה */}
