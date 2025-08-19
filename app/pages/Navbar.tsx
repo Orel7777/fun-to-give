@@ -881,7 +881,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                   צור קשר
                 </motion.button>
               </Link>
-              <motion.button 
+               <motion.button 
                 className="px-4 py-3 w-full font-semibold font-staff text-[#2b2e3a] bg-[#f5a383] rounded-lg hover:scale-105 hover:bg-[#e0ccbc] transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group cursor-pointer mt-4"
                 whileHover={{
                   scale: 1.05,
@@ -890,6 +890,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                     ease: "easeInOut"
                   }
                 }}
+                onClick={() => { goToDonationSection(); closeMenu(); }}
               >
                 <span className="relative z-10">הצטרפו לנתינה</span>
                 <div className="relative z-10 w-4 h-4 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110">
