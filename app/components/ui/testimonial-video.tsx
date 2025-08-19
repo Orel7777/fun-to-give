@@ -316,7 +316,7 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
         controls={false}
         controlsList="nodownload noplaybackrate"
         disablePictureInPicture
-        src={videoUrl || ''}
+        src={videoUrl ?? undefined}
       >
         {videoUrl && <source src={videoUrl} type="video/mp4" />}
         הדפדפן שלך לא תומך בתגית video.

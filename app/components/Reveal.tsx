@@ -42,7 +42,11 @@ export default function Reveal({ as = "div", type = "default", delay = 0, classN
     <Component
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.3 }}
+      viewport={{ 
+        once: true, 
+        amount: 0.2,
+        margin: "-50px 0px -50px 0px"
+      }}
       variants={variants}
       className={className}
       {...rest}

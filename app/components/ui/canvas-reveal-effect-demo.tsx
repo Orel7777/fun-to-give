@@ -4,52 +4,55 @@ import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CanvasRevealEffect } from './canvas-reveal-effect';
 
-export function CanvasRevealEffectDemo() {
+export function CanvasRevealEffectDemo({
+  onSelect,
+  selectedId,
+}: {
+  onSelect?: (id: 'onetime' | 'monthly' | 'basket' | 'volunteer') => void;
+  selectedId?: string;
+}) {
   return (
     <div className="py-3 flex flex-row items-center justify-center w-full gap-3 sm:gap-4 mx-auto px-2 sm:px-3 md:px-4 overflow-x-auto">
-      <Card 
-        title="תרומה חד פעמית" 
+      <Card
+        title="תרומה חד פעמית"
         description="תרומה חד פעמית שתתרום ישירות לפעילות העמותה"
         icon={<DonationIcon />}
+        onClick={() => onSelect?.('onetime')}
+        active={selectedId === 'onetime'}
       >
         <CanvasRevealEffect
           animationSpeed={5.1}
           containerClassName="bg-[#9acdbe]"
-          colors={[
-            [154, 205, 190], // #9acdbe
-            [255, 255, 255],
-          ]}
+          colors={[[154, 205, 190], [255, 255, 255]]}
         />
       </Card>
-      
-      <Card 
-        title="תרומה חודשית" 
+
+      <Card
+        title="תרומה חודשית"
         description="הצטרפו למעגל הנתינה הקבוע שלנו"
         icon={<HandshakeIcon />}
+        onClick={() => onSelect?.('monthly')}
+        active={selectedId === 'monthly'}
       >
         <CanvasRevealEffect
           animationSpeed={3}
           containerClassName="bg-[#9acdbe]"
-          colors={[
-            [154, 205, 190], // #9acdbe
-            [255, 255, 255],
-          ]}
+          colors={[[154, 205, 190], [255, 255, 255]]}
           dotSize={2}
         />
       </Card>
-      
-      <Card 
-        title="התנדבות" 
-        description="הצטרפו אלינו כחלק מצוות המתנדבים"
+
+      <Card
+        title="סל לתרומה"
+        description="חבילת תרומה מיוחדת עם מוצרים נבחרים"
         icon={<HeartIcon />}
+        onClick={() => onSelect?.('basket')}
+        active={selectedId === 'basket'}
       >
         <CanvasRevealEffect
           animationSpeed={3}
           containerClassName="bg-[#9acdbe]"
-          colors={[
-            [154, 205, 190], // #9acdbe
-            [255, 255, 255],
-          ]}
+          colors={[[154, 205, 190], [255, 255, 255]]}
         />
       </Card>
     </div>
@@ -62,12 +65,16 @@ const Card = ({
   icon,
   children,
   className,
+  onClick,
+  active,
 }: {
   title: string;
   description: string;
   icon: React.ReactNode;
   children?: React.ReactNode;
   className?: string;
+  onClick?: () => void;
+  active?: boolean;
 }) => {
   const [hovered, setHovered] = React.useState(false);
   const [isMobile, setIsMobile] = React.useState(false);
@@ -89,6 +96,7 @@ const Card = ({
     <div
       role="button"
       tabIndex={0}
+      onClick={onClick}
       onMouseEnter={() => !isMobile && setHovered(true)}
       onMouseLeave={() => !isMobile && setHovered(false)}
       onTouchStart={() => !isMobile && setHovered(true)}
@@ -96,7 +104,7 @@ const Card = ({
       onFocus={() => !isMobile && setHovered(true)}
       onBlur={() => !isMobile && setHovered(false)}
       className={`border-2 group/canvas-card flex items-center justify-center min-w-[120px] w-[120px] sm:w-[130px] md:w-[150px] lg:w-[180px] xl:w-[220px] p-2 sm:p-3 relative h-32 sm:h-36 md:h-40 lg:h-44 xl:h-48 rounded-xl overflow-hidden shadow-sm transition-all duration-300 cursor-pointer ${
-        hovered ? 'bg-[#f5a383] border-[#f5a383]' : 'bg-white border-[#f5a383]'
+        (hovered || active) ? 'bg-[#f5a383] border-[#f5a383]' : 'bg-white border-[#f5a383]'
       } hover:bg-[#f5a383] hover:border-[#f5a383] ${className ?? ''}`}
     >
       <CornerIcon className={`absolute h-4 w-4 -top-2 -left-2 ${hovered ? 'text-white' : 'text-[#f5a383]'} group-hover/canvas-card:text-white`} />
@@ -124,10 +132,10 @@ const Card = ({
           {icon}
         </div>
         <div className="flex-1 flex flex-col justify-center">
-          <h2 className={`font-bold mb-2 sm:mb-3 transition-all duration-300 text-[12px] sm:text-[14px] md:text-sm lg:text-base xl:text-lg ${hovered ? 'text-white' : 'text-[#f5a383]'} group-hover/canvas-card:text-white`}>
+          <h2 className={`font-bold mb-2 sm:mb-3 transition-all duration-300 text-[12px] sm:text-[14px] md:text-sm lg:text-base xl:text-lg ${(hovered || active) ? 'text-white' : 'text-[#f5a383]'} group-hover/canvas-card:text-white`}>
             {title}
           </h2>
-          <p className={`transition-all duration-300 text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base leading-tight ${hovered ? 'text-white/95' : 'text-[#f5a383]'} group-hover/canvas-card:text-white/95`}>
+          <p className={`transition-all duration-300 text-[10px] sm:text-[11px] md:text-xs lg:text-sm xl:text-base leading-tight ${(hovered || active) ? 'text-white/95' : 'text-[#f5a383]'} group-hover/canvas-card:text-white/95`}>
             {description}
           </p>
         </div>

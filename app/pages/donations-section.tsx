@@ -15,7 +15,7 @@ import paymentSuccessAnimation from "../../public/animation-json/Payment Success
 import AiChildVideo from "../components/ui/ai-child-video"
 
 export default function DonationsSection() {
-  const donationType = "monthly"
+  const [donationType, setDonationType] = useState<'monthly' | 'basket' | 'onetime'>("monthly")
   const [customAmount, setCustomAmount] = useState("")
 
   const donationOptions = [
@@ -95,7 +95,15 @@ export default function DonationsSection() {
 
         {/* Donation type cards with effects (kept as requested) */}
         <div className="mb-8">
-          <CanvasRevealEffectDemo />
+          <CanvasRevealEffectDemo
+            selectedId={donationType}
+            onSelect={(id) => {
+              // מיפוי זהה לשמות ה-id ברשימת האפשרויות
+              if (id === 'monthly' || id === 'basket' || id === 'onetime') {
+                setDonationType(id)
+              }
+            }}
+          />
         </div>
 
         <motion.div
