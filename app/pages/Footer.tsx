@@ -25,7 +25,7 @@ export default function Footer() {
             <div className="flex justify-start" style={{ marginTop: '100px' }}>
               {/* Contact section - moved to right */}
                              <div className="space-y-8 max-w-md">
-                 <Reveal as="h2" type="heading" className="text-4xl md:text-5xl font-light text-[#f5a383] tracking-wide text-right mt-8 flex items-center justify-start gap-4" dir="rtl">
+                 <Reveal as="h2" type="heading" className="text-4xl md:text-5xl font-staff text-[#f5a383] tracking-wide text-right mt-8 flex items-center justify-start gap-4" dir="rtl">
                   צור קשר
                   <Reveal type="media" className="flex justify-center items-center w-12 h-12 md:w-16 md:h-16">
                     {/* @ts-expect-error - custom element */}
@@ -65,22 +65,22 @@ export default function Footer() {
                                      <div className="flex items-start space-x-4">
                      <Mail className="w-7 h-7 text-[#f5a383] mt-1 flex-shrink-0" />
                      <div>
-                      <Reveal as="p" type="paragraph" className="text-[#f5a383]/80 text-lg">keflatet@gmail.com</Reveal>
-                    </div>
+                     <Reveal as="p" type="paragraph" className="text-[#f5a383]/80 text-xl sm:text-2xl font-staff">keflatet@gmail.com</Reveal>
+                   </div>
                    </div>
 
                    <div className="flex items-start space-x-4">
                      <MapPin className="w-7 h-7 text-[#f5a383] mt-1 flex-shrink-0" />
                      <div>
-                      <Reveal as="p" type="paragraph" className="text-[#f5a383]/80 text-lg">חולדה הנביאה 10, ירושלים מיקוד 9511010</Reveal>
-                    </div>
+                     <Reveal as="p" type="paragraph" className="text-[#f5a383]/80 text-xl sm:text-2xl font-staff">חולדה הנביאה 10, ירושלים מיקוד 9511010</Reveal>
+                   </div>
                    </div>
 
                    <div className="flex items-start space-x-4">
                      <Phone className="w-7 h-7 text-[#f5a383] mt-1 flex-shrink-0" />
                      <div>
-                      <Reveal as="p" type="paragraph" className="text-[#f5a383]/80 text-lg">053-221-7895</Reveal>
-                    </div>
+                     <Reveal as="p" type="paragraph" className="text-[#f5a383]/80 text-xl sm:text-2xl font-staff">053-221-7895</Reveal>
+                   </div>
                 </div>
                 </div>
               </div>

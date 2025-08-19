@@ -11,7 +11,7 @@ export default function JobPostPage() {
         {/* Header */}
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-4">
-            <h1 className="text-2xl font-bold text-gray-800">כרי לתת - בניית אתר</h1>
+            <h1 className="text-2xl font-bold font-staff text-gray-800">כרי לתת - בניית אתר</h1>
             <Button
               variant="outline"
               className="bg-cyan-100 border-cyan-300 text-cyan-700 hover:bg-cyan-200 rounded-full px-6"
@@ -53,7 +53,7 @@ export default function JobPostPage() {
           {/* Card 1 - Teal */}
           <Card className="bg-teal-500 text-white p-6">
             <div className="space-y-4">
-              <h3 className="font-bold text-lg">מה זה אומר? מתנדבים שמעניינים להתנדב</h3>
+              <h3 className="font-bold font-staff text-lg">מה זה אומר? מתנדבים שמעניינים להתנדב</h3>
               <div className="text-sm space-y-2">
                 <p>• מתנדבים שמעניינים להתנדב בפעילויות השונות של העמותה</p>
                 <p>• מתנדבים שרוצים לעזור בארגון אירועים</p>
@@ -70,7 +70,7 @@ export default function JobPostPage() {
           {/* Card 2 - Yellow */}
           <Card className="bg-yellow-400 text-black p-6">
             <div className="space-y-4">
-              <h3 className="font-bold text-lg">הגדלת המעורבות של הקהל</h3>
+              <h3 className="font-bold font-staff text-lg">הגדלת המעורבות של הקהל</h3>
               <div className="text-sm space-y-2">
                 <p>• יצירת תוכן מעניין ורלוונטי לקהל היעד</p>
                 <p>• פיתוח אסטרטגיות שיווק דיגיטלי</p>
@@ -87,7 +87,7 @@ export default function JobPostPage() {
           {/* Card 3 - Teal */}
           <Card className="bg-teal-500 text-white p-6">
             <div className="space-y-4">
-              <h3 className="font-bold text-lg">בניית אתר האינטרנט החדש</h3>
+              <h3 className="font-bold font-staff text-lg">בניית אתר האינטרנט החדש</h3>
               <div className="text-sm space-y-2">
                 <p>• עיצוב ופיתוח אתר מודרני ונגיש</p>
                 <p>• התאמה למכשירים ניידים</p>

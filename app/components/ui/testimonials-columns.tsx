@@ -50,7 +50,7 @@ export const TestimonialsColumn = (props: {
                           {name.charAt(0)}
                         </span>
                       </div>
-                      <div className="font-medium tracking-tight leading-5 text-[#2a2b26] font-staff">
+                      <div className="font-medium font-staff tracking-tight leading-5 text-[#2a2b26]">
                         {name}
                       </div>
                     </div>

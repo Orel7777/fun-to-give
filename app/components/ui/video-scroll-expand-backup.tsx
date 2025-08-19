@@ -526,7 +526,7 @@ const VideoScrollExpand = ({
                       }}
                     >
                       <div className="px-6 py-3 rounded-full shadow-lg backdrop-blur-sm bg-white/90">
-                        <span className="text-[#2a2b26] font-bold text-lg font-staff tracking-wider">
+                        <span className="text-[#2a2b26] font-bold font-staff text-lg tracking-wider">
                           PLAY VIDEO
                         </span>
                       </div>

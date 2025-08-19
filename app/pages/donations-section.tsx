@@ -13,6 +13,7 @@ import Reveal from "../components/Reveal"
 import Lottie from "lottie-react"
 import paymentSuccessAnimation from "../../public/animation-json/Payment Success.json"
 import AiChildVideo from "../components/ui/ai-child-video"
+import { SlidUp } from "../lib/utils"
 
 export default function DonationsSection() {
   const [donationType, setDonationType] = useState<'monthly' | 'basket' | 'onetime'>("monthly")
@@ -87,7 +88,7 @@ export default function DonationsSection() {
               התרומה שלכם מאפשרת לנו להמשיך בפעילותנו החשובה.
             </Reveal>
             <Reveal as="p" type="paragraph">
-              <span className="font-semibold text-[#9dd0bf]">רק שם ושם משפחה נדרשים</span> - כל השדות האחרים הם
+              <span className="font-semibold font-staff text-[#9dd0bf]">רק שם ושם משפחה נדרשים</span> - כל השדות האחרים הם
               אופציונליים לנוחותכם.
             </Reveal>
           </div>
@@ -119,7 +120,7 @@ export default function DonationsSection() {
             <CardContent className="space-y-8">
               {/* Amount Selection */}
               <div className="space-y-4">
-                <Reveal as="h3" type="heading" className="text-lg font-semibold text-center text-gray-800" style={{ marginBottom: '20px' }}>בחרו סכום לתרומה (₪)</Reveal>
+                <Reveal as="h3" type="heading" className="text-lg font-semibold font-staff text-center text-gray-800" style={{ marginBottom: '20px' }}>בחרו סכום לתרומה (₪)</Reveal>
                 <motion.div
                   className="grid grid-cols-2 gap-4 sm:flex sm:flex-wrap sm:justify-center sm:items-center"
                   initial={{ opacity: 0 }}
@@ -140,20 +141,20 @@ export default function DonationsSection() {
                       <Button
                         key={amount}
                         variant={customAmount === amount.toString() ? "default" : "outline"}
-                        className={`h-12 w-full sm:w-auto text-lg font-semibold transition-all duration-300 ${
+                        className={`h-12 w-full sm:w-auto text-lg font-semibold font-staff transition-all duration-300 ${
                           customAmount === amount.toString()
                             ? "bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] hover:from-[#f5a383]/80 hover:to-[#9dd0bf]/80 text-white border-0"
                             : "border-2 border-gray-200 hover:border-[#f5a383] hover:bg-[#f5a383]/10"
                         }`}
                         onClick={() => setCustomAmount(amount.toString())}
                       >
-                        ₪{amount}
+                        {amount}₪
                       </Button>
                     </motion.div>
                   ))}
                 </motion.div>
                 <div className="flex justify-center items-center space-x-reverse">
-                  <Label htmlFor="custom-amount" className="text-sm font-medium text-gray-700">
+                  <Label htmlFor="custom-amount" className="text-sm font-medium font-staff text-gray-700">
                     או הזינו סכום אחר:
                   </Label>
                   <Input
@@ -176,7 +177,7 @@ export default function DonationsSection() {
                 transition={{ duration: 0.6, delay: 1.0 }}
               >
                 <div className="space-y-2">
-                  <Label htmlFor="firstName" className="flex items-center text-sm font-medium text-gray-700">
+                  <Label htmlFor="firstName" className="flex items-center text-sm font-medium font-staff text-gray-700">
                     <User className="ml-2 w-4 h-4" />
                     שם פרטי *
                   </Label>
@@ -189,7 +190,7 @@ export default function DonationsSection() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="lastName" className="flex items-center text-sm font-medium text-gray-700">
+                  <Label htmlFor="lastName" className="flex items-center text-sm font-medium font-staff text-gray-700">
                     <User className="ml-2 w-4 h-4" />
                     שם משפחה *
                   </Label>
@@ -202,7 +203,7 @@ export default function DonationsSection() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="flex items-center text-sm font-medium text-gray-700">
+                  <Label htmlFor="email" className="flex items-center text-sm font-medium font-staff text-gray-700">
                     <Mail className="ml-2 w-4 h-4" />
                     דוא״ל
                   </Label>
@@ -215,7 +216,7 @@ export default function DonationsSection() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone" className="flex items-center text-sm font-medium text-gray-700">
+                  <Label htmlFor="phone" className="flex items-center text-sm font-medium font-staff text-gray-700">
                     <Phone className="ml-2 w-4 h-4" />
                     טלפון
                   </Label>
@@ -228,7 +229,7 @@ export default function DonationsSection() {
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="comments" className="flex items-center text-sm font-medium text-gray-700">
+                  <Label htmlFor="comments" className="flex items-center text-sm font-medium font-staff text-gray-700">
                     <MessageSquare className="ml-2 w-4 h-4" />
                     הערות
                   </Label>
@@ -273,7 +274,7 @@ export default function DonationsSection() {
                 >
                   <Button
                     size="lg"
-                    className="w-full md:w-auto px-12 py-4 text-xl font-bold bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] hover:from-[#f5a383]/80 hover:to-[#9dd0bf]/80 text-white border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 cursor-pointer"
+                    className="w-full md:w-auto px-12 py-4 text-xl font-bold font-staff bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] hover:from-[#f5a383]/80 hover:to-[#9dd0bf]/80 text-white border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 cursor-pointer"
                     aria-label="לחצו כאן לביצוע התרומה"
                     onClick={() => {
                       // כאן תוכל להוסיף לוגיקה לטיפול בלחיצה
@@ -309,7 +310,17 @@ export default function DonationsSection() {
           transition={{ duration: 0.6, delay: 0.6 }}
         >
           <div className="mx-auto max-w-4xl">
-            <Reveal type="media">
+            <motion.h3
+              className="text-center text-2xl sm:text-3xl md:text-4xl font-bold text-[#2a2b26] font-staff mb-8 sm:mb-10 md:mb-12"
+              variants={SlidUp(0.1)}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.2, margin: "-50px 0px -50px 0px" }}
+              dir="rtl"
+            >
+              כל תרומה בכיף לתת = ילד שבע ומאושר!
+            </motion.h3>
+            <Reveal type="media" className="mt-6 sm:mt-8 md:mt-10">
               <AiChildVideo className="w-full" />
             </Reveal>
           </div>

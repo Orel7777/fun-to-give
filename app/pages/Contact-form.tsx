@@ -63,7 +63,7 @@ export function ContactForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="text-center mb-8">
-        <h2 className="text-xl font-semibold text-gray-700">נשמח לחבר</h2>
+        <h2 className="text-xl font-semibold font-staff text-gray-700">נשמח לחבר</h2>
       </div>
 
       {sent === true && (
@@ -164,7 +164,7 @@ export function ContactForm() {
         <Button
           type="submit"
           disabled={submitting}
-          className="bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-white px-12 py-3 rounded-full text-lg font-medium"
+          className="bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-white px-12 py-3 rounded-full text-lg font-medium font-staff"
         >
           {submitting ? 'שולח…' : 'שליחה'}
         </Button>

@@ -37,7 +37,7 @@ export default function OrganizationStory() {
           className="mb-16 text-center"
         >
                                                                                        <Reveal as="h1"
-               className="flex gap-3 justify-center items-baseline mb-4 text-4xl font-bold tracking-tighter text-center md:text-5xl"
+               className="flex gap-3 justify-center items-baseline mb-4 text-4xl font-bold font-staff tracking-tighter text-center md:text-5xl"
                style={{ color: "#2a2b26" }}
                type="heading"
              >
@@ -109,7 +109,7 @@ export default function OrganizationStory() {
                 </motion.div>
                 <div className="text-right">
                   <Reveal as="h2" type="heading"
-                     className="mb-4 text-2xl font-bold tracking-tighter"
+                     className="mb-4 text-2xl font-bold font-staff tracking-tighter"
                      style={{ color: "#2a2b26" }}
                    >
                      למה קראנו לעמותה כיף לתת?
@@ -165,7 +165,7 @@ export default function OrganizationStory() {
           {/* Memorial Section */}
           <motion.div variants={fadeInUp} className="mb-16">
             <Reveal as="h2" type="heading"
-               className="mb-8 text-2xl font-bold tracking-tighter text-center"
+               className="mb-8 text-2xl font-bold font-staff tracking-tighter text-center"
                style={{ color: "#2a2b26" }}
                dir="rtl"
              >
@@ -252,7 +252,7 @@ export default function OrganizationStory() {
             <Card className="p-8 mb-12 border-0 shadow-lg" style={{ backgroundColor: "rgba(151, 202, 188, 0.1)" }}>
               <div className="text-center" dir="rtl">
                 <Reveal as="h2" type="heading"
-                  className="mb-6 text-3xl font-bold tracking-tighter"
+                  className="mb-6 text-3xl font-bold font-staff tracking-tighter"
                   style={{ color: "#2a2b26" }}
                 >
                   "ואהבת לרעך כמוך"
@@ -269,7 +269,7 @@ export default function OrganizationStory() {
                     לכמות גדולה יותר של משפחות.
                   </Reveal>
                   <Reveal as="p" type="paragraph">נשמח להיות שותפים אתכם בסיוע למשפחות במצוקה, ויחד נוכל להמשיך ולהפיץ שמחה ואהבה.</Reveal>
-                  <Reveal as="p" type="paragraph" className="font-semibold">כל תרומה, קטנה או גדולה, תסייע לנו להמשיך את המפעל החשוב הזה.</Reveal>
+                  <Reveal as="p" type="paragraph" className="font-semibold font-staff">כל תרומה, קטנה או גדולה, תסייע לנו להמשיך את המפעל החשוב הזה.</Reveal>
                 </motion.div>
               </div>
             </Card>
@@ -281,7 +281,7 @@ export default function OrganizationStory() {
             className="mt-8 text-center"
           >
             <motion.button
-              className="px-8 py-4 text-lg font-bold text-white rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl cursor-pointer"
+              className="px-8 py-4 text-lg font-bold font-staff text-white rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl cursor-pointer"
               style={{
                 background: "linear-gradient(135deg, #f2a283 0%, #97cabc 100%)"
               }}

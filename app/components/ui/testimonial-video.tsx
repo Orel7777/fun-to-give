@@ -361,7 +361,7 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
       {isPlaying && (
         <button
           onClick={stopPlayback}
-          className="absolute top-2 left-2 z-10 rounded-full bg-white/90 text-gray-800 shadow-md px-3 py-1 text-xs font-medium hover:bg-white focus:outline-none focus:ring-2 focus:ring-white/70"
+          className="absolute top-2 left-2 z-10 rounded-full bg-white/90 text-gray-800 shadow-md px-3 py-1 text-xs font-medium font-staff hover:bg-white focus:outline-none focus:ring-2 focus:ring-white/70"
           aria-label="עצור וידאו"
         >
           Stop

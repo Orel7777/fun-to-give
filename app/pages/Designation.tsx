@@ -55,7 +55,7 @@ interface KeywordProps {
 const HighlightedKeyword: React.FC<KeywordProps> = ({ children, className = '' }) => {
   return (
     <span className={`relative inline-block group cursor-pointer ${className}`}>
-      <span className="relative z-10 font-bold text-[#2a2b26] group-hover:text-white transition-colors duration-300">
+      <span className="relative z-10 font-bold font-staff text-[#2a2b26] group-hover:text-white transition-colors duration-300">
         {children}
       </span>
       <span className="absolute inset-0 bg-gradient-to-r from-[#f5a383] to-[#9acdbe] opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-md transform scale-x-0 group-hover:scale-x-100 origin-center"></span>
@@ -127,7 +127,7 @@ const Designation: React.FC<DesignationProps> = ({ className = '' }) => {
           <div className="text-center mb-16 sm:mb-20">
             {/* Main Title */}
             <div className="relative inline-block mb-8">
-              <h2 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold text-[#2a2b26] font-staff mb-6 transition-all duration-500 hover:scale-105 cursor-pointer">
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-extrabold font-staff text-[#2a2b26] mb-6 transition-all duration-500 hover:scale-105 cursor-pointer">
                 ייעוד העמותה
               </h2>
               <div className="absolute -bottom-2 left-1/2 transform -translate-x-1/2 w-32 h-1 bg-gradient-to-r from-[#f5a383] to-[#9acdbe] rounded-full"></div>
@@ -159,7 +159,7 @@ const Designation: React.FC<DesignationProps> = ({ className = '' }) => {
                       🎯
                     </FloatingIcon>
                     
-                    <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#2a2b26] font-staff leading-relaxed">
+                    <p className="text-2xl sm:text-3xl lg:text-4xl font-bold font-staff text-[#2a2b26] leading-relaxed">
                       מטרתנו היא לחזק את{' '}
                       <HighlightedKeyword>הערבות ההדדית</HighlightedKeyword>{' '}
                       של תושבי מדינת ישראל,
@@ -195,7 +195,7 @@ const Designation: React.FC<DesignationProps> = ({ className = '' }) => {
                       🌉
                     </FloatingIcon>
                     
-                    <p className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#2a2b26] font-staff leading-relaxed">
+                    <p className="text-2xl sm:text-3xl lg:text-4xl font-bold font-staff text-[#2a2b26] leading-relaxed">
                       על ידי יצירת{' '}
                       <HighlightedKeyword>חיבור</HighlightedKeyword>{' '}
                       בין כל מי שרוצה לסייע לכל מי שזקוק לסיוע.
@@ -237,7 +237,7 @@ const Designation: React.FC<DesignationProps> = ({ className = '' }) => {
                   </FloatingIcon>
                   
                   <div className="pt-6">
-                    <p className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-extrabold text-[#2a2b26] font-staff leading-relaxed mb-6">
+                    <p className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-extrabold font-staff text-[#2a2b26] leading-relaxed mb-6">
                       <HighlightedKeyword>ההתנדבות</HighlightedKeyword>{' '}
                       היא המפתח לחיזוק{' '}
                       <HighlightedKeyword>הערבות ההדדית</HighlightedKeyword>{' '}

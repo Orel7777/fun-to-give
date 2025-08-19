@@ -16,7 +16,7 @@ export function CanvasRevealEffectDemo({
       <Card
         title="תרומה חד פעמית"
         description="תרומה חד פעמית שתתרום ישירות לפעילות העמותה"
-        icon={<DonationIcon />}
+        icon={<DonationIcon active={selectedId === 'onetime'} />}
         onClick={() => onSelect?.('onetime')}
         active={selectedId === 'onetime'}
       >
@@ -30,7 +30,7 @@ export function CanvasRevealEffectDemo({
       <Card
         title="תרומה חודשית"
         description="הצטרפו למעגל הנתינה הקבוע שלנו"
-        icon={<HandshakeIcon />}
+        icon={<HandshakeIcon active={selectedId === 'monthly'} />}
         onClick={() => onSelect?.('monthly')}
         active={selectedId === 'monthly'}
       >
@@ -45,7 +45,7 @@ export function CanvasRevealEffectDemo({
       <Card
         title="סל לתרומה"
         description="חבילת תרומה מיוחדת עם מוצרים נבחרים"
-        icon={<HeartIcon />}
+        icon={<HeartIcon active={selectedId === 'basket'} />}
         onClick={() => onSelect?.('basket')}
         active={selectedId === 'basket'}
       >
@@ -144,20 +144,20 @@ const Card = ({
   );
 };
 
-const DonationIcon = () => (
-  <svg width="66" height="65" viewBox="0 0 66 65" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 text-[#f5a383] transition-colors duration-300 group-hover/canvas-card:text-white">
+const DonationIcon = ({ active = false }: { active?: boolean }) => (
+  <svg width="66" height="65" viewBox="0 0 66 65" fill="none" xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 transition-colors duration-300 group-hover/canvas-card:text-white ${active ? 'text-white' : 'text-[#f5a383]'}`}>
     <path d="M12 22.9185C14.071 14.0991 21.75 7.25 33 7.25C44.25 7.25 54.75 16.25 58 22.9185M12 22.9185C6.8469 24.992 3 27.341 3 30.25C3 34.8301 14.0294 38.5 33 38.5C51.9706 38.5 63 34.8301 63 30.25C63 27.341 59.1531 24.992 54 22.9185M12 22.9185V42.25C12 49.5 21 53.25 33 53.25C45 53.25 54 49.5 54 42.25V22.9185" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
-const HandshakeIcon = () => (
-  <svg width="66" height="65" viewBox="0 0 66 65" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 text-[#f5a383] transition-colors duration-300 group-hover/canvas-card:text-white">
+const HandshakeIcon = ({ active = false }: { active?: boolean }) => (
+  <svg width="66" height="65" viewBox="0 0 66 65" fill="none" xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 transition-colors duration-300 group-hover/canvas-card:text-white ${active ? 'text-white' : 'text-[#f5a383]'}`}>
     <path d="M21.5 26.5L15.5 32.5M15.5 32.5L21.5 38.5M15.5 32.5H25.5M44.5 26.5L50.5 32.5M50.5 32.5L44.5 38.5M50.5 32.5H40.5M13 19.5L25.5 7M25.5 7L31.5 13M25.5 7V19.5M53 19.5L40.5 7M40.5 7L34.5 13M40.5 7V19.5" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );
 
-const HeartIcon = () => (
-  <svg width="66" height="65" viewBox="0 0 66 65" fill="none" xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 text-[#f5a383] transition-colors duration-300 group-hover/canvas-card:text-white">
+const HeartIcon = ({ active = false }: { active?: boolean }) => (
+  <svg width="66" height="65" viewBox="0 0 66 65" fill="none" xmlns="http://www.w3.org/2000/svg" className={`h-6 w-6 sm:h-7 sm:w-7 md:h-8 md:w-8 lg:h-9 lg:w-9 xl:h-10 xl:w-10 transition-colors duration-300 group-hover/canvas-card:text-white ${active ? 'text-white' : 'text-[#f5a383]'}`}>
     <path d="M33 22.75C33 22.75 38.5 15.5 46.5 15.5C54.5 15.5 58.5 22.75 58.5 30.25C58.5 37.75 46.5 49.5 33 58.5C19.5 49.5 7.5 37.75 7.5 30.25C7.5 22.75 11.5 15.5 19.5 15.5C27.5 15.5 33 22.75 33 22.75Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
   </svg>
 );

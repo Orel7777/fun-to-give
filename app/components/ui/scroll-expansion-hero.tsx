@@ -530,7 +530,7 @@ const ScrollExpandMedia = ({
                   <button
                     type='button'
                     aria-label='מסך מלא'
-                    className='md:hidden absolute bottom-12 left-1/2 -translate-x-1/2 px-5 py-2 rounded-full shadow-lg text-white font-medium pointer-events-auto z-[9999]
+                    className='md:hidden absolute bottom-12 left-1/2 -translate-x-1/2 px-5 py-2 rounded-full shadow-lg text-white font-medium font-staff pointer-events-auto z-[9999]
                                bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
                                transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
                     onClick={async (e) => { 
@@ -547,7 +547,7 @@ const ScrollExpandMedia = ({
                   <button
                     type='button'
                     aria-label='מסך מלא'
-                    className='hidden md:block absolute bottom-12 right-8 px-4 py-2 rounded-full shadow-lg text-white font-medium pointer-events-auto z-[9999]
+                    className='hidden md:block absolute bottom-12 right-8 px-4 py-2 rounded-full shadow-lg text-white font-medium font-staff pointer-events-auto z-[9999]
                                bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
                                transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
                     onClick={async (e) => { 
@@ -573,7 +573,7 @@ const ScrollExpandMedia = ({
                 <button
                   type='button'
                   aria-label='יציאה'
-                  className='absolute top-4 right-4 px-3 py-2 rounded-full shadow-lg text-white font-medium z-[9999]
+                  className='absolute top-4 right-4 px-3 py-2 rounded-full shadow-lg text-white font-medium font-staff z-[9999]
                              bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
                              transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
                   onClick={async (e) => { 
@@ -704,12 +704,12 @@ const ScrollExpandMedia = ({
                           {/* Mobile: vertical text above and below the centered play button */}
                           <div className='flex absolute inset-0 z-40 justify-center items-center pointer-events-none md:hidden'>
                             <div className='flex flex-col gap-3 justify-center items-center'>
-                              <span className='[color:#dac8b4] font-bold uppercase tracking-widest text-4xl sm:text-5xl select-none'>
+                              <span className='[color:#dac8b4] font-bold font-staff uppercase tracking-widest text-4xl sm:text-5xl select-none'>
                                 PLAY
                               </span>
                               {/* Spacer height equal to play button to keep words around it */}
                               <div className='w-14 h-14' />
-                              <span className='[color:#dac8b4] font-bold uppercase tracking-widest text-4xl sm:text-5xl select-none'>
+                              <span className='[color:#dac8b4] font-bold font-staff uppercase tracking-widest text-4xl sm:text-5xl select-none'>
                                 REEL
                               </span>
                             </div>
@@ -718,12 +718,12 @@ const ScrollExpandMedia = ({
                           {/* Desktop: keep side-by-side layout */}
                           <div className='hidden absolute inset-0 z-40 justify-center items-center pointer-events-none md:flex'>
                             <div className='flex gap-6 justify-center items-center'>
-                              <span className='[color:#dac8b4] font-bold uppercase tracking-widest text-5xl md:text-7xl lg:text-8xl select-none'>
+                              <span className='[color:#dac8b4] font-bold font-staff uppercase tracking-widest text-5xl md:text-7xl lg:text-8xl select-none'>
                                 REEL
                               </span>
                               {/* Spacer width equal to play button to keep words on sides */}
                               <div className='w-14 h-14' />
-                              <span className='[color:#dac8b4] font-bold uppercase tracking-widest text-5xl md:text-7xl lg:text-8xl select-none'>
+                              <span className='[color:#dac8b4] font-bold font-staff uppercase tracking-widest text-5xl md:text-7xl lg:text-8xl select-none'>
                                 PLAY
                               </span>
                             </div>
@@ -849,7 +849,7 @@ const ScrollExpandMedia = ({
                     )}
                     {scrollToExpand && (
                       <p
-                        className='font-medium text-center text-blue-200'
+                        className='font-medium font-staff text-center text-blue-200'
                         style={{ transform: `translateX(${textTranslateX}vw)` }}
                       >
                         {scrollToExpand}
@@ -897,7 +897,7 @@ const ScrollExpandMedia = ({
           <button
             type='button'
             aria-label='יציאה'
-            className='absolute top-4 right-4 px-3 py-2 rounded-full shadow-lg text-white font-medium
+            className='absolute top-4 right-4 px-3 py-2 rounded-full shadow-lg text-white font-medium font-staff
                        bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
                        transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
             onClick={async (e) => { 
@@ -914,7 +914,7 @@ const ScrollExpandMedia = ({
             <button
               type='button'
               aria-label='נגן'
-              className='px-4 py-2 rounded-full shadow-lg text-white font-medium
+              className='px-4 py-2 rounded-full shadow-lg text-white font-medium font-staff
                          bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
                          transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
               onClick={async (e) => {
@@ -931,7 +931,7 @@ const ScrollExpandMedia = ({
             <button
               type='button'
               aria-label='עצור'
-              className='px-4 py-2 rounded-full shadow-lg text-white font-medium
+              className='px-4 py-2 rounded-full shadow-lg text-white font-medium font-staff
                          bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
                          transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
               onClick={(e) => {
@@ -950,7 +950,7 @@ const ScrollExpandMedia = ({
           <button
             type='button'
             aria-label='יציאה לאתר'
-            className='absolute bottom-6 right-4 px-4 py-2 rounded-full shadow-lg text-white font-medium
+            className='absolute bottom-6 right-4 px-4 py-2 rounded-full shadow-lg text-white font-medium font-staff
                        bg-[#eb9c7d] hover:bg-[#98c5b1] active:bg-[#98c5b1] focus:outline-none focus:ring-2 focus:ring-white/80 focus:ring-offset-2 focus:ring-offset-transparent 
                        transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95'
             onClick={async (e) => { 

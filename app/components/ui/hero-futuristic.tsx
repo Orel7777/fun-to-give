@@ -159,7 +159,7 @@ export const HeroFuturistic = () => {
         {/* Button */}
         <div className="mt-2">
           <button 
-            className="px-8 py-3 font-bold text-white bg-gradient-to-r from-pink-500 to-purple-600 rounded-full shadow-lg transition-all duration-300 transform hover:from-pink-600 hover:to-purple-700 hover:scale-105 active:scale-95"
+            className="px-8 py-3 font-bold font-staff text-white bg-gradient-to-r from-pink-500 to-purple-600 rounded-full shadow-lg transition-all duration-300 transform hover:from-pink-600 hover:to-purple-700 hover:scale-105 active:scale-95"
             onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
           >
             התחל עכשיו
@@ -172,7 +172,7 @@ export const HeroFuturistic = () => {
           style={{ animationDelay: '2.5s' }}
         >
           <div className="flex flex-col items-center space-y-2">
-            <span className="text-sm font-medium">גלול למטה</span>
+            <span className="text-sm font-medium font-staff">גלול למטה</span>
             <svg 
               width="24" 
               height="24" 

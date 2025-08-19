@@ -103,7 +103,7 @@ export default function ContributionPage(): React.ReactElement {
       <span className="text-xl" aria-hidden>
         {emoji}
       </span>
-      <span className="font-semibold">{label}</span>
+      <span className="font-semibold font-staff">{label}</span>
     </motion.button>
   );
 
@@ -111,7 +111,7 @@ export default function ContributionPage(): React.ReactElement {
     <main className="px-4 py-10 w-full min-h-screen bg-cream md:px-6 lg:px-10 md:py-14">
       {/* Header */}
       <section className="mx-auto max-w-6xl">
-        <h1 className="text-3xl font-extrabold text-center md:text-5xl text-primary">
+        <h1 className="text-3xl font-extrabold font-staff text-center md:text-5xl text-primary">
           הצטרפו אלינו – כל תרומה משנה חיים
         </h1>
         <p className="mt-3 text-sm text-center md:text-base text-gray">
@@ -135,7 +135,7 @@ export default function ContributionPage(): React.ReactElement {
           {/* Names */}
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label htmlFor="firstName" className="block text-sm font-medium text-[#2a2b26] mb-1">
+              <label htmlFor="firstName" className="block text-sm font-medium font-staff text-[#2a2b26] mb-1">
                 שם <span className="text-red-500">*</span>
               </label>
               <input
@@ -150,7 +150,7 @@ export default function ContributionPage(): React.ReactElement {
               />
             </div>
             <div>
-              <label htmlFor="lastName" className="block text-sm font-medium text-[#2a2b26] mb-1">
+              <label htmlFor="lastName" className="block text-sm font-medium font-staff text-[#2a2b26] mb-1">
                 שם משפחה <span className="text-red-500">*</span>
               </label>
               <input
@@ -169,7 +169,7 @@ export default function ContributionPage(): React.ReactElement {
           {/* Optional Fields */}
           <div className="grid grid-cols-1 gap-4 mt-4 md:grid-cols-2">
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-[#2a2b26] mb-1">
+              <label htmlFor="phone" className="block text-sm font-medium font-staff text-[#2a2b26] mb-1">
                 טלפון <span className="text-[#2a2b26] text-xs">(לא חובה – ניתן להשאיר ריק)</span>
               </label>
               <input
@@ -183,7 +183,7 @@ export default function ContributionPage(): React.ReactElement {
               />
             </div>
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-[#2a2b26] mb-1">
+              <label htmlFor="email" className="block text-sm font-medium font-staff text-[#2a2b26] mb-1">
                 אימייל <span className="text-[#2a2b26] text-xs">(לא חובה – ניתן להשאיר ריק)</span>
               </label>
               <input
@@ -198,7 +198,7 @@ export default function ContributionPage(): React.ReactElement {
             </div>
           </div>
           <div className="mt-4">
-            <label htmlFor="address" className="block text-sm font-medium text-[#2a2b26] mb-1">
+            <label htmlFor="address" className="block text-sm font-medium font-staff text-[#2a2b26] mb-1">
               כתובת <span className="text-[#2a2b26] text-xs">(לא חובה – ניתן להשאיר ריק)</span>
             </label>
             <input
@@ -218,7 +218,7 @@ export default function ContributionPage(): React.ReactElement {
               href="https://www.matara.pro/nedarimplus/online/?mosad=7014073"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex gap-2 items-center px-6 py-3 font-bold text-white rounded-lg bg-accent hover:bg-accent-dark"
+              className="flex gap-2 items-center px-6 py-3 font-bold font-staff text-white rounded-lg bg-accent hover:bg-accent-dark"
             >
               <span className="text-lg" aria-hidden>
                 ❤️
@@ -278,7 +278,7 @@ export default function ContributionPage(): React.ReactElement {
         <Link
           href="https://www.matara.pro/nedarimplus/online/?mosad=7014073"
           target="_blank"
-          className="flex fixed right-4 bottom-4 z-50 gap-2 items-center px-5 py-3 font-bold text-white rounded-full shadow-lg bg-accent hover:bg-accent-dark md:hidden"
+          className="flex fixed right-4 bottom-4 z-50 gap-2 items-center px-5 py-3 font-bold font-staff text-white rounded-full shadow-lg bg-accent hover:bg-accent-dark md:hidden"
         >
           <span className="text-lg" aria-hidden>
             ❤️

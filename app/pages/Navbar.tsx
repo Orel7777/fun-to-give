@@ -434,7 +434,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               </Link>
             </div>
             
-            <button onClick={goToDonationSection} className="px-[14px] py-2 font-semibold text-[#2b2e3a] bg-[#f4a282] rounded-lg transition-all duration-300 hover:scale-105 hover:bg-[#e0ccbc] flex items-center gap-2 relative overflow-hidden group cursor-pointer">
+            <button onClick={goToDonationSection} className="px-[14px] py-2 font-semibold font-staff text-[#2b2e3a] bg-[#f4a282] rounded-lg transition-all duration-300 hover:scale-105 hover:bg-[#e0ccbc] flex items-center gap-2 relative overflow-hidden group cursor-pointer">
                               <span className="relative z-10">הצטרפו לנתינה</span>
               <div className="relative z-10 w-4 h-4 transition-all duration-300 group-hover:translate-x-1 group-hover:scale-110">
                 {/* Default icon (click icon) */}
@@ -529,7 +529,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
           <div className="hidden items-center space-x-4 md:flex">
             <div className="relative group">
               <motion.button 
-                className="flex gap-2 items-center px-4 py-2 font-semibold text-gray-800 rounded-lg transition-all duration-300 cursor-pointer hover:text-[#f5a383] hover:bg-[#f5a383]/10"
+                className="flex gap-2 items-center px-4 py-2 font-semibold font-staff text-gray-800 rounded-lg transition-all duration-300 cursor-pointer hover:text-[#f5a383] hover:bg-[#f5a383]/10"
                 whileHover={!isMobile ? { scale: 1.05 } : {}}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 onMouseEnter={() => !isMobile && setIsMenuButtonHovered(true)}
@@ -573,7 +573,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                 <a
                   key={index}
                       href={item.url}
-                       className="block px-4 py-4 text-base font-medium text-gray-700 rounded-lg transition-all duration-300 cursor-pointer hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:shadow-md hover:scale-105 hover:translate-x-1 active:scale-95 menu-item"
+                       className="block px-4 py-4 text-base font-medium font-bold font-staff text-gray-700 rounded-lg transition-all duration-300 cursor-pointer hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:shadow-md hover:scale-105 hover:translate-x-1 active:scale-95 menu-item"
                       style={{
                         animationDelay: `${index * 100}ms`,
                          transform: 'translateX(0)'
@@ -598,7 +598,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                        }}
                     >
                       <div className="flex justify-between items-center">
-                        <span className="font-bold text-gray-800 transition-all duration-300">{item.title}</span>
+                        <span className="font-bold font-staff text-gray-800 transition-all duration-300">{item.title}</span>
                         <div className="flex gap-2 items-center">
                           {item.icon && (
                             <div className="flex-shrink-0">
@@ -619,7 +619,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
             </div>
             <Link href="/contact-form">
               <motion.button 
-                className="flex gap-2 items-center px-4 py-2 font-semibold text-gray-800 rounded-lg transition-all duration-300 cursor-pointer hover:text-[#f5a383] hover:bg-[#f5a383]/10"
+                className="flex gap-2 items-center px-4 py-2 font-semibold font-staff text-gray-800 rounded-lg transition-all duration-300 cursor-pointer hover:text-[#f5a383] hover:bg-[#f5a383]/10"
                 whileHover={!isMobile ? { scale: 1.05 } : {}}
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 onMouseEnter={() => !isMobile && setIsContactButtonHovered(true)}
@@ -761,7 +761,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
             <div className="pt-4 mt-4 space-y-3 border-t">
               <div className="space-y-2">
                 <motion.button 
-                  className="flex gap-1 justify-center items-center px-4 py-3 w-full font-semibold text-gray-800 rounded-lg border border-gray-300 cursor-pointer hover:bg-[#f5a383]/10 hover:text-[#f5a383]"
+                  className="flex gap-1 justify-center items-center px-4 py-3 w-full font-semibold font-staff text-gray-800 rounded-lg border border-gray-300 cursor-pointer hover:bg-[#f5a383]/10 hover:text-[#f5a383]"
                   onClick={toggleMobileMenuDropdown}
                                       whileHover={!isMobile ? { scale: 1.02 } : {}}
                   transition={{ duration: 0.3, ease: "easeInOut" }}
@@ -815,7 +815,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                       }}
               >
                       <div className="flex justify-between items-center">
-                        <span className="font-bold text-gray-800 transition-all duration-300">{item.title}</span>
+                        <span className="font-bold font-staff text-gray-800 transition-all duration-300">{item.title}</span>
                         <div className="flex gap-2 items-center">
                           {item.icon && (
                             <div className="flex-shrink-0">
@@ -833,7 +833,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
               </div>
               <Link href="/contact-form">
                 <motion.button 
-                  className="flex gap-1 justify-center items-center px-4 py-3 w-full font-semibold text-gray-800 rounded-lg border border-gray-300 cursor-pointer hover:bg-[#f5a383]/10 hover:text-[#f5a383]"
+                  className="flex gap-1 justify-center items-center px-4 py-3 w-full font-semibold font-staff text-gray-800 rounded-lg border border-gray-300 cursor-pointer hover:bg-[#f5a383]/10 hover:text-[#f5a383]"
                   whileHover={{
                     scale: 1.02,
                     transition: { 
@@ -882,7 +882,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                 </motion.button>
               </Link>
               <motion.button 
-                className="px-4 py-3 w-full font-semibold text-[#2b2e3a] bg-[#f5a383] rounded-lg hover:scale-105 hover:bg-[#e0ccbc] transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group cursor-pointer mt-4"
+                className="px-4 py-3 w-full font-semibold font-staff text-[#2b2e3a] bg-[#f5a383] rounded-lg hover:scale-105 hover:bg-[#e0ccbc] transition-all duration-300 flex items-center justify-center gap-2 relative overflow-hidden group cursor-pointer mt-4"
                 whileHover={{
                   scale: 1.05,
                   transition: { 

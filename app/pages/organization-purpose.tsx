@@ -132,7 +132,7 @@ export default function OrganizationPurpose() {
       <div className="mx-auto max-w-4xl">
         {/* Header */}
         <div className="pt-16 mb-12 text-center">
-          <Reveal as="h2" type="heading" className="mb-4 text-2xl font-bold tracking-tighter text-[#2a2b26] sm:text-3xl md:text-4xl lg:text-5xl flex items-center justify-center gap-3">
+          <Reveal as="h2" type="heading" className="mb-4 text-2xl font-bold font-staff tracking-tighter text-[#2a2b26] sm:text-3xl md:text-4xl lg:text-5xl flex items-center justify-center gap-3">
             ייעוד העמותה
           </Reveal>
           <div className="w-24 h-1 bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] mx-auto rounded-full" />
@@ -184,7 +184,7 @@ export default function OrganizationPurpose() {
                       </Reveal>
                     </div>
                     <div className="flex flex-col items-center text-center space-y-2 flex-1 justify-center">
-                      <Reveal as="h3" type="heading" className="font-bold tracking-tighter text-lg text-[#2a2b26]">
+                      <Reveal as="h3" type="heading" className="font-bold font-staff tracking-tighter text-lg text-[#2a2b26]">
                         {purpose.title}
                       </Reveal>
                       <Reveal as="p" type="paragraph" className="text-sm text-[#2a2b26] px-2 max-w-[250px]">

@@ -242,7 +242,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       {/* מספר הטעינה בפינה שמאלית תחתונה */}
       <div 
         ref={numberRef}
-        className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 text-[#fdf6ed] text-6xl sm:text-8xl font-bold"
+        className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 text-[#fdf6ed] text-6xl sm:text-8xl font-bold font-staff"
         style={{ fontFamily: 'Aeonik, sans-serif' }}
       >
         {Math.round(progress).toString().padStart(3, '0')}
