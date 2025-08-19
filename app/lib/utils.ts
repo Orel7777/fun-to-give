@@ -37,8 +37,8 @@ export const SlidUpLeft = (delay = 0) => {
       x: 0,
       y: 0,
       transition: {
-        duration: 1.2, 
-        ease: "easeOut",
+        duration: 1.2,
+        ease: [0.16, 1, 0.3, 1],
         delay: delay,
       },
     },
@@ -56,7 +56,7 @@ export const SlidUpRight = (delay = 0) => {
       x: 0,
       transition: {
         duration: 1.2, 
-        ease: "easeOut", 
+        ease: [0.16, 1, 0.3, 1],
         delay: delay,
       },
     },

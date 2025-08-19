@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  compiler: {
+    styledComponents: true,
+  },
   // Remove custom font loading to fix the error
   images: {
     domains: ['images.unsplash.com'],
