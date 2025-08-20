@@ -329,7 +329,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     },
     { 
       title: "דרושים", 
-      url: "#דרושים",
+      url: "/drushim",
       icon: (
         <motion.svg 
           width="20" 

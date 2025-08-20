@@ -110,6 +110,19 @@ html {
   color: #f5a383 !important;
 }
 
+/* Ensure native select dropdown options are visible across browsers */
+select,
+option {
+  color: #111827 !important; /* Tailwind gray-900 */
+  background-color: #ffffff !important;
+  font-family: var(--font-staff);
+  direction: rtl;
+}
+
+select:focus {
+  outline: none;
+}
+
 /* Force hover color for menu items */
 .menu-item:hover span {
   color: #f5a383 !important;

@@ -1,18 +1,43 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { SlidUpLeft } from '../lib/utils';
 import Card from '../ui/Card';
+import Lottie from 'lottie-react';
 
 const FormsDownload: React.FC = () => {
+  const [registrationAnim, setRegistrationAnim] = useState<any>(null);
+  const [generateInitialAnim, setGenerateInitialAnim] = useState<any>(null);
+  const [writingExamAnim, setWritingExamAnim] = useState<any>(null);
+
+  useEffect(() => {
+    // Load animations from public
+    const load = async () => {
+      try {
+        const [a, b, c] = await Promise.all([
+          fetch('/animation-json/form%20registration.json').then(r => r.json()),
+          fetch('/animation-json/Generate-Initial.json').then(r => r.json()),
+          fetch('/animation-json/Writing%20an%20exam.json').then(r => r.json()),
+        ]);
+        setRegistrationAnim(a);
+        setGenerateInitialAnim(b);
+        setWritingExamAnim(c);
+      } catch (e) {
+        // Fail silently; page continues without icons
+        console.warn('Failed to load lottie icons', e);
+      }
+    };
+    load();
+  }, []);
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#fdf6ed' }}>
       <div className="container px-4 py-12 mx-auto">
         <motion.h1
-          className="mb-28 md:mb-32 text-4xl font-bold font-staff text-center text-gray-800"
+          className="mb-4 md:mb-6 text-4xl font-bold font-staff text-center text-gray-800"
           variants={SlidUpLeft(0)}
           initial="hidden"
           whileInView="visible"
@@ -20,6 +45,24 @@ const FormsDownload: React.FC = () => {
         >
           טפסים רשמיים
         </motion.h1>
+        {/* Icons row under the title */}
+        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mt-2 md:mt-4 mb-8">
+          {registrationAnim && (
+            <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24">
+              <Lottie animationData={registrationAnim} loop autoplay style={{ width: '100%', height: '100%' }} />
+            </div>
+          )}
+          {generateInitialAnim && (
+            <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24">
+              <Lottie animationData={generateInitialAnim} loop autoplay style={{ width: '100%', height: '100%' }} />
+            </div>
+          )}
+          {writingExamAnim && (
+            <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24">
+              <Lottie animationData={writingExamAnim} loop autoplay style={{ width: '100%', height: '100%' }} />
+            </div>
+          )}
+        </div>
         
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4" style={{ marginTop: '90px' }}>
           {/* תעודת רישום עמותה */}

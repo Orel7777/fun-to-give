@@ -21,12 +21,14 @@ export function ContactForm() {
   const [submitting, setSubmitting] = useState(false)
   const [sent, setSent] = useState<null | boolean>(null)
   const [error, setError] = useState<string | null>(null)
+  const [warning, setWarning] = useState<string | null>(null)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setSubmitting(true)
     setSent(null)
     setError(null)
+    setWarning(null)
     try {
       // Basic client validation
       if (!formData.email && !formData.phone) {
@@ -37,11 +39,19 @@ export function ContactForm() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
+      const data = await res.json().catch(() => ({}))
+      
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
         throw new Error(data?.error || 'שליחה נכשלה, אנא נסו שוב')
       }
+      
       setSent(true)
+      
+      // Handle partial success with warnings
+      if (data.warning && data.errors?.length > 0) {
+        setWarning(`${data.warning}: ${data.errors.join(', ')}`)
+      }
+      
       // Reset form on success
       setFormData({
         subject: "",
@@ -61,13 +71,18 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-6 overflow-visible">
       <div className="text-center mb-8">
-        <h2 className="text-xl font-semibold font-staff text-gray-700">נשמח לחבר</h2>
+        <h2 className="text-xl font-semibold font-staff text-gray-700">נשמח לדבר</h2>
       </div>
 
       {sent === true && (
-        <p className="text-center text-green-600">הטופס נשלח בהצלחה!</p>
+        <div className="text-center">
+          <p className="text-green-600">הטופס נשלח בהצלחה!</p>
+          {warning && (
+            <p className="text-yellow-600 text-sm mt-1">{warning}</p>
+          )}
+        </div>
       )}
       {sent === false && error && (
         <p className="text-center text-red-600">{error}</p>
@@ -75,16 +90,18 @@ export function ContactForm() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Subject Dropdown */}
-        <div>
+        <div className="relative z-50">
           <select 
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-right bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md text-right bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
             value={formData.subject}
             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+            dir="rtl"
           >
-            <option value="">בחר נושא</option>
-            <option value="general">כללי</option>
-            <option value="support">תמיכה</option>
-            <option value="donation">תרומה</option>
+            <option value="" className="bg-white text-gray-900">בחר נושא</option>
+            <option value="donation" className="bg-white text-gray-900">תרומה</option>
+            <option value="jobs" className="bg-white text-gray-900">דרושים</option>
+            <option value="about" className="bg-white text-gray-900">על העמותה</option>
+            <option value="other" className="bg-white text-gray-900">כל נושא אחר</option>
           </select>
         </div>
 
@@ -138,26 +155,14 @@ export function ContactForm() {
       {/* Message */}
       <div>
         <Textarea
-          placeholder="פירוט הבעיה"
+          placeholder="אני מעוניין ב..."
           className="text-right min-h-[120px] resize-none"
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
         />
       </div>
 
-      {/* Checkbox */}
-      <div className="flex items-center gap-3 justify-end">
-        <label htmlFor="notifications" className="text-sm text-gray-600 cursor-pointer">
-          אני רוצה לקבל הודעות
-        </label>
-        <input
-          type="checkbox"
-          id="notifications"
-          checked={formData.notifications}
-          onChange={(e) => setFormData({ ...formData, notifications: e.target.checked })}
-          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-        />
-      </div>
+      
 
       {/* Submit Button */}
       <div className="flex justify-center pt-4">
