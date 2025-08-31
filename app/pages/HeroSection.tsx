@@ -248,7 +248,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         <ScrollExpandMedia
           mediaType="video"
           mediaSrc={mainVideo.videoUrl}
-          bgImageSrc="/pictures/1.JPG"
+          bgImageSrc="/pictures/1.webp"
           title="עמותת כיף לתת"
           date="כיף לתת"
           scrollToExpand="גלול/י להרחבה"
@@ -379,20 +379,18 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       
       <HorizontalScrollCarousel
         images={[
-          "/pictures/1.JPG",
-          "/pictures/2.JPG",
-          "/pictures/3.jpeg",
-          "/pictures/4.JPG",
-          "/pictures/5.JPG",
-          "/pictures/6.JPG",
-          "/pictures/7.JPG",
-          "/pictures/8.png",
-          "/pictures/9.png",
-          "/pictures/10.png",
-          "/pictures/11.jpeg",
-          "/pictures/12.jpeg",
-          // "/pictures/13.jpeg", // הוסתר לסדר יפה של 4 תמונות בכל שורה
-          // "/pictures/14.jpeg"  // הוסתר לסדר יפה של 4 תמונות בכל שורה
+          "/pictures/1.webp",
+          "/pictures/2.webp",
+          "/pictures/3.webp",
+          "/pictures/4.webp",
+          "/pictures/6.webp",
+          "/pictures/7.webp",
+          "/pictures/8.webp",
+          "/pictures/10.webp",
+          "/pictures/11.webp",
+          "/pictures/12.webp",
+          "/pictures/13.webp",
+          "/pictures/14.webp"
         ]}
       />
 

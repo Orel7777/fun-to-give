@@ -4,6 +4,7 @@ import * as React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import { createPortal } from "react-dom"
+import getBase64 from "../../utils/getBase64"
 
 interface ImageDialogProps {
   images: string[]
@@ -24,6 +25,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
 }) => {
   const [buttonPressed, setButtonPressed] = React.useState<'prev' | 'next' | null>(null)
   const [isNavigating, setIsNavigating] = React.useState(false)
+  const [blurDataUrls, setBlurDataUrls] = React.useState<{ [key: string]: string }>({})
 
   const handleNext = React.useCallback(() => {
     if (isNavigating) return
@@ -86,6 +88,31 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
     return () => window.removeEventListener('keydown', handleKeyPress)
   }, [isOpen, onClose, handleNext, handlePrev])
 
+  // Generate blur placeholders for dialog images
+  React.useEffect(() => {
+    if (isOpen && images.length > 0) {
+      const generateBlurPlaceholders = async () => {
+        const blurPromises = images.map(async (src) => {
+          const blurData = await getBase64(src)
+          return { src, blurData }
+        })
+        
+        const results = await Promise.all(blurPromises)
+        const blurMap: { [key: string]: string } = {}
+        
+        results.forEach(({ src, blurData }) => {
+          if (blurData) {
+            blurMap[src] = blurData
+          }
+        })
+        
+        setBlurDataUrls(blurMap)
+      }
+      
+      generateBlurPlaceholders()
+    }
+  }, [isOpen, images])
+
   if (!isOpen) {
     return null
   }
@@ -99,9 +126,9 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
         exit={{ opacity: 0 }}
         transition={{ duration: 0.3 }}
       >
-        {/* רקע מטושטש של האתר */}
+        {/* רקע מטושטש של האתר - לחיצה לסגירה */}
         <motion.div
-          className="absolute inset-0 backdrop-blur-md bg-black/70"
+          className="absolute inset-0 backdrop-blur-md bg-black/70 cursor-pointer"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
@@ -110,7 +137,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
 
         {/* תוכן הדיאלוג */}
         <motion.div
-          className="relative z-50 flex flex-col items-center justify-start max-w-7xl mx-auto min-h-screen overflow-y-auto p-6 sm:p-10"
+          className="relative z-50 flex flex-col items-center justify-center max-w-4xl mx-auto min-h-screen overflow-y-auto p-4 sm:p-6"
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.8, opacity: 0 }}
@@ -122,7 +149,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
           }}
         >
           {/* מיכל התמונה עם כפתורים */}
-          <div className="flex items-center justify-center gap-3 sm:gap-6 w-full py-6">
+          <div className="flex items-center justify-center gap-2 sm:gap-4 w-full py-4">
             {/* כפתור שמאל (תמונה קודמת) */}
             <motion.button
               onClick={handlePrev}
@@ -141,7 +168,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
             </motion.button>
 
             {/* מיכל התמונה */}
-            <div className="relative flex-1 max-w-5xl">
+            <div className="relative flex-1 max-w-3xl">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentIndex}
@@ -158,20 +185,22 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
                 >
                   <Image
                     src={images[currentIndex]}
-                    width={1920}
-                    height={1280}
-                    quality={95}
-                    sizes="(max-width: 768px) 90vw, 80vw"
+                    width={800}
+                    height={600}
+                    quality={85}
+                    sizes="(max-width: 768px) 70vw, (max-width: 1200px) 60vw, 50vw"
                     style={{ 
                       objectFit: "contain", 
                       width: "100%", 
                       height: "auto",
-                      maxWidth: "90vw",
-                      maxHeight: "85vh"
+                      maxWidth: "60vw",
+                      maxHeight: "60vh"
                     }}
                     alt={`תמונה ${currentIndex + 1} מפעילות העמותה`}
-                    className="rounded-lg"
+                    className="rounded-lg shadow-2xl"
                     priority
+                    placeholder={blurDataUrls[images[currentIndex]] ? "blur" : "empty"}
+                    blurDataURL={blurDataUrls[images[currentIndex]] || undefined}
                   />
                 </motion.div>
               </AnimatePresence>
@@ -195,54 +224,58 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
             </motion.button>
           </div>
 
-          {/* נקודות ניווט וכפתור סגירה */}
+          {/* נקודות ניווט */}
           <motion.div 
-            className="flex flex-col items-center justify-center mt-6 space-y-3"
+            className="flex justify-center mt-3 space-x-2"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            {/* נקודות ניווט */}
-            <div className="flex justify-center space-x-2">
-              {images.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => {
-                    if (index !== currentIndex && !isNavigating) {
-                      // מעבר ישיר לתמונה
-                      const diff = index - currentIndex
-                      if (diff > 0) {
-                        for (let i = 0; i < diff; i++) {
-                          setTimeout(() => handleNext(), i * 100)
-                        }
-                      } else {
-                        for (let i = 0; i < Math.abs(diff); i++) {
-                          setTimeout(() => handlePrev(), i * 100)
-                        }
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => {
+                  if (index !== currentIndex && !isNavigating) {
+                    // מעבר ישיר לתמונה
+                    const diff = index - currentIndex
+                    if (diff > 0) {
+                      for (let i = 0; i < diff; i++) {
+                        setTimeout(() => handleNext(), i * 100)
+                      }
+                    } else {
+                      for (let i = 0; i < Math.abs(diff); i++) {
+                        setTimeout(() => handlePrev(), i * 100)
                       }
                     }
-                  }}
-                  className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
-                    index === currentIndex 
-                      ? 'bg-[#f5a383] scale-125' 
-                      : 'bg-white/50 hover:bg-white/70'
-                  }`}
-                  disabled={isNavigating}
-                />
-              ))}
-            </div>
-            
-            {/* כפתור סגירה */}
+                  }
+                }}
+                className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-200 ${
+                  index === currentIndex 
+                    ? 'bg-[#f5a383] scale-125' 
+                    : 'bg-white/50 hover:bg-white/70'
+                }`}
+                disabled={isNavigating}
+              />
+            ))}
+          </motion.div>
+          
+          {/* כפתור סגירה מתחת לתמונה */}
+          <motion.div 
+            className="flex justify-center mt-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+          >
             <motion.button
               onClick={onClose}
               disabled={isNavigating}
-              className={`flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 backdrop-blur-sm ${
+              className={`flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 backdrop-blur-sm ${
                 'bg-white/90 text-[#f5a383] hover:bg-[#98c5b1] hover:text-white'
               } ${isNavigating ? 'opacity-50 cursor-not-allowed' : ''}`}
               whileHover={{ scale: isNavigating ? 1 : 1.1 }}
               whileTap={{ scale: isNavigating ? 1 : 0.95 }}
             >
-              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </motion.button>

@@ -4,6 +4,7 @@ import * as React from "react"
 import { motion } from "framer-motion"
 import Image from "next/image"
 import { ImageDialog } from "./image-dialog"
+import getBase64 from "../../utils/getBase64"
 
 interface HorizontalScrollCarouselProps {
   images: string[]
@@ -12,6 +13,7 @@ interface HorizontalScrollCarouselProps {
 const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ images }) => {
   const [dialogOpen, setDialogOpen] = React.useState(false)
   const [currentImageIndex, setCurrentImageIndex] = React.useState(0)
+  const [blurDataUrls, setBlurDataUrls] = React.useState<{ [key: string]: string }>({})
 
   const openDialog = (index: number) => {
     setCurrentImageIndex(index)
@@ -29,6 +31,29 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ ima
   const prevImage = () => {
     setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length)
   }
+
+  // Generate blur placeholders for all images
+  React.useEffect(() => {
+    const generateBlurPlaceholders = async () => {
+      const blurPromises = images.map(async (src) => {
+        const blurData = await getBase64(src)
+        return { src, blurData }
+      })
+      
+      const results = await Promise.all(blurPromises)
+      const blurMap: { [key: string]: string } = {}
+      
+      results.forEach(({ src, blurData }) => {
+        if (blurData) {
+          blurMap[src] = blurData
+        }
+      })
+      
+      setBlurDataUrls(blurMap)
+    }
+    
+    generateBlurPlaceholders()
+  }, [images])
 
   return (
     <div className="overflow-x-hidden bg-[#fdf6ed] py-2 sm:py-8 md:py-12 lg:py-16 pb-8 sm:pb-12 md:pb-16 lg:pb-20">
@@ -53,6 +78,7 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ ima
                 src={src}
                 index={index}
                 onClick={() => openDialog(index)}
+                blurDataUrl={blurDataUrls[src]}
               />
             </motion.div>
           ))}
@@ -72,7 +98,7 @@ const HorizontalScrollCarousel: React.FC<HorizontalScrollCarouselProps> = ({ ima
   )
 }
 
-const Card: React.FC<{ src: string; index: number; onClick: () => void }> = ({ src, index, onClick }) => {
+const Card: React.FC<{ src: string; index: number; onClick: () => void; blurDataUrl?: string }> = ({ src, index, onClick, blurDataUrl }) => {
   const [isPressed, setIsPressed] = React.useState(false)
   const [isHovered, setIsHovered] = React.useState(false)
 
@@ -136,7 +162,6 @@ const Card: React.FC<{ src: string; index: number; onClick: () => void }> = ({ s
           ? 'border-[#f5a383]/50 shadow-[0_0_30px_rgba(245,163,131,0.3)]' 
           : 'border-transparent'
       }`} />
-
       <Image
         src={src}
         fill
@@ -147,6 +172,10 @@ const Card: React.FC<{ src: string; index: number; onClick: () => void }> = ({ s
             ? 'scale-110' 
             : isHovered ? 'scale-105' : 'scale-100'
         }`}
+        sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+        quality={75}
+        placeholder={blurDataUrl ? "blur" : "empty"}
+        blurDataURL={blurDataUrl || undefined}
       />
       
       {/* אוברליי עם גרדיאנט */}
