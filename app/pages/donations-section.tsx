@@ -12,7 +12,6 @@ import { CanvasRevealEffectDemo } from "../components/ui/canvas-reveal-effect-de
 import Reveal from "../components/Reveal"
 import Lottie from "lottie-react"
 import paymentSuccessAnimation from "../../public/animation-json/Payment Success.json"
-import AiChildVideo from "../components/ui/ai-child-video"
 import { SlidUp } from "../lib/utils"
 
 export default function DonationsSection() {
@@ -302,29 +301,6 @@ export default function DonationsSection() {
           </Card>
         </motion.div>
 
-        {/* סרטון aiChild */}
-        <motion.div
-          className="mt-16 mb-8"
-          initial={{ y: 50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-        >
-          <div className="mx-auto max-w-4xl">
-            <motion.h3
-              className="text-center text-2xl sm:text-3xl md:text-4xl font-bold text-[#2a2b26] font-staff mb-8 sm:mb-10 md:mb-12"
-              variants={SlidUp(0.1)}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2, margin: "-50px 0px -50px 0px" }}
-              dir="rtl"
-            >
-              כל תרומה בכיף לתת = ילד שבע ומאושר!
-            </motion.h3>
-            <Reveal type="media" className="mt-6 sm:mt-8 md:mt-10">
-              <AiChildVideo className="w-full" />
-            </Reveal>
-          </div>
-        </motion.div>
       </div>
     </motion.section>
   )
