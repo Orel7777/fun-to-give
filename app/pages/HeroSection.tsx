@@ -112,7 +112,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               {/* Logo Image - מיקום וגודל התמונה */}
               {/* זוהי המעטפת של הלבבות */}
               <div
-                className="flex relative justify-center items-center mx-auto -mt-20 w-40 h-40 sm:w-64 sm:h-64 hero-image-container sm:mt-2 md:mt-2 lg:mt-0"
+                className="flex relative justify-center items-center mx-auto -mt-16 w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 hero-image-container"
                 style={{
                   zIndex: 10
                 }}
@@ -120,7 +120,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                 {/* זו האנימציה של הלבבות - כאן תוכל להתאים את המסלול */}
                 {/* מתחיל מתחת לכותרת והכפתור כך שהאנימציה נראית יותר טוב */}
                 <motion.div
-                  initial={{ scale: 1, y: 300 }}
+                  initial={{ scale: 1, y: 200 }}
                   animate={isMobile ? {
                     // מסלול התנועה של הלבבות למסכים קטנים:
                     // נקודה 1: (0,0) - מרכז התחלה
@@ -195,7 +195,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               </div>
 
               {/* Title Image - תמונת הכותרת */}
-              <div className="flex relative z-20 justify-center items-center -mt-1 sm:-mt-6 md:-mt-4 lg:-mt-8 w-[160px] sm:w-[250px] md:w-[300px] transition-all duration-300">
+              <div className="flex relative z-20 justify-center items-center -mt-4 sm:-mt-4 md:-mt-4 lg:-mt-6 w-[160px] sm:w-[250px] md:w-[300px] transition-all duration-300">
                 <Image
                   src="/title.png"
                   alt="כיף לתת - עם כל נתינה הלב מתמלא"
@@ -245,7 +245,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       )}
       
       {!loading && !error && isReady && (
-        <div className="bg-[#fdf6ed] py-1 sm:py-1 md:py-2 lg:py-2">
+        <div className="bg-[#fdf6ed] py-8 sm:py-10 md:py-12 lg:py-16">
           <div id="הפעילות-שלנו" className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8">
             {/* תמונה עם אנימציה */}
             <div className="flex justify-center mb-2 sm:mb-3">

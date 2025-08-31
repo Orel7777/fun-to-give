@@ -51,7 +51,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     // Ensure single init on client
     if (typeof window === 'undefined') return;
     if (!audioRef.current) {
-      const audio = new Audio('/shortSong.mp3');
+      const audio = new Audio('/עקיבא - שלום בבית (Prod (mp3cut.net).mp3');
       audio.loop = true;
       audio.preload = 'auto';
       audio.volume = 1;
