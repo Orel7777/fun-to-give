@@ -497,6 +497,24 @@ const ScrollExpandMedia = ({
     };
   }, [scrollProgress, mediaFullyExpanded, touchStartY, isCapturing, activationTopVH, retentionTopVH, headerOffsetPx]);
 
+  // Auto-mute when scrolling down past video
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      // Force mute when scrolling down past 100px
+      if (videoRef.current && currentScrollY > 100) {
+        console.log('🔇 MUTING VIDEO - scrolled down past 100px', { currentScrollY });
+        videoRef.current.muted = true;
+        setIsMuted(true);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   useEffect(() => {
     const checkIfMobile = (): void => {
       setIsMobileState(window.innerWidth < 768);

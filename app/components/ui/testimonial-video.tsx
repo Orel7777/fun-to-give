@@ -28,6 +28,37 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
   const inView = useInView(containerRef, { once: true, margin: '0px 0px -20% 0px' });
   const { videoUrl, loading: firebaseLoading, error } = useFirebaseVideo(videoPath, { enabled: inView });
   const { currentPlayingVideo, setCurrentPlayingVideo } = useTestimonialVideo();
+  
+  // Auto-pause when scrolling out of viewport
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!containerRef.current || !isPlaying || !videoRef.current) return;
+
+      const rect = containerRef.current.getBoundingClientRect();
+      const windowHeight = window.innerHeight;
+      
+      // Calculate visibility ratio
+      const containerHeight = rect.height;
+      const visibleHeight = Math.min(rect.bottom, windowHeight) - Math.max(rect.top, 0);
+      const visibilityRatio = Math.max(0, visibleHeight) / containerHeight;
+      
+      // Mute if less than 70% of video is visible or if scrolled past the video
+      const shouldMute = visibilityRatio < 0.7 || rect.bottom < windowHeight * 0.6;
+      
+      if (shouldMute && !videoRef.current.muted) {
+        console.log('🔇 משתיק testimonial video בגלילה למטה', { visibilityRatio, rectBottom: rect.bottom, windowHeight });
+        videoRef.current.muted = true;
+      } else if (!shouldMute && videoRef.current.muted) {
+        console.log('🔊 מחזיר אודיו לtestimonial video בגלילה חזרה למעלה');
+        videoRef.current.muted = false;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isPlaying, videoId, currentPlayingVideo, setCurrentPlayingVideo]);
 
   // טיפול בטעינת הוידאו
   useEffect(() => {

@@ -85,12 +85,28 @@ const VideoScrollExpand = ({
   const loading = usePreloadedVideo ? mainVideo.loading : false;
   const error = usePreloadedVideo ? mainVideo.error : null;
 
+  // Add scroll position tracking
+  const [lastScrollY, setLastScrollY] = useState(0);
+
   useEffect(() => {
     const handleScroll = () => {
-      if (!containerRef.current) return;
+      const currentScrollY = window.scrollY;
+      console.log('📍 SCROLL EVENT:', { currentScrollY, lastScrollY });
+      
+      if (!containerRef.current || !videoRef.current) {
+        console.log('❌ Missing refs:', { containerRef: !!containerRef.current, videoRef: !!videoRef.current });
+        return;
+      }
 
       const rect = containerRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
+      
+      console.log('📐 Video position:', { 
+        rectTop: rect.top, 
+        rectBottom: rect.bottom, 
+        windowHeight,
+        videoMuted: videoRef.current.muted 
+      });
       
       let progress = 0;
       
@@ -100,13 +116,22 @@ const VideoScrollExpand = ({
       }
       
       setScrollProgress(progress);
+      
+      // Force mute when scrolling down past video
+      if (currentScrollY > lastScrollY && currentScrollY > 100) {
+        console.log('⬇️ SCROLLING DOWN DETECTED - FORCE MUTING');
+        videoRef.current.muted = true;
+        setIsMuted(true);
+      }
+      
+      setLastScrollY(currentScrollY);
     };
 
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: false });
     handleScroll();
     
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [lastScrollY, isMobile]);
 
   // חישוב גודל הוידאו
   const baseScale = isMobile ? 0.8 : 0.3;
