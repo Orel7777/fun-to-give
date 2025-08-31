@@ -6,6 +6,9 @@ interface TestimonialVideoContextType {
   currentPlayingVideo: string | null;
   setCurrentPlayingVideo: (videoId: string | null) => void;
   stopAllVideos: () => void;
+  currentPlayingFamilyAudio: string | null;
+  setCurrentPlayingFamilyAudio: (audioPath: string | null) => void;
+  stopFamilyAudio: () => void;
 }
 
 const TestimonialVideoContext = createContext<TestimonialVideoContextType | undefined>(undefined);
@@ -24,10 +27,21 @@ interface TestimonialVideoProviderProps {
 
 export const TestimonialVideoProvider = ({ children }: TestimonialVideoProviderProps) => {
   const [currentPlayingVideo, setCurrentPlayingVideoState] = useState<string | null>(null);
+  const [currentPlayingFamilyAudio, setCurrentPlayingFamilyAudioState] = useState<string | null>(null);
 
   const setCurrentPlayingVideo = useCallback((videoId: string | null) => {
     console.log('🎬 שינוי וידאו נוכחי:', videoId);
     setCurrentPlayingVideoState(videoId);
+    
+    // אם וידאו מתחיל לנגן, עצור את אודיו המשפחות
+    if (videoId && currentPlayingFamilyAudio) {
+      stopFamilyAudio();
+    }
+  }, [currentPlayingFamilyAudio]);
+
+  const setCurrentPlayingFamilyAudio = useCallback((audioPath: string | null) => {
+    console.log('🔊 שינוי אודיו משפחות נוכחי:', audioPath);
+    setCurrentPlayingFamilyAudioState(audioPath);
   }, []);
 
   const stopAllVideos = useCallback(() => {
@@ -44,11 +58,26 @@ export const TestimonialVideoProvider = ({ children }: TestimonialVideoProviderP
     });
   }, []);
 
+  const stopFamilyAudio = useCallback(() => {
+    console.log('🔇 עצירת אודיו משפחות');
+    if (currentPlayingFamilyAudio) {
+      const audio = document.getElementById(currentPlayingFamilyAudio) as HTMLAudioElement;
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      setCurrentPlayingFamilyAudioState(null);
+    }
+  }, [currentPlayingFamilyAudio]);
+
   return (
     <TestimonialVideoContext.Provider value={{
       currentPlayingVideo,
       setCurrentPlayingVideo,
-      stopAllVideos
+      stopAllVideos,
+      currentPlayingFamilyAudio,
+      setCurrentPlayingFamilyAudio,
+      stopFamilyAudio
     }}>
       {children}
     </TestimonialVideoContext.Provider>

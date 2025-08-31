@@ -7,7 +7,7 @@ import Reveal from "../components/Reveal";
 
 import TestimonialCard from "../components/ui/testimonial-card";
 import TestimonialVideo from "../components/ui/testimonial-video";
-import { TestimonialVideoProvider } from "../contexts/TestimonialVideoContext";
+import { TestimonialVideoProvider, useTestimonialVideo } from "../contexts/TestimonialVideoContext";
 
 const testimonials = [
   {
@@ -47,8 +47,8 @@ const testimonials = [
   }
 ];
 
-const FamiliesTestimonials = () => {
-  const [playingAudio, setPlayingAudio] = useState<string | null>(null);
+const FamiliesTestimonialsContent = () => {
+  const { currentPlayingFamilyAudio, setCurrentPlayingFamilyAudio, currentPlayingVideo } = useTestimonialVideo();
   const [animationsPaused, setAnimationsPaused] = useState(false);
   const [currentTestimonial, setCurrentTestimonial] = useState(0); // מתחיל עם משפחה א'
   const [buttonPressed, setButtonPressed] = useState<'prev' | 'next' | null>(null);
@@ -57,8 +57,8 @@ const FamiliesTestimonials = () => {
   // פונקציה לטיפול בהשמעת אודיו
   const handleAudioPlay = (audioPath: string) => {
     // עצור כל אודיו אחר
-    if (playingAudio) {
-      const currentAudio = document.getElementById(playingAudio) as HTMLAudioElement;
+    if (currentPlayingFamilyAudio) {
+      const currentAudio = document.getElementById(currentPlayingFamilyAudio) as HTMLAudioElement;
       if (currentAudio) {
         currentAudio.pause();
         currentAudio.currentTime = 0;
@@ -67,21 +67,21 @@ const FamiliesTestimonials = () => {
 
     const audio = document.getElementById(audioPath) as HTMLAudioElement;
     if (audio) {
-      if (playingAudio === audioPath) {
+      if (currentPlayingFamilyAudio === audioPath) {
         // אם לוחצים על אותו אודיו, עצור אותו
         audio.pause();
         audio.currentTime = 0;
-        setPlayingAudio(null);
+        setCurrentPlayingFamilyAudio(null);
         setAnimationsPaused(false);
       } else {
         // נגן אודיו חדש ועצור אנימציות
         audio.play();
-        setPlayingAudio(audioPath);
+        setCurrentPlayingFamilyAudio(audioPath);
         setAnimationsPaused(true);
         
         // חזור לאנימציות כשהאודיו נגמר
         audio.onended = () => {
-          setPlayingAudio(null);
+          setCurrentPlayingFamilyAudio(null);
           setAnimationsPaused(false);
         };
       }
@@ -118,13 +118,13 @@ const FamiliesTestimonials = () => {
   // מעבר אוטומטי כל 5 שניות (אופציונלי)
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!playingAudio && !isNavigating) { // רק אם לא משמיעים אודיו ולא מנווטים ידנית
+      if (!currentPlayingFamilyAudio && !isNavigating) { // רק אם לא משמיעים אודיו ולא מנווטים ידנית
         setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
       }
     }, 5000);
 
     return () => clearInterval(interval);
-  }, [playingAudio, isNavigating]);
+  }, [currentPlayingFamilyAudio, isNavigating]);
 
   // event listener לגלילה - חזור לאנימציות
   useEffect(() => {
@@ -143,7 +143,6 @@ const FamiliesTestimonials = () => {
   }, [animationsPaused]);
 
   return (
-    <TestimonialVideoProvider>
       <section id="משפחות-מספרות" className="relative min-h-screen bg-gradient-to-br from-[#fdf6ed] via-[#fdf6ed] to-[#f5f0e8] py-8 sm:py-12 md:py-16 lg:py-20 overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col items-center justify-center max-w-[640px] mx-auto">
@@ -167,7 +166,7 @@ const FamiliesTestimonials = () => {
                 <span className="block">כל עדות מלווה בהקלטה אמיתית</span>
               </Reveal>
             </div>
-            <div className="flex items-center gap-2 mt-1 sm:mt-2 text-[#f5a383]">
+            <div className="flex items-center gap-2 mt-4 sm:mt-6 md:mt-8 text-[#f5a383]">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
               </svg>
@@ -182,7 +181,7 @@ const FamiliesTestimonials = () => {
                 key={currentTestimonial}
                 testimonial={testimonials[currentTestimonial]}
                 onAudioPlay={handleAudioPlay}
-                playingAudio={playingAudio}
+                playingAudio={currentPlayingFamilyAudio}
               />
             </AnimatePresence>
             
@@ -243,14 +242,21 @@ const FamiliesTestimonials = () => {
           </Reveal>
         </div>
         
-          {/* רקע דקורטיבי */}
-          <div className="overflow-hidden absolute inset-0 pointer-events-none">
-            <div className="absolute top-10 left-10 w-20 h-20 bg-[#f5a383]/10 rounded-full blur-xl"></div>
-            <div className="absolute bottom-10 right-10 w-32 h-32 bg-[#9acdbe]/10 rounded-full blur-xl"></div>
-            <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-[#f5a383]/5 rounded-full blur-lg"></div>
-          </div>
-        </section>
-      </TestimonialVideoProvider>
+        {/* רקע דקורטיבי */}
+        <div className="overflow-hidden absolute inset-0 pointer-events-none">
+          <div className="absolute top-10 left-10 w-20 h-20 bg-[#f5a383]/10 rounded-full blur-xl"></div>
+          <div className="absolute bottom-10 right-10 w-32 h-32 bg-[#9acdbe]/10 rounded-full blur-xl"></div>
+          <div className="absolute top-1/2 left-1/4 w-16 h-16 bg-[#f5a383]/5 rounded-full blur-lg"></div>
+        </div>
+      </section>
+  );
+};
+
+const FamiliesTestimonials = () => {
+  return (
+    <TestimonialVideoProvider>
+      <FamiliesTestimonialsContent />
+    </TestimonialVideoProvider>
   );
 };
 
