@@ -7,6 +7,7 @@ import { motion } from 'framer-motion';
 import { SlidUpLeft } from '../lib/utils';
 import Card from '../ui/Card';
 import Lottie from 'lottie-react';
+import NavigationBar from './Navbar';
 
 const FormsDownload: React.FC = () => {
   const [registrationAnim, setRegistrationAnim] = useState<any>(null);
@@ -35,7 +36,8 @@ const FormsDownload: React.FC = () => {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#fdf6ed' }}>
-      <div className="container px-4 py-12 mx-auto">
+      <NavigationBar />
+      <div className="container px-4 pt-32 py-12 mx-auto">
         <motion.h1
           className="mb-4 md:mb-6 text-4xl font-bold font-staff text-center text-gray-800"
           variants={SlidUpLeft(0)}
@@ -46,7 +48,7 @@ const FormsDownload: React.FC = () => {
           טפסים רשמיים
         </motion.h1>
         {/* Icons row under the title */}
-        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mt-2 md:mt-4 mb-8">
+        <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mt-10 md:mt-14 mb-10">
           {registrationAnim && (
             <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24">
               <Lottie animationData={registrationAnim} loop autoplay style={{ width: '100%', height: '100%' }} />

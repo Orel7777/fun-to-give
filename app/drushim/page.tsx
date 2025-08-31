@@ -5,11 +5,13 @@ import { Card } from "../components/ui/card"
 import Link from "next/link"
 import { motion } from "framer-motion"
 import { SlidUpRight, SlidUpLeft } from "../lib/utils"
+import NavigationBar from "../pages/Navbar"
 
 export default function JobPostPage() {
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto px-4 py-8 max-w-6xl">
+      <NavigationBar />
+      <div className="container mx-auto px-4 pt-32 py-8 max-w-6xl">
         {/* Page Title */}
         <motion.h1
           className="mb-8 text-3xl md:text-4xl font-bold font-staff text-center text-gray-800"

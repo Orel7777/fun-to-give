@@ -5,6 +5,7 @@ import { motion } from "framer-motion"
 import { SlidUpRight } from "../lib/utils"
 import { Button } from "../components/ui/button"
 import { useRouter } from "next/navigation"
+import NavigationBar from "../pages/Navbar"
 
 export default function ContactFormPage() {
   const router = useRouter()
@@ -15,8 +16,10 @@ export default function ContactFormPage() {
   // 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <NavigationBar />
+      <div className="pt-20 py-12 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl mx-auto">
         <motion.div
           variants={SlidUpRight(0)}
           initial="hidden"
@@ -42,6 +45,7 @@ export default function ContactFormPage() {
             חזרה לאתר
           </Button>
         </motion.div>
+        </div>
       </div>
     </div>
   )
