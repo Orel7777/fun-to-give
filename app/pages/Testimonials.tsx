@@ -223,9 +223,6 @@ const FamiliesTestimonialsContent = () => {
             <Reveal as="h3" type="heading" className="text-2xl sm:text-3xl font-bold text-[#2a2b26] font-staff mb-2">
               סרטונים נוספים
             </Reveal>
-            <Reveal as="p" type="paragraph" className="text-[#2a2b26]/70 font-staff text-sm sm:text-base">
-              עוד סיפורים מרגשים ממשפחות שקיבלו עזרה
-            </Reveal>
           </div>
           
           <Reveal type="media" className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-4xl mx-auto px-4">
@@ -233,11 +230,13 @@ const FamiliesTestimonialsContent = () => {
               videoPath="סרטון1.mp4"
               className="w-full"
               videoId="testimonial-video-1"
+              thumbnailSrc="/pictures/men.jpeg"
             />
             <TestimonialVideo 
               videoPath="סרטון2.mp4"
               className="w-full"
               videoId="testimonial-video-2"
+              thumbnailSrc="/pictures/women.webp"
             />
           </Reveal>
         </div>

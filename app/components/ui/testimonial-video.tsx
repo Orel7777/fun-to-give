@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { Play } from 'lucide-react';
+import Image from 'next/image';
 import { useFirebaseVideo } from '../../hooks/useFirebaseVideo';
 import { useTestimonialVideo } from '../../contexts/TestimonialVideoContext';
 
@@ -11,9 +12,10 @@ interface TestimonialVideoProps {
   title?: string;
   className?: string;
   videoId: string;
+  thumbnailSrc?: string;
 }
 
-const TestimonialVideo = ({ videoPath, title, className = '', videoId }: TestimonialVideoProps) => {
+const TestimonialVideo = ({ videoPath, title, className = '', videoId, thumbnailSrc }: TestimonialVideoProps) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isStarting, setIsStarting] = useState(false);
@@ -202,6 +204,8 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
         setIsPlaying(false);
         setCurrentPlayingVideo(null);
         setShowVideoLoading(false);
+        userPausedRef.current = true;
+        userWantsPlayRef.current = false;
       } else {
         // הימנע מקריאות כפולות לניגון שעלולות ליצור AbortError
         if (startGuardRef.current) {
@@ -337,6 +341,19 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
 
   return (
     <div ref={containerRef} className={`relative aspect-video bg-gray-900 rounded-lg overflow-hidden shadow-lg ${className}`}>
+      {/* תמונה ממוזערת לפני הפעלת הוידאו */}
+      {!isPlaying && !isStarting && thumbnailSrc && (
+        <div className="absolute inset-0 z-5">
+          <Image
+            src={thumbnailSrc}
+            alt="תמונה ממוזערת לוידאו"
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 50vw"
+          />
+        </div>
+      )}
+      
       {/* וידאו */}
       <video
         ref={videoRef}
@@ -388,18 +405,14 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId }: Testimo
         </div>
       )}
 
-      {/* כפתור Stop קטן בזמן ניגון */}
-      {isPlaying && (
-        <button
-          onClick={stopPlayback}
-          className="absolute top-2 left-2 z-10 rounded-full bg-white/90 text-gray-800 shadow-md px-3 py-1 text-xs font-medium font-staff hover:bg-white focus:outline-none focus:ring-2 focus:ring-white/70"
-          aria-label="עצור וידאו"
-        >
-          Stop
-        </button>
+      {/* אוברליי לחיצה בזמן ניגון - כמו ביוטיוב */}
+      {isPlaying && !isStarting && (
+        <div
+          onClick={togglePlay}
+          className="absolute inset-0 z-10 cursor-pointer"
+          aria-label="השהה וידאו"
+        />
       )}
-      
-      {/* עצרנו שימוש באוברליי לחיצה בזמן ניגון כדי למנוע פאוזה מיידית לאחר התחלה */}
 
       {/* כותרת אם קיימת */}
       {title && !isPlaying && (
