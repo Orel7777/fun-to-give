@@ -1,10 +1,38 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import Lottie from "lottie-react";
 
-const TestimonialCard = ({ testimonial, onAudioPlay, playingAudio }) => {
+interface Testimonial {
+  text: string;
+  name: string;
+  audioPath: string;
+}
+
+interface TestimonialCardProps {
+  testimonial: Testimonial;
+  onAudioPlay: (audioPath: string) => void;
+  playingAudio: string | null;
+}
+
+const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, onAudioPlay, playingAudio }) => {
   const isPlaying = playingAudio === testimonial.audioPath;
+  const [musicNoteAnim, setMusicNoteAnim] = useState<any>(null);
+
+  // טעינת אנימציית הנוטה המוזיקלית
+  useEffect(() => {
+    const loadMusicNoteAnimation = async () => {
+      try {
+        const response = await fetch('/animation-json/wired-outline-43-music-note-hover-bounce (1).json');
+        const animationData = await response.json();
+        setMusicNoteAnim(animationData);
+      } catch (error) {
+        console.error('Failed to load music note animation:', error);
+      }
+    };
+    loadMusicNoteAnimation();
+  }, []);
 
   return (
     <motion.div
@@ -45,8 +73,17 @@ const TestimonialCard = ({ testimonial, onAudioPlay, playingAudio }) => {
             )}
           </button>
           
-          <div className="text-right">
+          <div className="text-right flex items-center gap-2">
             <div className="text-lg sm:text-xl text-[#f5a383] font-staff">לחץ לשמיעה</div>
+            {musicNoteAnim && (
+              <Lottie 
+                animationData={musicNoteAnim}
+                loop={true}
+                autoplay={true}
+                style={{ width: 20, height: 20 }}
+                className="flex-shrink-0"
+              />
+            )}
           </div>
         </div>
       </div>
@@ -84,4 +121,4 @@ const TestimonialCard = ({ testimonial, onAudioPlay, playingAudio }) => {
   );
 };
 
-export default TestimonialCard; 
+export default TestimonialCard;

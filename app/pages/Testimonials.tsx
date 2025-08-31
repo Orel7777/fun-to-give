@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import Reveal from "../components/Reveal";
+import Lottie from "lottie-react";
 
 import TestimonialCard from "../components/ui/testimonial-card";
 import TestimonialVideo from "../components/ui/testimonial-video";
@@ -47,10 +48,10 @@ const testimonials = [
   }
 ];
 
-const FamiliesTestimonialsContent = () => {
-  const { currentPlayingFamilyAudio, setCurrentPlayingFamilyAudio, currentPlayingVideo } = useTestimonialVideo();
+function TestimonialsSection() {
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [currentPlayingFamilyAudio, setCurrentPlayingFamilyAudio] = useState<string | null>(null);
   const [animationsPaused, setAnimationsPaused] = useState(false);
-  const [currentTestimonial, setCurrentTestimonial] = useState(0); // מתחיל עם משפחה א'
   const [buttonPressed, setButtonPressed] = useState<'prev' | 'next' | null>(null);
   const [isNavigating, setIsNavigating] = useState(false); // מניעת לחיצות כפולות
 
@@ -174,6 +175,9 @@ const FamiliesTestimonialsContent = () => {
             </div>
           </div>
 
+          {/* מרווח נוסף בין ההוראה לעדויות */}
+          <div className="mt-8 md:mt-12"></div>
+
           {/* תצוגה אחידה למובייל ודסקטופ - קרוסלה */}
           <div className="mx-auto max-w-sm md:max-w-md lg:max-w-lg">
             <AnimatePresence mode="wait">
@@ -255,7 +259,7 @@ const FamiliesTestimonialsContent = () => {
 const FamiliesTestimonials = () => {
   return (
     <TestimonialVideoProvider>
-      <FamiliesTestimonialsContent />
+      <TestimonialsSection />
     </TestimonialVideoProvider>
   );
 };

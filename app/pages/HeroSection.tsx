@@ -245,18 +245,10 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       )}
       
       {!loading && !error && isReady && (
-        <ScrollExpandMedia
-          mediaType="video"
-          mediaSrc={mainVideo.videoUrl}
-          bgImageSrc="/pictures/1.webp"
-          title="עמותת כיף לתת"
-          date="כיף לתת"
-          scrollToExpand="גלול/י להרחבה"
-          textBlend
-        >
-          <div id="הפעילות-שלנו" className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8 -pt-16 sm:pt-0 md:pt-2 lg:pt-8">
+        <div className="bg-[#fdf6ed] py-1 sm:py-1 md:py-2 lg:py-2">
+          <div id="הפעילות-שלנו" className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8">
             {/* תמונה עם אנימציה */}
-            <div className="flex justify-center mb-0 sm:mb-2">
+            <div className="flex justify-center mb-2 sm:mb-3">
               <div className="relative group">
                 {/* רקע זוהר */}
                 <div className="absolute inset-0 bg-gradient-to-r from-[#f5a383] to-[#9acdbe] rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500 animate-pulse"></div>
@@ -276,7 +268,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                       animation: 'coinFloat 4s ease-in-out infinite',
                     }}
                   />
-                
+                  
                   {/* אפקט זוהר מסביב */}
                   <div className="absolute inset-0 rounded-full bg-gradient-to-r from-[#f5a383]/20 to-[#9acdbe]/20 blur-md animate-ping"></div>
                 
@@ -289,24 +281,24 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               </div>
             </div>
 
-            <Reveal as="h2" type="heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-8 sm:mb-10">
+            <Reveal as="h2" type="heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-2 sm:mb-3">
               עמותת כיף לתת
             </Reveal>
-            <Reveal as="p" type="paragraph" className="text-base sm:text-lg md:text-xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-loose">
+            <Reveal as="p" type="paragraph" className="text-base sm:text-lg md:text-xl mb-2 sm:mb-2 text-[#2a2b26] font-staff leading-loose">
               מעניקה בשר, עופות, דגים ביצים ויין למאות משפחות באופן קבוע.
             </Reveal>
-            <Reveal as="p" type="paragraph" className="text-base sm:text-lg md:text-xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-loose">
+            <Reveal as="p" type="paragraph" className="text-base sm:text-lg md:text-xl mb-2 sm:mb-2 text-[#2a2b26] font-staff leading-loose">
               בנוסף, כיף לתת עוזרת לילדים עם מוגבלויות ומשמחת ילדים בבתי חולים.
             </Reveal>
-            <Reveal as="p" type="paragraph" className="text-base sm:text-lg md:text-xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-loose">
+            <Reveal as="p" type="paragraph" className="text-base sm:text-lg md:text-xl mb-2 sm:mb-2 text-[#2a2b26] font-staff leading-loose">
               הפעילות שלנו מבוצעת מתוך אמונה עמוקה בעקרונות של נתינה,<br />אהבת הזולת ורצון לשמח את האחר.
             </Reveal>
-            <Reveal as="p" type="paragraph" className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-relaxed font-semibold">
+            <Reveal as="p" type="paragraph" className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-2 text-[#2a2b26] font-staff leading-relaxed font-semibold">
               כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
             </Reveal>
 
             {/* Lottie animations row */}
-            <div className="flex flex-row gap-4 justify-center items-center mt-6 sm:mt-8 sm:gap-6 md:gap-10 lg:gap-12">
+            <div className="flex flex-row gap-4 justify-center items-center mt-2 sm:mt-3 sm:gap-6 md:gap-10 lg:gap-12">
               {/* Load Lottie web component once on client */}
               <Script
                 src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
@@ -350,14 +342,24 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               </Reveal>
             </div>
           </div>
+        </div>
+      )}
+      
+      {!loading && !error && isReady && (
+        <ScrollExpandMedia
+          mediaType="video"
+          mediaSrc={mainVideo.videoUrl}
+          bgImageSrc="/pictures/1.webp"
+          title="עמותת כיף לתת"
+          date="כיף לתת"
+          scrollToExpand="גלול/י להרחבה"
+          textBlend
+        >
         </ScrollExpandMedia>
       )}
 
-      {/* מרווח גדול בין הטקסט לגלריה */}
-      
-
       {/* גלריה של תמונות פעילות העמותה */}
-      <div id="תמונות-ווידאו" className="bg-[#fdf6ed] py-2 sm:py-4 md:py-6 lg:py-8 text-center">
+      <div id="תמונות-ווידאו" className="bg-[#fdf6ed] py-0 sm:py-1 md:py-1 lg:py-2 text-center">
         <Reveal as="h2" type="heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-6 sm:mb-8 md:mb-10 flex items-center justify-center gap-3">
           תמונות מפעילות העמותה
           <svg 
@@ -394,8 +396,6 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         ]}
       />
 
-      {/* מרווח בין גלריית התמונות למשפחות מספרות */}
-      <div className="py-4 sm:py-8 md:py-12 lg:py-20"></div>
 
       {/* סיפורי משפחות עם עדויות אודיו */}
       <FamiliesTestimonials />
