@@ -230,13 +230,14 @@ const FamiliesTestimonialsContent = () => {
               videoPath="סרטון1.mp4"
               className="w-full"
               videoId="testimonial-video-1"
-              thumbnailSrc="/pictures/men.jpeg"
+              thumbnailSrc="/pictures/women.webp"
             />
             <TestimonialVideo 
               videoPath="סרטון2.mp4"
               className="w-full"
               videoId="testimonial-video-2"
-              thumbnailSrc="/pictures/women.webp"
+              thumbnailSrc="/pictures/men.webp"
+              // women.webp
             />
           </Reveal>
         </div>
