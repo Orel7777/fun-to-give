@@ -905,7 +905,7 @@ const ScrollExpandMedia = ({
                           {/* Time Display */}
                           <div className='flex items-center justify-center text-white text-sm font-staff'>
                             <span className='bg-black/50 px-2 py-1 rounded backdrop-blur-sm'>
-                              {formatTime(currentTime)} / {formatTime(duration)}
+                              {formatTime(duration)} / {formatTime(currentTime)}
                             </span>
                           </div>
                         </div>
