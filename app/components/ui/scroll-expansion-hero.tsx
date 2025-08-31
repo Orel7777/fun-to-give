@@ -82,6 +82,9 @@ const ScrollExpandMedia = ({
   const modalVideoRef = useRef<HTMLVideoElement | null>(null);
   const preloadModalRef = useRef<HTMLVideoElement | null>(null);
   const [isModalPlaying, setIsModalPlaying] = useState<boolean>(true);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [duration, setDuration] = useState<number>(0);
+  const [isDragging, setIsDragging] = useState<boolean>(false);
 
   // Fullscreen handling - try native API first, fallback to modal
   const requestFs = async (): Promise<void> => {
@@ -236,6 +239,45 @@ const ScrollExpandMedia = ({
         resolve();
       }, 1500);
     });
+  };
+
+  // Format time in MM:SS format
+  const formatTime = (seconds: number): string => {
+    if (!seconds || isNaN(seconds)) return '0:00';
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  // Seek to specific time
+  const seekTo = (time: number) => {
+    const video = videoRef.current;
+    const modalVideo = modalVideoRef.current;
+    if (video) {
+      video.currentTime = time;
+    }
+    if (modalVideo && isFullscreen) {
+      modalVideo.currentTime = time;
+    }
+    setCurrentTime(time);
+  };
+
+  // Skip to beginning, middle, or end
+  const skipTo = (position: 'start' | 'middle' | 'end') => {
+    if (!duration) return;
+    let targetTime = 0;
+    switch (position) {
+      case 'start':
+        targetTime = 0;
+        break;
+      case 'middle':
+        targetTime = duration / 2;
+        break;
+      case 'end':
+        targetTime = duration - 5; // 5 seconds before end
+        break;
+    }
+    seekTo(targetTime);
   };
 
   // Try to play with audio enabled under a user gesture
@@ -687,6 +729,16 @@ const ScrollExpandMedia = ({
                             }
                           }
                         }}
+                        onPlay={() => setIsPlaying(true)}
+                        onPause={() => setIsPlaying(false)}
+                        onTimeUpdate={(e) => {
+                          if (!isDragging) {
+                            setCurrentTime(e.currentTarget.currentTime);
+                          }
+                        }}
+                        onLoadedMetadata={(e) => {
+                          setDuration(e.currentTarget.duration);
+                        }}
                         controls={false}
                         disablePictureInPicture
                         disableRemotePlayback
@@ -797,25 +849,82 @@ const ScrollExpandMedia = ({
                             </svg>
                           </button>
                         )}
-
-                        {/* Stop button removed per request */
-                        }
-
-                        {/* Bottom gradient positioned BELOW the video box (outside) - full page width, blurred */}
-                        <div
-                          aria-hidden
-                          className='absolute blur-lg pointer-events-none'
-                          style={{
-                            top: '100%',
-                            height: gradientHeight,
-                            width: '100vw',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
-                            zIndex: 5,
-                            background: 'linear-gradient(0deg, #eb9c7d 0%, rgba(235,156,125,0) 80%)',
-                          }}
-                        />
                       </div>
+
+                      {/* Video Progress Bar and Time Controls - positioned at bottom of video */}
+                      {isPlaying && duration > 0 && (
+                        <div className='absolute bottom-4 left-4 right-4 z-[70] pointer-events-auto'>
+                          {/* Progress Bar */}
+                          <div className='mb-3'>
+                            <div 
+                              className='relative w-full h-2 bg-black/30 rounded-full overflow-hidden backdrop-blur-sm cursor-pointer'
+                              onClick={(e) => {
+                                const rect = e.currentTarget.getBoundingClientRect();
+                                const clickX = e.clientX - rect.left;
+                                const percentage = clickX / rect.width;
+                                const targetTime = Math.max(0, Math.min(duration, percentage * duration));
+                                seekTo(targetTime);
+                              }}
+                            >
+                              <div 
+                                className='absolute top-0 left-0 h-full bg-gradient-to-r from-[#98c5b1] to-[#eb9c7d] rounded-full transition-all duration-200 pointer-events-none'
+                                style={{ width: `${(currentTime / duration) * 100}%` }}
+                              />
+                              <input
+                                type='range'
+                                min='0'
+                                max={duration}
+                                value={currentTime}
+                                onChange={(e) => {
+                                  const time = parseFloat(e.target.value);
+                                  setIsDragging(true);
+                                  setCurrentTime(time);
+                                }}
+                                onMouseDown={() => {
+                                  setIsDragging(true);
+                                }}
+                                onMouseUp={(e) => {
+                                  const time = parseFloat(e.currentTarget.value);
+                                  seekTo(time);
+                                  setIsDragging(false);
+                                }}
+                                onTouchStart={() => {
+                                  setIsDragging(true);
+                                }}
+                                onTouchEnd={(e) => {
+                                  const time = parseFloat(e.currentTarget.value);
+                                  seekTo(time);
+                                  setIsDragging(false);
+                                }}
+                                className='absolute inset-0 w-full h-full opacity-0 cursor-pointer'
+                                style={{ zIndex: 10 }}
+                              />
+                            </div>
+                          </div>
+                          
+                          {/* Time Display */}
+                          <div className='flex items-center justify-center text-white text-sm font-staff'>
+                            <span className='bg-black/50 px-2 py-1 rounded backdrop-blur-sm'>
+                              {formatTime(currentTime)} / {formatTime(duration)}
+                            </span>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Bottom gradient positioned BELOW the video box (outside) - full page width, blurred */}
+                      <div
+                        aria-hidden
+                        className='absolute blur-lg pointer-events-none'
+                        style={{
+                          top: '100%',
+                          height: gradientHeight,
+                          width: '100vw',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          zIndex: 5,
+                          background: 'linear-gradient(0deg, #eb9c7d 0%, rgba(235,156,125,0) 80%)',
+                        }}
+                      />
                     </div>
                   )
                 ) : (
@@ -893,6 +1002,14 @@ const ScrollExpandMedia = ({
             disableRemotePlayback
             onPlay={() => setIsModalPlaying(true)}
             onPause={() => setIsModalPlaying(false)}
+            onTimeUpdate={(e) => {
+              if (!isDragging) {
+                setCurrentTime(e.currentTarget.currentTime);
+              }
+            }}
+            onLoadedMetadata={(e) => {
+              setDuration(e.currentTarget.duration);
+            }}
           />
           <button
             type='button'
