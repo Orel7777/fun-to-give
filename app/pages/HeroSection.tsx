@@ -271,7 +271,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                     alt="יד עם מטבע - סמל הנתינה"
                     width={300}
                     height={300}
-                    className="object-contain w-64 h-64 sm:w-48 sm:h-48 md:w-64 md:h-64 lg:w-80 lg:h-80"
+                    className="object-contain w-32 h-32 sm:w-24 sm:h-24 md:w-32 md:h-32 lg:w-40 lg:h-40"
                     style={{
                       animation: 'coinFloat 4s ease-in-out infinite',
                     }}

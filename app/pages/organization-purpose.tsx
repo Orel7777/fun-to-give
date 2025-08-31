@@ -173,7 +173,7 @@ export default function OrganizationPurpose() {
                         <motion.div
                           animate={{ scale: [1, 1.05, 1] }}
                           transition={{ duration: 4, repeat: Infinity, delay: index * 0.5 }}
-                          className="w-16 h-16 flex items-center justify-center"
+                          className="w-2 h-2 sm:w-3 sm:h-3 md:w-3 md:h-3 lg:w-3 lg:h-3 xl:w-3 xl:h-3 flex items-center justify-center"
                         >
                           <AnimationIcon
                             animationPath={purpose.animationPath}
