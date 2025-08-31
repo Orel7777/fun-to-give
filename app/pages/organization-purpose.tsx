@@ -160,14 +160,14 @@ export default function OrganizationPurpose() {
                   duration={Math.floor(Math.random() * 10000) + 10000}
                   borderRadius="1.75rem"
                   style={{
-                    background: "#ffffff",
+                    background: "#fef7f1",
                     borderRadius: `calc(1.75rem* 0.96)`,
                     border: "2px solid #9acdbe",
                     width: "100%",
                   }}
                   className="!w-full h-full block text-black dark:text-white border-[#9acdbe] shadow-sm"
                 >
-                  <div className="flex flex-col items-center justify-center p-4 h-full space-y-4">
+                  <div className="flex flex-col items-center justify-center p-6 h-full space-y-4">
                     <div className="flex-shrink-0">
                       <Reveal type="media" as="div">
                         <motion.div
