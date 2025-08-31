@@ -152,44 +152,6 @@ export default function OrganizationStory() {
             </Card>
           </motion.div>
 
-          {/* Foundation Story */}
-          <motion.div variants={fadeInUp}>
-            <Card className="p-8 mb-12 border-0 shadow-lg" style={{ backgroundColor: "rgba(242, 162, 131, 0.1)" }}>
-              <div className="flex gap-4 items-start mb-6" dir="rtl">
-                <motion.div variants={iconBounce} animate="animate" className="flex-shrink-0 mt-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ color: "#97cabc" }}
-                  >
-                    <circle cx="4" cy="4" r="2" />
-                    <path d="m14 5 3-3 3 3" />
-                    <path d="m14 10 3-3 3 3" />
-                    <path d="M17 14V2" />
-                    <path d="M17 14H7l-5 8h20Z" />
-                    <path d="M8 14v8" />
-                    <path d="m9 14 5 8" />
-                  </svg>
-                </motion.div>
-                <div className="text-right">
-                  <Reveal as="p" type="paragraph"
-                    className="text-lg leading-relaxed text-gray-800"
-                  >
-                    העמותה הוקמה על שם של יוסף ומסעדה כנפו ז"ל, שעלו לארץ הקדישו את חייהם לגידול 14 ילדים, שאיתם הם
-                    חינכו לערכים של אהבת הזולת ואהבת הארץ.
-                  </Reveal>
-                </div>
-              </div>
-            </Card>
-          </motion.div>
-
           {/* Memorial Section */}
           <motion.div variants={fadeInUp} className="mb-16">
             <Reveal as="h2" type="heading"
@@ -197,80 +159,108 @@ export default function OrganizationStory() {
                style={{ color: "#2a2b26" }}
                dir="rtl"
              >
-               אנו גאים להוקיר באהבה:
+               העמותה הוקמה לזכרם של:
             </Reveal>
 
-                         <div className="grid gap-8 mt-8 md:grid-cols-2">
-              {/* Miriam Almalich Memorial */}
+            <div className="grid gap-6 mt-8 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1">
+              {/* Miriam Alimlich Memorial */}
               <motion.div
-                initial={{ opacity: 0, x: -50 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.2 }}
+                className="w-full"
               >
-                <Card className="p-6 h-full border-0 shadow-lg" style={{ backgroundColor: "rgba(151, 202, 188, 0.1)" }}>
-                  <div className="flex flex-col items-center text-center" dir="rtl">
-                    <Reveal type="media" as="div" className="flex overflow-hidden justify-center items-center mb-4 w-32 h-32 rounded-full">
-                      <div className="flex w-full h-full">
-                        <Image
-                          src="/picture-personal/women1.jpg"
-                          alt="מרים אלמליח ז״ל"
-                          width={64}
-                          height={128}
-                          className="object-cover w-1/2 h-full"
-                        />
-                        <Image
-                          src="/picture-personal/women2.jpeg"
-                          alt="מרים אלמליח ז״ל"
-                          width={64}
-                          height={128}
-                          className="object-cover w-1/2 h-full"
-                        />
-                      </div>
+                <div
+                  className="p-6 h-full border-2 rounded-3xl shadow-lg"
+                  style={{
+                    background: "#fef7f1",
+                    border: "2px solid #f5a383"
+                  }}
+                >
+                  <div className="flex flex-col items-center text-center h-full" dir="rtl">
+                    <Reveal type="media" as="div" className="mb-4 w-24 h-24 rounded-lg overflow-hidden">
+                      <Image
+                        src="/pictures/מרים-אלימלך.webp"
+                        alt="מרים אלימלך ז״ל"
+                        width={96}
+                        height={96}
+                        className="object-cover w-full h-full"
+                      />
                     </Reveal>
                     <Reveal as="p" type="paragraph"
-                      className="text-base leading-relaxed text-gray-800"
+                      className="text-sm leading-relaxed text-gray-800 px-2"
                     >
-                      את זכרה של <strong>מרים אלמליח ז"ל</strong>, שהקדישה את חייה לגידול ילדיה ושמשה כוח עוז בבית
-                      החולים סורוקה במסירות לב ואהבת אדם.
+                      <strong>מרים אלימלך ז"ל</strong>,<br />
+                      שהקדישה את חייה לגידול ילדיה ושמשה כוח עזר בבית החולים סורוקה במסירות רבה ואהבת אדם.
                     </Reveal>
                   </div>
-                </Card>
+                </div>
               </motion.div>
 
-              {/* Professor Yaakov Bichler Memorial */}
+              {/* Yosef and Masuda Kanfo Memorial */}
               <motion.div
-                initial={{ opacity: 0, x: 50 }}
-                animate={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.4 }}
+                className="w-full"
               >
-                <Card className="p-6 h-full border-0 shadow-lg" style={{ backgroundColor: "rgba(242, 162, 131, 0.1)" }}>
-                  <div className="flex flex-col items-center text-center" dir="rtl">
-                    <Reveal type="media" as="div" className="flex overflow-hidden justify-center items-center mb-4 w-32 h-32 rounded-full">
-                      <div className="flex w-full h-full">
-                        <Image
-                          src="/picture-personal/man1.jpeg"
-                          alt="פרופסור יעקב ביכלר ז״ל"
-                          width={64}
-                          height={128}
-                          className="object-cover w-1/2 h-full"
-                        />
-                        <Image
-                          src="/picture-personal/man2.png"
-                          alt="פרופסור יעקב ביכלר ז״ל"
-                          width={64}
-                          height={128}
-                          className="object-cover w-1/2 h-full"
-                        />
-                      </div>
+                <div
+                  className="p-6 h-full border-2 rounded-3xl shadow-lg"
+                  style={{
+                    background: "#fef7f1",
+                    border: "2px solid #f5a383"
+                  }}
+                >
+                  <div className="flex flex-col items-center text-center h-full" dir="rtl">
+                    <Reveal type="media" as="div" className="mb-4 w-24 h-24 rounded-lg overflow-hidden">
+                      <Image
+                        src="/picture-personal/women2.jpeg"
+                        alt="מסעודה כנפו ז״ל"
+                        width={96}
+                        height={96}
+                        className="object-cover w-full h-full"
+                      />
                     </Reveal>
                     <Reveal as="p" type="paragraph"
-                      className="text-base leading-relaxed text-gray-800"
+                      className="text-sm leading-relaxed text-gray-800 px-2"
                     >
-                      את זכרו של <strong>פרופסור יעקב ביכלר ז"ל</strong>, ששירת את ישראל בכבוד ונתן בסתר לנצרכים ביחד עם
-                      אשתו יהודית ביכלר ז"ל.
+                      <strong>יוסף ומסעודה כנפו ז"ל</strong>, שעלו לארץ והקדישו את חייהם לגידול 14 ילדים, שאותם הם חינכו לערכים של אהבת הזולת ואהבת הארץ.
                     </Reveal>
                   </div>
-                </Card>
+                </div>
+              </motion.div>
+
+              {/* Professor Yaakov Zvisky Memorial */}
+              <motion.div
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.6 }}
+                className="w-full"
+              >
+                <div
+                  className="p-6 h-full border-2 rounded-3xl shadow-lg"
+                  style={{
+                    background: "#fef7f1",
+                    border: "2px solid #f5a383"
+                  }}
+                >
+                  <div className="flex flex-col items-center text-center h-full" dir="rtl">
+                    <Reveal type="media" as="div" className="mb-4 w-24 h-24 rounded-lg overflow-hidden">
+                      <Image
+                        src="/picture-personal/man2.png"
+                        alt="פרופסור יעקב זביצקי ז״ל"
+                        width={96}
+                        height={96}
+                        className="object-cover w-full h-full"
+                      />
+                    </Reveal>
+                    <Reveal as="p" type="paragraph"
+                      className="text-sm leading-relaxed text-gray-800 px-2"
+                    >
+                      <strong>פרופסור יעקב זביצקי ז"ל</strong> ששירת את ישראל בכבוד ונתן בסתר לנצרכים ביחד עם אשתו יהודית תבדל"א.
+                    </Reveal>
+                  </div>
+                </div>
               </motion.div>
             </div>
           </motion.div>
