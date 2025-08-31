@@ -289,17 +289,17 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               </div>
             </div>
 
-            <Reveal as="h2" type="heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-3 sm:mb-4">
+            <Reveal as="h2" type="heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-8 sm:mb-10">
               עמותת כיף לתת
             </Reveal>
-            <Reveal as="p" type="paragraph" className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+            <Reveal as="p" type="paragraph" className="text-base sm:text-lg md:text-xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-loose">
               מעניקה בשר, עופות, דגים ביצים ויין למאות משפחות באופן קבוע.
             </Reveal>
-            <Reveal as="p" type="paragraph" className="text-lg sm:text-xl md:text-2xl mb-2 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
+            <Reveal as="p" type="paragraph" className="text-base sm:text-lg md:text-xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-loose">
               בנוסף, כיף לתת עוזרת לילדים עם מוגבלויות ומשמחת ילדים בבתי חולים.
             </Reveal>
-            <Reveal as="p" type="paragraph" className="text-lg sm:text-xl md:text-2xl mt-2 mb-2 sm:mt-3 sm:mb-3 text-[#2a2b26] font-staff leading-relaxed">
-              הפעילות שלנו מבוצעת מתוך אמונה עמוקה בעקרונות של נתינה, אהבת הזולת ורצון לשמח את האחר.
+            <Reveal as="p" type="paragraph" className="text-base sm:text-lg md:text-xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-loose">
+              הפעילות שלנו מבוצעת מתוך אמונה עמוקה בעקרונות של נתינה,<br />אהבת הזולת ורצון לשמח את האחר.
             </Reveal>
             <Reveal as="p" type="paragraph" className="text-lg sm:text-xl md:text-2xl mb-4 sm:mb-5 text-[#2a2b26] font-staff leading-relaxed font-semibold">
               כל פעילות העמותה נעשית על ידי מתנדבים וללא מקבלי שכר.
