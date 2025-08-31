@@ -117,9 +117,37 @@ export default function OrganizationStory() {
                   <Reveal as="p" type="paragraph"
                     className="text-lg leading-relaxed text-gray-800"
                   >
-                    אם ישאלו אותנו מה הדבר שאנחנו הכי אוהבים, נעמה חד משמעית שלחת לאחר זה הדבר הכי כיף בעולם!
+                    אם ישאלו אותנו מה הדבר שאנחנו הכי אוהבים, נעמה חד משמעית שלתת לאחר זה הדבר הכי כיף בעולם!
                   </Reveal>
                 </div>
+              </div>
+            </Card>
+          </motion.div>
+
+          {/* Mission Statement - moved here */}
+          <motion.div variants={fadeInUp}>
+            <Card className="p-8 mb-12 border-0 shadow-lg" style={{ backgroundColor: "rgba(151, 202, 188, 0.1)" }}>
+              <div className="text-center" dir="rtl">
+                <Reveal as="h2" type="heading"
+                  className="mb-6 text-3xl font-bold font-staff tracking-tighter"
+                  style={{ color: "#2a2b26" }}
+                >
+                  "ואהבת לרעך כמוך"
+                </Reveal>
+                <motion.div
+                  className="space-y-4 text-lg leading-relaxed text-gray-800"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                >
+                  <Reveal as="p" type="paragraph">הוא עקרון בסיסי שעלינו ליישם בחיינו ולכן אנו פועלים במטרה להעניק עזרה לכל מי שזקוק לה.</Reveal>
+                  <Reveal as="p" type="paragraph">
+                    כיום, אנו מחלקים באופן קבוע סלי מזון עשירים למאות משפחות,<br />ושואפים להרחיב את החלוקה שלנו
+                    לכמות גדולה יותר של משפחות.
+                  </Reveal>
+                  <Reveal as="p" type="paragraph">נשמח להיות שותפים אתכם בסיוע למשפחות במצוקה, ויחד נוכל להמשיך ולהפיץ שמחה ואהבה.</Reveal>
+                  <Reveal as="p" type="paragraph" className="font-semibold font-staff">כל תרומה, קטנה או גדולה, תסייע לנו להמשיך את המפעל החשוב הזה.</Reveal>
+                </motion.div>
               </div>
             </Card>
           </motion.div>
@@ -247,33 +275,6 @@ export default function OrganizationStory() {
             </div>
           </motion.div>
 
-          {/* Mission Statement */}
-          <motion.div variants={fadeInUp}>
-            <Card className="p-8 mb-12 border-0 shadow-lg" style={{ backgroundColor: "rgba(151, 202, 188, 0.1)" }}>
-              <div className="text-center" dir="rtl">
-                <Reveal as="h2" type="heading"
-                  className="mb-6 text-3xl font-bold font-staff tracking-tighter"
-                  style={{ color: "#2a2b26" }}
-                >
-                  "ואהבת לרעך כמוך"
-                </Reveal>
-                <motion.div
-                  className="space-y-4 text-lg leading-relaxed text-gray-800"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                  <Reveal as="p" type="paragraph">הוא עקרון בסיסי שעלינו ליישם בחיינו ולכן אנו פועלים במטרה להעניק עזרה לכל מי שזקוק לה.</Reveal>
-                  <Reveal as="p" type="paragraph">
-                    כיום, אנו מחלקים באופן קבוע סלי מזון עשירים למאות משפחות, ושואפים להרחיב את החלוקה שלנו
-                    לכמות גדולה יותר של משפחות.
-                  </Reveal>
-                  <Reveal as="p" type="paragraph">נשמח להיות שותפים אתכם בסיוע למשפחות במצוקה, ויחד נוכל להמשיך ולהפיץ שמחה ואהבה.</Reveal>
-                  <Reveal as="p" type="paragraph" className="font-semibold font-staff">כל תרומה, קטנה או גדולה, תסייע לנו להמשיך את המפעל החשוב הזה.</Reveal>
-                </motion.div>
-              </div>
-            </Card>
-          </motion.div>
 
           {/* Call to Action Button */}
           <motion.div
