@@ -88,7 +88,8 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
   return (
     <div className="overflow-x-hidden">
       {/* טקסט ולוגו מקוריים */}
-      <div className="relative h-screen w-full overflow-hidden bg-[#fdf6ed] pt-8">
+      <div className="relative  w-full bg-[#fdf6ed] pt-48" style={{ overflow: 'visible' }}>
+        {/* גובה המסך הוא h-screen */}
         {/* Subtle animated background grid */}
         <div className="absolute inset-0 opacity-20 z-5">
           <div className="w-full h-full cyber-grid"></div>
@@ -103,7 +104,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         />
 
         {/* Text Content */}
-        <div className="flex relative z-20 flex-col justify-center items-center px-10 h-full text-center">
+        <div className="flex relative z-20 flex-col justify-center items-center px-10 h-full text-center" style={{ overflow: 'visible' }}>
           <div 
             className="opacity-100 transition-all transform -translate-y-[60px] sm:-translate-y-[30px] md:-translate-y-[60px] duration-2000"
           >
@@ -114,7 +115,8 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
               <div
                 className="flex relative justify-center items-center mx-auto -mt-16 w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 hero-image-container"
                 style={{
-                  zIndex: 10
+                  zIndex: 10,
+                  overflow: 'visible'
                 }}
               >
                 {/* זו האנימציה של הלבבות - כאן תוכל להתאים את המסלול */}
@@ -210,10 +212,6 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                 />
               </div>
 
-              {/* Call to Action Button */}
-              <div className="mt-1 sm:mt-1 md:mt-1">
-                <PulseBeamsFirstDemo />
-              </div>
             </div>
           </div>
 
@@ -307,7 +305,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
 
               <Reveal type="media" as="div" className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32">
                 <lottie-player
-                  src="/animation-json/Donation.json"
+                  src="/animation-json/handshake%20blue.json"
                   background="transparent"
                   speed="1"
                   loop
@@ -319,7 +317,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
 
               <Reveal type="media" as="div" className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32">
                 <lottie-player
-                  src="/animation-json/handshake%20blue.json"
+                  src="/animation-json/Donation.json"
                   background="transparent"
                   speed="1"
                   loop
