@@ -136,6 +136,23 @@ export default function OrganizationPurpose() {
             ייעוד העמותה
           </Reveal>
           <div className="w-24 h-1 bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] mx-auto rounded-full" />
+          
+          {/* Lottie Animation */}
+          <div className="flex justify-center mt-8">
+            <Reveal type="media" as="div" className="w-32 h-32 md:w-40 md:h-40">
+              {isLottieLoaded && (
+                <lottie-player
+                  src="/animation-json/58.json"
+                  background="transparent"
+                  speed="1"
+                  loop
+                  autoplay
+                  className="w-full h-full"
+                  style={{ width: 'auto', height: 'auto' }}
+                />
+              )}
+            </Reveal>
+          </div>
         </div>
 
         {/* Purpose Cards */}

@@ -2,6 +2,7 @@
 import { Card } from "../components/ui/card"
 import { motion } from "framer-motion"
 import Image from "next/image"
+import Script from "next/script"
 import Reveal from "../components/Reveal"
 
 export default function OrganizationStory() {
@@ -86,40 +87,40 @@ export default function OrganizationStory() {
           {/* Why we named it "Fun to Give" */}
           <motion.div variants={fadeInUp}>
             <Card className="p-8 mb-12 border-0 shadow-lg" style={{ backgroundColor: "rgba(151, 202, 188, 0.1)" }}>
-              <div className="flex gap-4 items-start mb-6" dir="rtl">
-                <motion.div variants={iconBounce} animate="animate" className="flex-shrink-0 mt-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ color: "#f2a283" }}
-                  >
-                    <path d="m11 17 2 2a1 1 0 1 0 3-3" />
-                    <path d="m14 14 2.5 2.5a1 1 0 1 0 3-3l-3.88-3.88a3 3 0 0 0-4.24 0l-.88.88a1 1 0 1 1-3-3l2.81-2.81a5.79 5.79 0 0 1 7.06-.87l.47.28a2 2 0 0 0 1.42.25L21 4" />
-                    <path d="m21 3 1 11h-2" />
-                    <path d="M3 3 2 14l6.5 6.5a1 1 0 1 0 3-3" />
-                    <path d="M3 4h8" />
-                  </svg>
+              <div className="text-center" dir="rtl">
+                <Reveal as="h2" type="heading"
+                  className="mb-6 text-3xl font-bold font-staff tracking-tighter"
+                  style={{ color: "#2a2b26" }}
+                >
+                  למה קראנו לעמותה כיף לתת?
+                </Reveal>
+                <motion.div
+                  className="space-y-4 text-lg leading-relaxed text-gray-800"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                >
+                  <Reveal as="p" type="paragraph">אם ישאלו אותנו מה הדבר שאנחנו הכי אוהבים, נעמה חד משמעית שלתת לאחר זה הדבר הכי כיף בעולם!</Reveal>
+                  
+                  {/* Lottie Animation */}
+                  <div className="flex justify-center mt-6">
+                    <Script
+                      src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
+                      strategy="afterInteractive"
+                    />
+                    <Reveal type="media" as="div" className="w-32 h-32 md:w-40 md:h-40">
+                      <lottie-player
+                        src="/animation-json/56.json"
+                        background="transparent"
+                        speed="1"
+                        loop
+                        autoplay
+                        className="w-full h-full"
+                        style={{ width: 'auto', height: 'auto' }}
+                      ></lottie-player>
+                    </Reveal>
+                  </div>
                 </motion.div>
-                <div className="text-right">
-                  <Reveal as="h2" type="heading"
-                     className="mb-4 text-2xl font-bold font-staff tracking-tighter"
-                     style={{ color: "#2a2b26" }}
-                   >
-                     למה קראנו לעמותה כיף לתת?
-                  </Reveal>
-                  <Reveal as="p" type="paragraph"
-                    className="text-lg leading-relaxed text-gray-800"
-                  >
-                    אם ישאלו אותנו מה הדבר שאנחנו הכי אוהבים, נעמה חד משמעית שלתת לאחר זה הדבר הכי כיף בעולם!
-                  </Reveal>
-                </div>
               </div>
             </Card>
           </motion.div>
@@ -147,6 +148,21 @@ export default function OrganizationStory() {
                   </Reveal>
                   <Reveal as="p" type="paragraph">נשמח להיות שותפים אתכם בסיוע למשפחות במצוקה, ויחד נוכל להמשיך ולהפיץ שמחה ואהבה.</Reveal>
                   <Reveal as="p" type="paragraph" className="font-semibold font-staff">כל תרומה, קטנה או גדולה, תסייע לנו להמשיך את המפעל החשוב הזה.</Reveal>
+                  
+                  {/* Lottie Animation */}
+                  <div className="flex justify-center mt-6">
+                    <Reveal type="media" as="div" className="w-32 h-32 md:w-40 md:h-40">
+                      <lottie-player
+                        src="/animation-json/57.json"
+                        background="transparent"
+                        speed="1"
+                        loop
+                        autoplay
+                        className="w-full h-full"
+                        style={{ width: 'auto', height: 'auto' }}
+                      ></lottie-player>
+                    </Reveal>
+                  </div>
                 </motion.div>
               </div>
             </Card>

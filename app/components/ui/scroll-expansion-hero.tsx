@@ -740,10 +740,23 @@ const ScrollExpandMedia = ({
                           const v = videoRef.current;
                           if (!v) return;
                           if (isPlaying) {
-                            if (isMuted) {
-                              try { v.muted = false; setIsMuted(false); await ensureCanPlay(v); await v.play(); } catch {}
-                            } else {
-                              try { v.muted = true; setIsMuted(true); } catch {}
+                            // Second click - pause the video
+                            try { 
+                              v.pause(); 
+                              setIsPlaying(false);
+                            } catch {}
+                          } else {
+                            // First click - play with audio
+                            const ok = await playWithAudio(v);
+                            if (!ok) {
+                              // Fallback to muted playback
+                              try {
+                                v.muted = true;
+                                setIsMuted(true);
+                                await ensureCanPlay(v);
+                                await v.play();
+                                setIsPlaying(true);
+                              } catch {}
                             }
                           }
                         }}
