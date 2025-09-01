@@ -17,6 +17,7 @@ import { SlidUp } from "../lib/utils"
 export default function DonationsSection() {
   const [donationType, setDonationType] = useState<'monthly' | 'basket' | 'onetime'>("monthly")
   const [customAmount, setCustomAmount] = useState("")
+  const [selectedPayment, setSelectedPayment] = useState("")
 
   const donationOptions = [
     {
@@ -177,9 +178,14 @@ export default function DonationsSection() {
                   {/* Credit Card Payment */}
                   <motion.button
                     onClick={() => {
+                      setSelectedPayment('credit');
                       console.log('מעבר לתרומה בכרטיס אשראי');
                     }}
-                    className="flex items-center justify-center gap-3 px-4 py-3 bg-white rounded-xl border-2 border-black hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0"
+                    className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 ${
+                      selectedPayment === 'credit' 
+                        ? 'bg-[#f4a282] hover:bg-[#f4a282]/90' 
+                        : 'bg-white hover:bg-gray-50'
+                    }`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -197,9 +203,14 @@ export default function DonationsSection() {
                   {/* Israeli Shekel Payment */}
                   <motion.button
                     onClick={() => {
+                      setSelectedPayment('shekel');
                       console.log('מעבר לתרומה בח״פ ישראלי');
                     }}
-                    className="flex items-center justify-center gap-3 px-4 py-3 bg-white rounded-xl border-2 border-black hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0"
+                    className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 ${
+                      selectedPayment === 'shekel' 
+                        ? 'bg-[#f4a282] hover:bg-[#f4a282]/90' 
+                        : 'bg-white hover:bg-gray-50'
+                    }`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
@@ -217,9 +228,14 @@ export default function DonationsSection() {
                   {/* Bit Payment */}
                   <motion.button
                     onClick={() => {
+                      setSelectedPayment('bit');
                       console.log('מעבר לתרומה דרך ביט');
                     }}
-                    className="flex items-center justify-center gap-3 px-4 py-3 bg-white rounded-xl border-2 border-black hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0"
+                    className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 ${
+                      selectedPayment === 'bit' 
+                        ? 'bg-[#f4a282] hover:bg-[#f4a282]/90' 
+                        : 'bg-white hover:bg-gray-50'
+                    }`}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
