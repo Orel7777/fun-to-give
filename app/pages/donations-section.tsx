@@ -87,7 +87,7 @@ export default function DonationsSection() {
               התרומה שלכם מאפשרת לנו להמשיך בפעילותנו החשובה.
             </Reveal>
             <Reveal as="p" type="paragraph">
-              <span className="font-semibold font-staff text-[#9dd0bf]">רק שם ושם משפחה נדרשים</span> - כל השדות האחרים הם
+              <span className="font-semibold font-staff text-[#f5a383]">רק שם ושם משפחה נדרשים</span> - כל השדות האחרים הם
               אופציונליים לנוחותכם.
             </Reveal>
           </div>
@@ -111,7 +111,7 @@ export default function DonationsSection() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <Card className="border-0 shadow-xl backdrop-blur-sm bg-white/80">
+          <Card className="border-0 shadow-xl backdrop-blur-sm" style={{ backgroundColor: "#e1cdbd" }}>
             <CardHeader className="pb-6">
               <Reveal as="h3" type="heading" className="text-2xl text-center text-gray-800">פרטי התרומה</Reveal>
             </CardHeader>
@@ -143,7 +143,7 @@ export default function DonationsSection() {
                         className={`h-12 w-full sm:w-auto text-lg font-semibold font-staff transition-all duration-300 ${
                           customAmount === amount.toString()
                             ? "bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] hover:from-[#f5a383]/80 hover:to-[#9dd0bf]/80 text-white border-0"
-                            : "border-2 border-gray-200 hover:border-[#f5a383] hover:bg-[#f5a383]/10"
+                            : "border-2 border-black hover:border-[#f5a383] hover:bg-[#f5a383]/10"
                         }`}
                         onClick={() => setCustomAmount(amount.toString())}
                       >
@@ -170,72 +170,74 @@ export default function DonationsSection() {
 
               {/* Form Fields */}
               <motion.div
-                className="grid gap-6 pt-6 border-t border-gray-200 md:grid-cols-2"
+                className="flex flex-wrap gap-6 pt-6 border-t border-gray-200 justify-center"
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 1.0 }}
               >
                 <div className="space-y-2">
-                  <Label htmlFor="firstName" className="flex items-center text-sm font-medium font-staff text-gray-700">
+                  <Label htmlFor="firstName" className="flex items-center text-lg font-medium font-staff text-gray-700">
                     <User className="ml-2 w-4 h-4" />
                     שם פרטי *
                   </Label>
                   <Input
                     id="firstName"
                     required
-                    className="border-2 focus:border-[#9dd0bf]"
+                    className="border-2 !border-black focus:border-[#9dd0bf] w-40"
                     aria-label="שם פרטי - שדה חובה"
+                    maxLength={20}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="lastName" className="flex items-center text-sm font-medium font-staff text-gray-700">
+                  <Label htmlFor="lastName" className="flex items-center text-lg font-medium font-staff text-gray-700">
                     <User className="ml-2 w-4 h-4" />
                     שם משפחה *
                   </Label>
                   <Input
                     id="lastName"
                     required
-                    className="border-2 focus:border-[#9dd0bf]"
+                    className="border-2 !border-black focus:border-[#9dd0bf] w-40"
                     aria-label="שם משפחה - שדה חובה"
+                    maxLength={20}
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="email" className="flex items-center text-sm font-medium font-staff text-gray-700">
+                  <Label htmlFor="email" className="flex items-center text-lg font-medium font-staff text-gray-700">
                     <Mail className="ml-2 w-4 h-4" />
                     דוא״ל
                   </Label>
                   <Input
                     id="email"
                     type="email"
-                    className="border-2 focus:border-[#9dd0bf]"
+                    className="border-2 !border-black focus:border-[#9dd0bf] w-56"
                     aria-label="כתובת דוא״ל - שדה אופציונלי"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="phone" className="flex items-center text-sm font-medium font-staff text-gray-700">
+                  <Label htmlFor="phone" className="flex items-center text-lg font-medium font-staff text-gray-700">
                     <Phone className="ml-2 w-4 h-4" />
                     טלפון
                   </Label>
                   <Input
                     id="phone"
                     type="tel"
-                    className="border-2 focus:border-[#9dd0bf]"
+                    className="border-2 !border-black focus:border-[#9dd0bf] w-44"
                     aria-label="מספר טלפון - שדה אופציונלי"
                   />
                 </div>
 
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="comments" className="flex items-center text-sm font-medium font-staff text-gray-700">
+                <div className="space-y-2 w-full max-w-md">
+                  <Label htmlFor="comments" className="flex items-center text-lg font-medium font-staff text-gray-700">
                     <MessageSquare className="ml-2 w-4 h-4" />
                     הערות
                   </Label>
                   <Textarea
                     id="comments"
                     rows={3}
-                    className="border-2 focus:border-[#9dd0bf] resize-none"
+                    className="border-2 !border-black focus:border-[#9dd0bf] resize-none w-full"
                     placeholder="הערות או הקדשה מיוחדת (אופציונלי)"
                     aria-label="הערות או הקדשה - שדה אופציונלי"
                   />
