@@ -28,7 +28,7 @@ export const HeroSimple = () => {
         />
 
                            {/* Text Content */}
-        <div className="flex relative z-20 flex-col justify-center items-center px-10 h-full text-center">
+        <div className="flex relative z-20 flex-col justify-center items-center px-10 h-full text-center" >
           <div 
             className={`transition-all duration-2000 ${
               isVisible 

@@ -104,7 +104,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         />
 
         {/* Text Content */}
-        <div className="flex relative z-20 flex-col justify-center items-center px-10 h-full text-center" style={{ overflow: 'visible' }}>
+        <div className="flex relative z-20 flex-col justify-center items-center px-10 h-full text-center" style={{ overflow: 'visible', marginBottom: '95px' }}>
           <div 
             className="opacity-100 transition-all transform -translate-y-[60px] sm:-translate-y-[30px] md:-translate-y-[60px] duration-2000"
           >
@@ -246,7 +246,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         <div className="bg-[#fdf6ed] py-8 sm:py-10 md:py-12 lg:py-16">
           <div id="הפעילות-שלנו" className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8">
             {/* תמונה עם אנימציה */}
-            <div className="flex justify-center mb-2 sm:mb-3">
+            <div className="flex justify-center mb-2 sm:mb-3" style={{ marginBottom: '-35px' }}>
               <div className="relative group">
                 {/* רקע זוהר */}
                 <div className="absolute inset-0 bg-gradient-to-r from-[#f5a383] to-[#9acdbe] rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-all duration-500 animate-pulse"></div>
