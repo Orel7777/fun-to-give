@@ -51,7 +51,7 @@ export default function JobPostPage() {
                 {/* Body */}
                 <div className="px-4 py-4 flex flex-col gap-4">
                   <div className="text-center">
-                    <Button asChild variant="outline" className="rounded-full px-6 transition-transform duration-200 hover:scale-105 active:scale-95">
+                    <Button asChild variant="outline" className="rounded-full px-6 transition-transform duration-200 hover:scale-105 active:scale-95 cursor-pointer">
                       <Link href="/contact-form">הגשת מועמדות</Link>
                     </Button>
                   </div>
@@ -63,7 +63,7 @@ export default function JobPostPage() {
 
           {/* Back to site */}
           <div className="flex justify-center">
-            <Button asChild variant="outline" className="rounded-full px-8 py-6 text-lg shadow-sm hover:shadow-md transition-shadow">
+            <Button asChild variant="outline" className="rounded-full px-8 py-6 text-lg shadow-sm hover:shadow-md transition-shadow cursor-pointer">
               <Link href="/">חזרה לאתר</Link>
             </Button>
           </div>

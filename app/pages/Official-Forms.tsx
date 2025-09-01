@@ -32,7 +32,7 @@ const OfficialForms = () => {
                 href="/טפסים/תעודת רישום עמותה.pdf"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-blue-600 hover:text-blue-800 underline"
+                className="block text-blue-600 hover:text-blue-800 underline cursor-pointer"
                 style={{ color: '#f5a383' }}
               >
                 לצפייה בתעודה לחץ כאן
@@ -41,7 +41,7 @@ const OfficialForms = () => {
                 href="https://www.guidestar.org.il"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-blue-600 hover:text-blue-800 underline"
+                className="block text-blue-600 hover:text-blue-800 underline cursor-pointer"
                 style={{ color: '#9acdbe' }}
               >
                 צפייה בדף העמותה באתר גיידסטאר
@@ -69,7 +69,7 @@ const OfficialForms = () => {
                 href="/טפסים/טופס 46.png"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-blue-600 hover:text-blue-800 underline"
+                className="block text-blue-600 hover:text-blue-800 underline cursor-pointer"
                 style={{ color: '#f5a383' }}
               >
                 לצפייה בתעודה לחץ כאן
@@ -97,7 +97,7 @@ const OfficialForms = () => {
                 href="/טפסים/אישור הגשת מסמכים.png"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="block text-blue-600 hover:text-blue-800 underline"
+                className="block text-blue-600 hover:text-blue-800 underline cursor-pointer"
                 style={{ color: '#f5a383' }}
               >
                 לצפייה בתעודה לחץ כאן

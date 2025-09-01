@@ -169,7 +169,7 @@ export function ContactForm() {
         <Button
           type="submit"
           disabled={submitting}
-          className="bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-white px-12 py-3 rounded-full text-lg font-medium font-staff"
+          className="bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-white px-12 py-3 rounded-full text-lg font-medium font-staff cursor-pointer"
         >
           {submitting ? 'שולח…' : 'שליחה'}
         </Button>

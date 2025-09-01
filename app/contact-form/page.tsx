@@ -40,7 +40,7 @@ export default function ContactFormPage() {
         >
           <Button
             onClick={handleBackToSite}
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-lg font-medium font-staff"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-full text-lg font-medium font-staff cursor-pointer"
           >
             חזרה לאתר
           </Button>

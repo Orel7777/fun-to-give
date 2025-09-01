@@ -149,7 +149,7 @@ export default function DonationsSection() {
                       <Button
                         key={amount}
                         variant={customAmount === amount.toString() ? "default" : "outline"}
-                        className={`h-12 w-full sm:w-auto text-lg font-semibold font-staff transition-all duration-300 ${
+                        className={`h-12 w-full sm:w-auto text-lg font-semibold font-staff transition-all duration-300 cursor-pointer ${
                           customAmount === amount.toString()
                             ? "bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] hover:from-[#f5a383]/80 hover:to-[#9dd0bf]/80 text-white border-0"
                             : "border-2 border-black hover:border-[#f5a383] hover:bg-[#f5a383]/10"
@@ -189,7 +189,7 @@ export default function DonationsSection() {
                       setSelectedPayment('credit');
                       console.log('מעבר לתרומה בכרטיס אשראי');
                     }}
-                    className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 ${
+                    className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 cursor-pointer ${
                       selectedPayment === 'credit' 
                         ? 'bg-[#f4a282] hover:bg-[#f4a282]/90' 
                         : 'bg-white hover:bg-gray-50'
@@ -214,7 +214,7 @@ export default function DonationsSection() {
                       setSelectedPayment('shekel');
                       console.log('מעבר לתרומה בח״פ ישראלי');
                     }}
-                    className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 ${
+                    className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 cursor-pointer ${
                       selectedPayment === 'shekel' 
                         ? 'bg-[#f4a282] hover:bg-[#f4a282]/90' 
                         : 'bg-white hover:bg-gray-50'
@@ -239,7 +239,7 @@ export default function DonationsSection() {
                       setSelectedPayment('bit');
                       console.log('מעבר לתרומה דרך ביט');
                     }}
-                    className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 ${
+                    className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 cursor-pointer ${
                       selectedPayment === 'bit' 
                         ? 'bg-[#f4a282] hover:bg-[#f4a282]/90' 
                         : 'bg-white hover:bg-gray-50'

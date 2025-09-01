@@ -99,7 +99,7 @@ const FormsDownload: React.FC = () => {
                   href="/טפסים/תעודת רישום עמותה.png"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-blue-600 underline hover:text-blue-800"
+                  className="block text-blue-600 underline hover:text-blue-800 cursor-pointer"
                   style={{ color: '#f5a383' }}
                 >
                   לצפייה בתעודה לחץ כאן
@@ -181,7 +181,7 @@ const FormsDownload: React.FC = () => {
                   href="/טפסים/אישור הגשת מסמכים.png"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-blue-600 underline hover:text-blue-800"
+                  className="block text-blue-600 underline hover:text-blue-800 cursor-pointer"
                   style={{ color: '#f5a383' }}
                 >
                   לצפייה בתעודה לחץ כאן
@@ -222,7 +222,7 @@ const FormsDownload: React.FC = () => {
                   href="/טפסים/ניכוי מס.png"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block text-blue-600 underline hover:text-blue-800"
+                  className="block text-blue-600 underline hover:text-blue-800 cursor-pointer"
                   style={{ color: '#f5a383' }}
                 >
                   לצפייה בתעודה לחץ כאן

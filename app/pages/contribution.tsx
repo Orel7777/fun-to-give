@@ -93,7 +93,7 @@ export default function ContributionPage(): React.ReactElement {
     <motion.button
       type="button"
       onClick={() => setSelected(id)}
-      className={`py-4 px-6 rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-lg flex items-center gap-3 ${optionClasses[id]} ${
+      className={`py-4 px-6 rounded-lg shadow-md transition transform hover:scale-105 hover:shadow-lg flex items-center gap-3 cursor-pointer ${optionClasses[id]} ${
         selected === id ? "ring-2 ring-white/70" : ""
       }`}
       whileHover={{ y: -2 }}
@@ -218,7 +218,7 @@ export default function ContributionPage(): React.ReactElement {
               href="https://www.matara.pro/nedarimplus/online/?mosad=7014073"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex gap-2 items-center px-6 py-3 font-bold font-staff text-white rounded-lg bg-accent hover:bg-accent-dark"
+              className="flex gap-2 items-center px-6 py-3 font-bold font-staff text-white rounded-lg bg-accent hover:bg-accent-dark cursor-pointer"
             >
               <span className="text-lg" aria-hidden>
                 ❤️
@@ -278,7 +278,7 @@ export default function ContributionPage(): React.ReactElement {
         <Link
           href="https://www.matara.pro/nedarimplus/online/?mosad=7014073"
           target="_blank"
-          className="flex fixed right-4 bottom-4 z-50 gap-2 items-center px-5 py-3 font-bold font-staff text-white rounded-full shadow-lg bg-accent hover:bg-accent-dark md:hidden"
+          className="flex fixed right-4 bottom-4 z-50 gap-2 items-center px-5 py-3 font-bold font-staff text-white rounded-full shadow-lg bg-accent hover:bg-accent-dark md:hidden cursor-pointer"
         >
           <span className="text-lg" aria-hidden>
             ❤️
