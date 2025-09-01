@@ -12,6 +12,7 @@ import { CanvasRevealEffectDemo } from "../components/ui/canvas-reveal-effect-de
 import Reveal from "../components/Reveal"
 import Lottie from "lottie-react"
 import paymentSuccessAnimation from "../../public/animation-json/Payment Success.json"
+import birdAnimation from "../../public/animation-json/bird.json"
 import { SlidUp } from "../lib/utils"
 
 export default function DonationsSection() {
@@ -112,9 +113,16 @@ export default function DonationsSection() {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <Card className="border-0 shadow-xl backdrop-blur-sm" style={{ backgroundColor: "#e1cdbd" }}>
-            <CardHeader className="pb-6">
-              <Reveal as="h3" type="heading" className="text-2xl text-center text-gray-800">פרטי התרומה</Reveal>
+          <Card className="border-0 shadow-xl backdrop-blur-sm" style={{ backgroundColor: "#f2f2e8" }}>
+            <CardHeader className="pb-2">
+              <Reveal as="h3" type="heading" className="text-2xl text-center text-gray-800 mb-2">פרטי התרומה:</Reveal>
+              <div className="flex justify-center -mt-4 mb-2">
+                <Lottie 
+                  animationData={birdAnimation} 
+                  className="w-32 h-32"
+                  loop={true}
+                />
+              </div>
             </CardHeader>
 
             <CardContent className="space-y-8">
@@ -154,7 +162,7 @@ export default function DonationsSection() {
                   ))}
                 </motion.div>
                 <div className="flex justify-center items-center space-x-reverse">
-                  <Label htmlFor="custom-amount" className="text-sm font-medium font-staff text-gray-700">
+                  <Label htmlFor="custom-amount" className="text-base font-bold font-staff text-gray-800">
                     או הזינו סכום אחר:
                   </Label>
                   <Input
@@ -163,7 +171,7 @@ export default function DonationsSection() {
                     placeholder="סכום בש״ח"
                     value={customAmount}
                     onChange={(e) => setCustomAmount(e.target.value)}
-                    className="max-w-32 text-center border-2 focus:border-[#9dd0bf]"
+                    className="max-w-32 text-center border-2 focus:border-[#9dd0bf] font-bold text-base"
                     style={{ marginRight: '15px' }}
                   />
                 </div>
