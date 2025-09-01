@@ -229,7 +229,7 @@ function TestimonialsSection() {
             </Reveal>
           </div>
           
-          <Reveal type="media" className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-4xl mx-auto px-4">
+          <Reveal type="media" className="grid grid-cols-2 gap-3 max-[467px]:grid-cols-1 max-[467px]:gap-4 sm:gap-6 md:gap-8 max-w-2xl md:max-w-4xl mx-auto px-4">
             <TestimonialVideo 
               videoPath="סרטון1.mp4"
               className="w-full"
