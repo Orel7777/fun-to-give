@@ -214,8 +214,8 @@ export default function OrganizationStory() {
                   <div className="flex flex-col items-center text-center h-full" dir="rtl">
                     <Reveal type="media" as="div" className="mb-4 w-24 h-24 rounded-lg overflow-hidden">
                       <Image
-                        src="/picture-personal/women2.jpeg"
-                        alt="מסעודה כנפו ז״ל"
+                        src="/pictures/יוסף.webp"
+                        alt="יוסף ומסעודה כנפו ז״ל"
                         width={96}
                         height={96}
                         className="object-cover w-full h-full"
@@ -247,7 +247,7 @@ export default function OrganizationStory() {
                   <div className="flex flex-col items-center text-center h-full" dir="rtl">
                     <Reveal type="media" as="div" className="mb-4 w-24 h-24 rounded-lg overflow-hidden">
                       <Image
-                        src="/picture-personal/man2.png"
+                        src="/pictures/פרופסור.webp"
                         alt="פרופסור יעקב זביצקי ז״ל"
                         width={96}
                         height={96}
