@@ -166,6 +166,71 @@ export default function DonationsSection() {
                     style={{ marginRight: '15px' }}
                   />
                 </div>
+
+                {/* Payment Options */}
+                <motion.div
+                  className="flex flex-col sm:flex-row justify-center items-center gap-3 mt-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 1.0 }}
+                >
+                  {/* Credit Card Payment */}
+                  <motion.button
+                    onClick={() => {
+                      console.log('מעבר לתרומה בכרטיס אשראי');
+                    }}
+                    className="flex items-center justify-center gap-3 px-4 py-3 bg-white rounded-xl border-2 border-black hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="text-center flex-1">
+                      <div className="text-sm font-bold text-black font-staff">חיוב בודד / תשלומים</div>
+                      <div className="text-xs text-gray-600">באמצעות אשראי</div>
+                    </div>
+                    <div className="flex items-center justify-center w-10 h-10 bg-[#FFD700] rounded-lg flex-shrink-0">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8H4V6H20V8ZM20 18H4V12H20V18ZM6 15H8V17H6V15ZM10 15H14V17H10V15Z"/>
+                      </svg>
+                    </div>
+                  </motion.button>
+
+                  {/* Israeli Shekel Payment */}
+                  <motion.button
+                    onClick={() => {
+                      console.log('מעבר לתרומה בח״פ ישראלי');
+                    }}
+                    className="flex items-center justify-center gap-3 px-4 py-3 bg-white rounded-xl border-2 border-black hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="text-center flex-1">
+                      <div className="text-sm font-bold text-black font-staff">הו"ק אשראי</div>
+                      <div className="text-xs text-gray-600">ללא תפיסת מסגרת</div>
+                    </div>
+                    <div className="flex items-center justify-center w-10 h-10 bg-[#FFD700] rounded-lg flex-shrink-0">
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.9 1 3 1.9 3 3V21C3 22.1 3.9 23 5 23H19C20.1 23 21 22.1 21 21V9ZM19 9H14V4H19V9ZM7 7H12V9H7V7ZM7 11H17V13H7V11ZM7 15H17V17H7V15Z"/>
+                      </svg>
+                    </div>
+                  </motion.button>
+
+                  {/* Bit Payment */}
+                  <motion.button
+                    onClick={() => {
+                      console.log('מעבר לתרומה דרך ביט');
+                    }}
+                    className="flex items-center justify-center gap-3 px-4 py-3 bg-white rounded-xl border-2 border-black hover:bg-gray-50 transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <div className="text-center flex-1">
+                      <div className="text-sm font-bold text-black font-staff">Bit ביט</div>
+                    </div>
+                    <div className="flex items-center justify-center w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
+                      <img src="/pictures/bit.webp" alt="Bit" className="w-full h-full object-cover" />
+                    </div>
+                  </motion.button>
+                </motion.div>
               </div>
 
               {/* Form Fields */}
