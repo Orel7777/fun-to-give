@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAudio } from "../contexts/AudioContext";
 
 interface NavigationBarProps {
   className?: string;
@@ -21,8 +22,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
 
   // בדיקה אם זה מובייל
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-  const [isSoundOn, setIsSoundOn] = useState<boolean>(true);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { isSoundOn, toggleSound } = useAudio();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -46,85 +46,6 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
     }
   }, []);
 
-  // Initialize audio and attempt autoplay on mount
-  useEffect(() => {
-    // Ensure single init on client
-    if (typeof window === 'undefined') return;
-    if (!audioRef.current) {
-      const audio = new Audio('/עקיבא - שלום בבית (Prod (mp3cut.net).mp3');
-      audio.loop = true;
-      audio.preload = 'auto';
-      audio.volume = 1;
-      audioRef.current = audio;
-    }
-
-    const audio = audioRef.current!;
-
-    const tryPlay = async () => {
-      try {
-        await audio.play();
-        // If playback succeeds, ensure state reflects it
-        setIsSoundOn(true);
-        removeFirstInteractionListeners();
-      } catch (_) {
-        // Autoplay blocked: wait for first user interaction
-        setIsSoundOn(false);
-        addFirstInteractionListeners();
-      }
-    };
-
-    const onFirstInteraction = async () => {
-      try {
-        await audio.play();
-        setIsSoundOn(true);
-      } catch (_) {
-        // keep off if still blocked
-        setIsSoundOn(false);
-      }
-      removeFirstInteractionListeners();
-    };
-
-    const addFirstInteractionListeners = () => {
-      const opts: AddEventListenerOptions = { once: true, capture: true };
-      window.addEventListener('pointerdown', onFirstInteraction as EventListener, opts);
-      window.addEventListener('click', onFirstInteraction as EventListener, opts);
-      window.addEventListener('keydown', onFirstInteraction as EventListener, opts);
-      window.addEventListener('wheel', onFirstInteraction as EventListener, opts);
-      window.addEventListener('touchstart', onFirstInteraction as EventListener, opts);
-      window.addEventListener('app:ready', onFirstInteraction as EventListener, opts);
-    };
-
-    const removeFirstInteractionListeners = () => {
-      const opts: EventListenerOptions = { capture: true };
-      window.removeEventListener('pointerdown', onFirstInteraction as EventListener, opts);
-      window.removeEventListener('click', onFirstInteraction as EventListener, opts);
-      window.removeEventListener('keydown', onFirstInteraction as EventListener, opts);
-      window.removeEventListener('wheel', onFirstInteraction as EventListener, opts);
-      window.removeEventListener('touchstart', onFirstInteraction as EventListener, opts);
-      window.removeEventListener('app:ready', onFirstInteraction as EventListener, opts);
-    };
-
-    // Attempt autoplay only once on mount
-    tryPlay();
-
-    return () => {
-      removeFirstInteractionListeners();
-    };
-  }, []);
-
-  // React to toggle changes to play/pause
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (isSoundOn) {
-      audio.play().catch(() => {
-        // If play fails, revert state
-        setIsSoundOn(false);
-      });
-    } else {
-      audio.pause();
-    }
-  }, [isSoundOn]);
 
   const menuItems = [
     { 
@@ -475,7 +396,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
                       {/* Music Icon - במרכז */}
             <div className="hidden absolute left-1/2 justify-center items-center transform -translate-x-1/2 lg:flex">
               <motion.button
-                onClick={() => setIsSoundOn(!isSoundOn)}
+                onClick={toggleSound}
                 className="p-2 rounded-full transition-colors duration-200 hover:bg-gray-100"
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
@@ -666,7 +587,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
           {/* Mobile menu button */}
           <div className="flex gap-2 items-center lg:hidden">
             <motion.button
-              onClick={() => setIsSoundOn(!isSoundOn)}
+              onClick={toggleSound}
               className="p-1 rounded-full transition-colors duration-200 hover:bg-gray-100"
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
