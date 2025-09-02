@@ -3,20 +3,9 @@
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { Heart, Calendar, Gift, CreditCard, User, Mail, Phone, MessageSquare } from "lucide-react"
-import { Button } from "../components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
-import { Input } from "../components/ui/input"
-import { Label } from "../components/ui/label"
-import { Textarea } from "../components/ui/textarea"
-import { CanvasRevealEffectDemo } from "../components/ui/canvas-reveal-effect-demo"
-import Reveal from "../components/Reveal"
-import Lottie from "lottie-react"
-import paymentSuccessAnimation from "../../public/animation-json/Payment Success.json"
-import birdAnimation from "../../public/animation-json/bird.json"
-import { SlidUp } from "../lib/utils"
 
 export default function DonationsSection() {
-  const [donationType, setDonationType] = useState<'monthly' | 'basket' | 'onetime'>("monthly")
+  const [donationType, setDonationType] = useState('monthly')
   const [customAmount, setCustomAmount] = useState("")
   const [selectedPayment, setSelectedPayment] = useState("")
 
@@ -44,46 +33,401 @@ export default function DonationsSection() {
     },
   ]
 
-  // const selectedOption = donationOptions.find((option) => option.id === donationType)
+  const renderCreditCardFields = () => (
+    <motion.div
+      className="flex flex-wrap gap-6 pt-6 border-t border-gray-200 justify-center"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 1.0 }}
+    >
+      <div className="space-y-2">
+        <label htmlFor="cardNumber" className="flex items-center text-lg font-medium font-staff text-gray-700">
+          <CreditCard className="ml-2 w-4 h-4" />
+          מספר כרטיס אשראי *
+        </label>
+        <input
+          id="cardNumber"
+          type="text"
+          placeholder="0000 0000 0000 0000"
+          required
+          className="border-2 border-black focus:border-[#9dd0bf] w-60 px-3 py-2 rounded-md"
+          aria-label="מספר כרטיס אשראי - שדה חובה"
+          maxLength={19}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="expiryDate" className="flex items-center text-lg font-medium font-staff text-gray-700">
+          <Calendar className="ml-2 w-4 h-4" />
+          תוקף *
+        </label>
+        <input
+          id="expiryDate"
+          type="text"
+          placeholder="MM/YY"
+          required
+          className="border-2 border-black focus:border-[#9dd0bf] w-32 px-3 py-2 rounded-md text-center"
+          aria-label="תאריך תוקף - שדה חובה"
+          maxLength={5}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="cvv" className="flex items-center text-lg font-medium font-staff text-gray-700">
+          <span className="ml-2 w-4 h-4 flex items-center justify-center bg-gray-200 rounded text-xs font-bold">
+            CVV
+          </span>
+          קוד אבטחה *
+        </label>
+        <input
+          id="cvv"
+          type="text"
+          placeholder="123"
+          required
+          className="border-2 border-black focus:border-[#9dd0bf] w-24 px-3 py-2 rounded-md text-center"
+          aria-label="קוד אבטחה - שדה חובה"
+          maxLength={4}
+        />
+      </div>
+
+      <div className="space-y-2 w-full max-w-md">
+        <label htmlFor="cardHolder" className="flex items-center text-lg font-medium font-staff text-gray-700">
+          <User className="ml-2 w-4 h-4" />
+          שם למחזיק הכרטיס *
+        </label>
+        <input
+          id="cardHolder"
+          type="text"
+          placeholder="כפי שמופיע על הכרטיס"
+          required
+          className="border-2 border-black focus:border-[#9dd0bf] w-full px-3 py-2 rounded-md"
+          aria-label="שם מחזיק הכרטיס - שדה חובה"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="installments" className="flex items-center text-lg font-medium font-staff text-gray-700">
+          <CreditCard className="ml-2 w-4 h-4" />
+          מספר תשלומים
+        </label>
+        <select
+          id="installments"
+          className="border-2 border-black focus:border-[#9dd0bf] w-40 px-3 py-2 rounded-md"
+          aria-label="בחירת מספר תשלומים"
+        >
+          <option value="1">תשלום אחד</option>
+          <option value="2">2 תשלומים</option>
+          <option value="3">3 תשלומים</option>
+          <option value="4">4 תשלומים</option>
+          <option value="5">5 תשלומים</option>
+          <option value="6">6 תשלומים</option>
+          <option value="12">12 תשלומים</option>
+        </select>
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="email" className="flex items-center text-lg font-medium font-staff text-gray-700">
+          <Mail className="ml-2 w-4 h-4" />
+          דוא״ל
+        </label>
+        <input
+          id="email"
+          type="email"
+          className="border-2 border-black focus:border-[#9dd0bf] w-56 px-3 py-2 rounded-md"
+          aria-label="כתובת דוא״ל - שדה אופציונלי"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="phone" className="flex items-center text-lg font-medium font-staff text-gray-700">
+          <Phone className="ml-2 w-4 h-4" />
+          טלפון
+        </label>
+        <input
+          id="phone"
+          type="tel"
+          className="border-2 border-black focus:border-[#9dd0bf] w-44 px-3 py-2 rounded-md"
+          aria-label="מספר טלפון - שדה אופציונלי"
+        />
+      </div>
+
+      <div className="space-y-2 w-full max-w-md">
+        <label htmlFor="comments" className="flex items-center text-lg font-medium font-staff text-gray-700">
+          <MessageSquare className="ml-2 w-4 h-4" />
+          הערות
+        </label>
+        <textarea
+          id="comments"
+          rows={3}
+          className="border-2 border-black focus:border-[#9dd0bf] resize-none w-full px-3 py-2 rounded-md"
+          placeholder="הערות או הקדשה מיוחדת (אופציונלי)"
+          aria-label="הערות או הקדשה - שדה אופציונלי"
+        />
+      </div>
+    </motion.div>
+  )
+
+  const renderShekelFields = () => (
+    <motion.div
+      className="space-y-6 pt-6 border-t border-gray-200"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 1.0 }}
+    >
+      <div className="flex flex-wrap gap-6 justify-center">
+        <div className="space-y-2">
+          <label htmlFor="monthlyAmountShekel" className="flex items-center text-lg font-medium font-staff text-gray-700">
+            <span className="text-red-500">*</span>
+            סכום לחיוב בכל חודש:
+          </label>
+          <div className="flex items-center gap-2">
+            <input
+              id="monthlyAmountShekel"
+              type="number"
+              placeholder="400"
+              required
+              className="border-2 border-black focus:border-[#9dd0bf] w-32 px-3 py-2 rounded-md text-center font-bold"
+              aria-label="סכום חיוב חודשי - שדה חובה"
+            />
+            <span className="text-gray-500">₪</span>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="fixedAmountShekel" className="flex items-center text-lg font-medium font-staff text-gray-700">
+            מספר תשלומים לחיוב:
+          </label>
+          <div className="flex items-center gap-2">
+            <span className="text-gray-500">ללא הגבלה</span>
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="dayOfMonthShekel" className="flex items-center text-lg font-medium font-staff text-gray-700">
+            <span className="text-red-500">*</span>
+            יום גביה בכל חודש:
+          </label>
+          <input
+            id="dayOfMonthShekel"
+            type="number"
+            min="1"
+            max="31"
+            placeholder="1"
+            required
+            className="border-2 border-black focus:border-[#9dd0bf] w-24 px-3 py-2 rounded-md text-center"
+            aria-label="יום בחודש לגביה - שדה חובה"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="cardNumberShekel" className="flex items-center text-lg font-medium font-staff text-gray-700">
+            <span className="text-red-500">*</span>
+            מספר כרטיס אשראי:
+          </label>
+          <input
+            id="cardNumberShekel"
+            type="text"
+            required
+            className="border-2 border-black focus:border-[#9dd0bf] w-56 px-3 py-2 rounded-md"
+            aria-label="מספר כרטיס אשראי - שדה חובה"
+            placeholder="0000 0000 0000 0000"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="validityShekel" className="flex items-center text-lg font-medium font-staff text-gray-700">
+            <span className="text-red-500">*</span>
+            תוקף:
+          </label>
+          <input
+            id="validityShekel"
+            type="text"
+            placeholder="07/2026 0426"
+            required
+            className="border-2 border-black focus:border-[#9dd0bf] w-40 px-3 py-2 rounded-md text-center"
+            aria-label="תוקף כרטיס - שדה חובה"
+            maxLength={11}
+          />
+        </div>
+
+        <div className="space-y-2 w-full">
+          <label htmlFor="installmentsShekel" className="flex items-center justify-center text-lg font-medium font-staff text-gray-700">
+            3 ספרות נגד הכרטיס:
+          </label>
+          <div className="flex justify-center">
+            <input
+              id="installmentsShekel"
+              type="text"
+              maxLength={3}
+              className="border-2 border-black focus:border-[#9dd0bf] w-24 px-3 py-2 rounded-md text-center"
+              aria-label="3 ספרות נגד הכרטיס"
+              placeholder="123"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="text-center">
+        <label className="flex items-center justify-center gap-2 text-base text-gray-700">
+          <input
+            type="checkbox"
+            className="w-4 h-4 text-[#9dd0bf] border-2 border-gray-300 rounded focus:ring-[#9dd0bf]"
+            defaultChecked
+          />
+          <span className="text-blue-600 underline cursor-pointer">
+            אני מסכים לתקנון האתר
+          </span>
+        </label>
+      </div>
+
+      <div className="text-center">
+        <button className="w-full max-w-md bg-[#5fb3a3] hover:bg-[#4a9d8e] text-white font-bold py-4 px-8 rounded-lg text-lg transition-colors duration-300">
+          שמירת הוראת קבע
+        </button>
+        <p className="mt-2 text-sm text-gray-600">זה הו"ק אשראי</p>
+      </div>
+    </motion.div>
+  )
+
+  const renderBitFields = () => (
+    <motion.div
+      className="space-y-6 pt-6 border-t border-gray-200"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 1.0 }}
+    >
+      <div className="flex justify-center">
+        <div className="space-y-2">
+          <label htmlFor="bitAmount" className="flex items-center justify-center text-lg font-medium font-staff text-gray-700">
+            <span className="text-red-500">*</span>
+            סכום לתרומה:
+          </label>
+          <input
+            id="bitAmount"
+            type="number"
+            placeholder="400"
+            required
+            className="border-2 border-black focus:border-[#9dd0bf] w-32 px-3 py-2 rounded-md text-center font-bold text-lg"
+            aria-label="סכום לתרומה - שדה חובה"
+          />
+        </div>
+      </div>
+
+      <div className="text-center">
+        <label className="flex items-center justify-center gap-2 text-base text-gray-700">
+          <input
+            type="checkbox"
+            className="w-4 h-4 text-[#9dd0bf] border-2 border-gray-300 rounded focus:ring-[#9dd0bf]"
+            defaultChecked
+          />
+          <span className="text-blue-600 underline cursor-pointer">
+            אני מסכים לתקנון האתר
+          </span>
+        </label>
+      </div>
+
+      <div className="text-center">
+        <button className="w-full max-w-md bg-[#5fb3a3] hover:bg-[#4a9d8e] text-white font-bold py-4 px-8 rounded-lg text-lg transition-colors duration-300">
+          תיוב תשלום באמצעות BIT
+        </button>
+      </div>
+    </motion.div>
+  )
+
+  const renderOriginalFields = () => (
+    <motion.div
+      className="flex flex-wrap gap-6 pt-6 border-t border-gray-200 justify-center"
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, delay: 1.0 }}
+    >
+      <div className="space-y-2">
+        <label htmlFor="firstName" className="flex items-center text-lg font-medium font-staff text-gray-700">
+          <User className="ml-2 w-4 h-4" />
+          שם פרטי *
+        </label>
+        <input
+          id="firstName"
+          required
+          className="border-2 border-black focus:border-[#9dd0bf] w-40 px-3 py-2 rounded-md"
+          aria-label="שם פרטי - שדה חובה"
+          maxLength={20}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="lastName" className="flex items-center text-lg font-medium font-staff text-gray-700">
+          <User className="ml-2 w-4 h-4" />
+          שם משפחה *
+        </label>
+        <input
+          id="lastName"
+          required
+          className="border-2 border-black focus:border-[#9dd0bf] w-40 px-3 py-2 rounded-md"
+          aria-label="שם משפחה - שדה חובה"
+          maxLength={20}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="email" className="flex items-center text-lg font-medium font-staff text-gray-700">
+          <Mail className="ml-2 w-4 h-4" />
+          דוא״ל
+        </label>
+        <input
+          id="email"
+          type="email"
+          className="border-2 border-black focus:border-[#9dd0bf] w-56 px-3 py-2 rounded-md"
+          aria-label="כתובת דוא״ל - שדה אופציונלי"
+        />
+      </div>
+
+      <div className="space-y-2">
+        <label htmlFor="phone" className="flex items-center text-lg font-medium font-staff text-gray-700">
+          <Phone className="ml-2 w-4 h-4" />
+          טלפון
+        </label>
+        <input
+          id="phone"
+          type="tel"
+          className="border-2 border-black focus:border-[#9dd0bf] w-44 px-3 py-2 rounded-md"
+          aria-label="מספר טלפון - שדה אופציונלי"
+        />
+      </div>
+
+      <div className="space-y-2 w-full max-w-md">
+        <label htmlFor="comments" className="flex items-center text-lg font-medium font-staff text-gray-700">
+          <MessageSquare className="ml-2 w-4 h-4" />
+          הערות
+        </label>
+        <textarea
+          id="comments"
+          rows={3}
+          className="border-2 border-black focus:border-[#9dd0bf] resize-none w-full px-3 py-2 rounded-md"
+          placeholder="הערות או הקדשה מיוחדת (אופציונלי)"
+          aria-label="הערות או הקדשה - שדה אופציונלי"
+        />
+      </div>
+    </motion.div>
+  )
 
   return (
     <motion.section
       id="תרומה"
       className="px-4 pt-16 pb-16 mb-24"
-      // style={{
-      //   background: 'linear-gradient(135deg, #e2cdbd 0%, #f5f5f5 15%, #f5f5f5 85%, #9dd0bf 100%)',
-      //   minHeight: '200vh'
-      // }}
       dir="rtl"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
-      <div className="mx-auto max-w-4xl ">
-
-
-        {/* Donation type cards with effects (kept as requested) */}
-        {/* 
-        <div className="mb-8">
-          <CanvasRevealEffectDemo
-            selectedId={donationType}
-            onSelect={(id) => {
-              // מיפוי זהה לשמות ה-id ברשימת האפשרויות
-              if (id === 'monthly' || id === 'basket' || id === 'onetime') {
-                setDonationType(id)
-              }
-            }}
-          />
-        </div>
-        */}
-
+      <div className="mx-auto max-w-4xl">
         <motion.div
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <Card className="border-0 shadow-xl backdrop-blur-sm" style={{ backgroundColor: "#f2f2e8" }}>
-            <CardHeader className="pb-2">
+          <div className="border-0 shadow-xl backdrop-blur-sm bg-[#f2f2e8] rounded-lg">
+            <div className="pb-2 pt-6 px-6">
               <motion.div
                 className="flex justify-center mb-4"
                 animate={{
@@ -92,7 +436,7 @@ export default function DonationsSection() {
                 }}
                 transition={{
                   duration: 3,
-                  repeat: Number.POSITIVE_INFINITY,
+                  repeat: Infinity,
                   ease: "easeInOut",
                 }}
               >
@@ -100,26 +444,19 @@ export default function DonationsSection() {
                   <Heart className="w-8 h-8 text-white" />
                 </div>
               </motion.div>
-              <Reveal as="h2" type="heading" className="text-3xl font-bold tracking-tighter text-[#2a2b26] font-staff mb-4 text-center">הצטרפו אלינו לעשות שינוי</Reveal>
+              <h2 className="text-3xl font-bold tracking-tighter text-[#2a2b26] font-staff mb-4 text-center">הצטרפו אלינו לעשות שינוי</h2>
               <div className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-600 text-center mb-4">
-                <Reveal as="p" type="paragraph" className="mb-2">
+                <p className="mb-2">
                   התרומה שלכם מאפשרת לנו להמשיך בפעילותנו החשובה.
-                </Reveal>
-                <Reveal as="p" type="paragraph">
+                </p>
+                <p>
                   <span className="font-semibold font-staff text-[#f5a383]">רק שם ושם משפחה נדרשים</span> - כל השדות האחרים הם
                   אופציונליים לנוחותכם.
-                </Reveal>
+                </p>
               </div>
-              <div className="flex justify-center -mt-4 mb-2">
-                <Lottie 
-                  animationData={birdAnimation} 
-                  className="w-32 h-32"
-                  loop={true}
-                />
-              </div>
-            </CardHeader>
+            </div>
 
-            <CardContent className="space-y-8">
+            <div className="space-y-8 px-6 pb-6">
               {/* Payment Options */}
               <motion.div
                 className="flex flex-col sm:flex-row justify-center items-center gap-3 mb-6"
@@ -195,14 +532,16 @@ export default function DonationsSection() {
                     <div className="text-sm font-bold text-black font-staff">Bit ביט</div>
                   </div>
                   <div className="flex items-center justify-center w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
-                    <img src="/pictures/bit.webp" alt="Bit" className="w-full h-full object-cover" />
+                    <div className="w-full h-full bg-blue-500 rounded flex items-center justify-center text-white text-xs font-bold">
+                      BIT
+                    </div>
                   </div>
                 </motion.button>
               </motion.div>
 
               {/* Amount Selection */}
               <div className="space-y-4">
-                <Reveal as="h3" type="heading" className="text-lg font-semibold font-staff text-center text-gray-800" style={{ marginBottom: '20px' }}>בחרו סכום לתרומה (₪)</Reveal>
+                <h3 className="text-lg font-semibold font-staff text-center text-gray-800" style={{ marginBottom: '20px' }}>בחרו סכום לתרומה (₪)</h3>
                 <motion.div
                   className="grid grid-cols-2 gap-4 sm:flex sm:flex-wrap sm:justify-center sm:items-center"
                   initial={{ opacity: 0 }}
@@ -220,131 +559,40 @@ export default function DonationsSection() {
                       whileTap={{ scale: 0.95 }}
                       className="flex justify-center"
                     >
-                      <Button
-                        key={amount}
-                        variant={customAmount === amount.toString() ? "default" : "outline"}
-                        className={`h-12 w-full sm:w-auto text-lg font-semibold font-staff transition-all duration-300 cursor-pointer ${
+                      <button
+                        className={`h-12 w-full sm:w-auto text-lg font-semibold font-staff transition-all duration-300 cursor-pointer px-6 py-2 rounded-md ${
                           customAmount === amount.toString()
-                            ? "bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] hover:from-[#f5a383]/80 hover:to-[#9dd0bf]/80 text-white border-0"
+                            ? "bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] text-white border-0"
                             : "border-2 border-black hover:border-[#f5a383] hover:bg-[#f5a383]/10 bg-[#fdf6ed]"
                         }`}
                         onClick={() => setCustomAmount(amount.toString())}
                       >
                         {amount}₪
-                      </Button>
+                      </button>
                     </motion.div>
                   ))}
                 </motion.div>
                 <div className="flex justify-center items-center space-x-reverse">
-                  <Label htmlFor="custom-amount" className="text-base font-bold font-staff text-gray-800">
+                  <label htmlFor="custom-amount" className="text-base font-bold font-staff text-gray-800">
                     או הזינו סכום אחר:
-                  </Label>
-                  <Input
+                  </label>
+                  <input
                     id="custom-amount"
                     type="number"
                     placeholder="סכום בש״ח"
                     value={customAmount}
                     onChange={(e) => setCustomAmount(e.target.value)}
-                    className="max-w-32 text-center border-2 focus:border-[#9dd0bf] font-bold text-base bg-[#fdf6ed]"
+                    className="max-w-32 text-center border-2 focus:border-[#9dd0bf] font-bold text-base bg-[#fdf6ed] px-3 py-2 rounded-md"
                     style={{ marginRight: '15px' }}
                   />
                 </div>
-
-
               </div>
 
-              {/* Form Fields */}
-              <motion.div
-                className="flex flex-wrap gap-6 pt-6 border-t border-gray-200 justify-center"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 1.0 }}
-              >
-                <div className="space-y-2">
-                  <Label htmlFor="firstName" className="flex items-center text-lg font-medium font-staff text-gray-700">
-                    <User className="ml-2 w-4 h-4" />
-                    שם פרטי *
-                  </Label>
-                  <Input
-                    id="firstName"
-                    required
-                    className="border-2 !border-black focus:border-[#9dd0bf] w-40"
-                    aria-label="שם פרטי - שדה חובה"
-                    maxLength={20}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="lastName" className="flex items-center text-lg font-medium font-staff text-gray-700">
-                    <User className="ml-2 w-4 h-4" />
-                    שם משפחה *
-                  </Label>
-                  <Input
-                    id="lastName"
-                    required
-                    className="border-2 !border-black focus:border-[#9dd0bf] w-40"
-                    aria-label="שם משפחה - שדה חובה"
-                    maxLength={20}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="flex items-center text-lg font-medium font-staff text-gray-700">
-                    <Mail className="ml-2 w-4 h-4" />
-                    דוא״ל
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    className="border-2 !border-black focus:border-[#9dd0bf] w-56"
-                    aria-label="כתובת דוא״ל - שדה אופציונלי"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="phone" className="flex items-center text-lg font-medium font-staff text-gray-700">
-                    <Phone className="ml-2 w-4 h-4" />
-                    טלפון
-                  </Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    className="border-2 !border-black focus:border-[#9dd0bf] w-44"
-                    aria-label="מספר טלפון - שדה אופציונלי"
-                  />
-                </div>
-
-                <div className="space-y-2 w-full max-w-md">
-                  <Label htmlFor="comments" className="flex items-center text-lg font-medium font-staff text-gray-700">
-                    <MessageSquare className="ml-2 w-4 h-4" />
-                    הערות
-                  </Label>
-                  <Textarea
-                    id="comments"
-                    rows={3}
-                    className="border-2 !border-black focus:border-[#9dd0bf] resize-none w-full"
-                    placeholder="הערות או הקדשה מיוחדת (אופציונלי)"
-                    aria-label="הערות או הקדשה - שדה אופציונלי"
-                  />
-                </div>
-              </motion.div>
-
-              {/* Payment Success Animation */}
-              <motion.div
-                className="flex justify-center mb-6"
-                initial={{ opacity: 0, scale: 0.5 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.8, delay: 1.0 }}
-              >
-                <Reveal type="media" className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28">
-                  <Lottie
-                    animationData={paymentSuccessAnimation}
-                    loop={true}
-                    autoplay={true}
-                    style={{ width: '100%', height: '100%' }}
-                  />
-                </Reveal>
-              </motion.div>
+              {/* Dynamic Form Fields based on payment selection */}
+              {selectedPayment === 'credit' && renderCreditCardFields()}
+              {selectedPayment === 'shekel' && renderShekelFields()}
+              {selectedPayment === 'bit' && renderBitFields()}
+              {!selectedPayment && renderOriginalFields()}
 
               {/* CTA Button */}
               <motion.div
@@ -358,12 +606,10 @@ export default function DonationsSection() {
                   whileTap={{ scale: 0.95 }}
                   className="cursor-pointer"
                 >
-                  <Button
-                    size="lg"
-                    className="w-full md:w-auto px-12 py-4 text-xl font-bold font-staff bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] hover:from-[#f5a383]/80 hover:to-[#9dd0bf]/80 text-white border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 cursor-pointer"
+                  <button
+                    className="w-full md:w-auto px-12 py-4 text-xl font-bold font-staff bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] text-white border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 cursor-pointer rounded-lg"
                     aria-label="לחצו כאן לביצוע התרומה"
                     onClick={() => {
-                      // כאן תוכל להוסיף לוגיקה לטיפול בלחיצה
                       console.log('כפתור תרומה נלחץ')
                     }}
                   >
@@ -373,21 +619,21 @@ export default function DonationsSection() {
                       }}
                       transition={{
                         duration: 2,
-                        repeat: Number.POSITIVE_INFINITY,
+                        repeat: Infinity,
                         ease: "easeInOut",
                       }}
+                      className="inline-flex items-center"
                     >
                       <Heart className="ml-2 w-6 h-6" />
+                      הצטרפו לנתינה
                     </motion.div>
-                    הצטרפו לנתינה
-                  </Button>
+                  </button>
                 </motion.div>
                 <p className="mt-3 text-sm text-gray-500">התרומה מאובטחת ומוגנת בהצפנה מתקדמת</p>
               </motion.div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </motion.div>
-
       </div>
     </motion.section>
   )
