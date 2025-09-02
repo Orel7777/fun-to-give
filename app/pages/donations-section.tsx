@@ -44,12 +44,12 @@ export default function DonationsSection() {
     },
   ]
 
-  const selectedOption = donationOptions.find((option) => option.id === donationType)
+  // const selectedOption = donationOptions.find((option) => option.id === donationType)
 
   return (
     <motion.section
       id="תרומה"
-      className="px-4 pt-16 pb-0"
+      className="px-4 pt-16 pb-16 mb-24"
       // style={{
       //   background: 'linear-gradient(135deg, #e2cdbd 0%, #f5f5f5 15%, #f5f5f5 85%, #9dd0bf 100%)',
       //   minHeight: '200vh'
@@ -59,43 +59,11 @@ export default function DonationsSection() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
     >
-      <div className="mx-auto max-w-4xl">
-        {/* Header */}
-        <motion.div
-          className="mb-12 text-center"
-          initial={{ y: -50, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
-          <motion.div
-            className="flex justify-center mb-4"
-            animate={{
-              y: [0, -10, 0],
-              rotate: [0, 5, -5, 0],
-            }}
-            transition={{
-              duration: 3,
-              repeat: Number.POSITIVE_INFINITY,
-              ease: "easeInOut",
-            }}
-          >
-            <div className="p-3 bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] rounded-full">
-              <Heart className="w-8 h-8 text-white" />
-            </div>
-          </motion.div>
-          <Reveal as="h2" type="heading" className="mb-4 text-4xl font-bold tracking-tighter text-[#2a2b26] font-staff">הצטרפו אלינו לעשות שינוי</Reveal>
-          <div className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-600" style={{ textAlign: 'center' }}>
-            <Reveal as="p" type="paragraph" className="mb-2">
-              התרומה שלכם מאפשרת לנו להמשיך בפעילותנו החשובה.
-            </Reveal>
-            <Reveal as="p" type="paragraph">
-              <span className="font-semibold font-staff text-[#f5a383]">רק שם ושם משפחה נדרשים</span> - כל השדות האחרים הם
-              אופציונליים לנוחותכם.
-            </Reveal>
-          </div>
-        </motion.div>
+      <div className="mx-auto max-w-4xl ">
+
 
         {/* Donation type cards with effects (kept as requested) */}
+        {/* 
         <div className="mb-8">
           <CanvasRevealEffectDemo
             selectedId={donationType}
@@ -107,6 +75,7 @@ export default function DonationsSection() {
             }}
           />
         </div>
+        */}
 
         <motion.div
           initial={{ y: 50, opacity: 0 }}
@@ -115,7 +84,32 @@ export default function DonationsSection() {
         >
           <Card className="border-0 shadow-xl backdrop-blur-sm" style={{ backgroundColor: "#f2f2e8" }}>
             <CardHeader className="pb-2">
-              <Reveal as="h3" type="heading" className="text-2xl text-center text-gray-800 mb-2">פרטי התרומה:</Reveal>
+              <motion.div
+                className="flex justify-center mb-4"
+                animate={{
+                  y: [0, -10, 0],
+                  rotate: [0, 5, -5, 0],
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Number.POSITIVE_INFINITY,
+                  ease: "easeInOut",
+                }}
+              >
+                <div className="p-3 bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] rounded-full">
+                  <Heart className="w-8 h-8 text-white" />
+                </div>
+              </motion.div>
+              <Reveal as="h2" type="heading" className="text-3xl font-bold tracking-tighter text-[#2a2b26] font-staff mb-4 text-center">הצטרפו אלינו לעשות שינוי</Reveal>
+              <div className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-600 text-center mb-4">
+                <Reveal as="p" type="paragraph" className="mb-2">
+                  התרומה שלכם מאפשרת לנו להמשיך בפעילותנו החשובה.
+                </Reveal>
+                <Reveal as="p" type="paragraph">
+                  <span className="font-semibold font-staff text-[#f5a383]">רק שם ושם משפחה נדרשים</span> - כל השדות האחרים הם
+                  אופציונליים לנוחותכם.
+                </Reveal>
+              </div>
               <div className="flex justify-center -mt-4 mb-2">
                 <Lottie 
                   animationData={birdAnimation} 
@@ -126,6 +120,86 @@ export default function DonationsSection() {
             </CardHeader>
 
             <CardContent className="space-y-8">
+              {/* Payment Options */}
+              <motion.div
+                className="flex flex-col sm:flex-row justify-center items-center gap-3 mb-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.6 }}
+              >
+                {/* Credit Card Payment */}
+                <motion.button
+                  onClick={() => {
+                    setSelectedPayment('credit');
+                    console.log('מעבר לתרומה בכרטיס אשראי');
+                  }}
+                  className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 cursor-pointer ${
+                    selectedPayment === 'credit' 
+                      ? 'bg-[#f4a282] hover:bg-[#f4a282]/90' 
+                      : 'bg-white hover:bg-gray-50'
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="text-center flex-1">
+                    <div className="text-sm font-bold text-black font-staff">חיוב בודד / תשלומים</div>
+                    <div className="text-xs text-gray-600">באמצעות אשראי</div>
+                  </div>
+                  <div className="flex items-center justify-center w-10 h-10 bg-[#FFD700] rounded-lg flex-shrink-0">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                      <path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8H4V6H20V8ZM20 18H4V12H20V18ZM6 15H8V17H6V15ZM10 15H14V17H10V15Z"/>
+                    </svg>
+                  </div>
+                </motion.button>
+
+                {/* Israeli Shekel Payment */}
+                <motion.button
+                  onClick={() => {
+                    setSelectedPayment('shekel');
+                    console.log('מעבר לתרומה בח״פ ישראלי');
+                  }}
+                  className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 cursor-pointer ${
+                    selectedPayment === 'shekel' 
+                      ? 'bg-[#f4a282] hover:bg-[#f4a282]/90' 
+                      : 'bg-white hover:bg-gray-50'
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="text-center flex-1">
+                    <div className="text-sm font-bold text-black font-staff">הו"ק אשראי</div>
+                    <div className="text-xs text-gray-600">ללא תפיסת מסגרת</div>
+                  </div>
+                  <div className="flex items-center justify-center w-10 h-10 bg-[#FFD700] rounded-lg flex-shrink-0">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                      <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.9 1 3 1.9 3 3V21C3 22.1 3.9 23 5 23H19C20.1 23 21 22.1 21 21V9ZM19 9H14V4H19V9ZM7 7H12V9H7V7ZM7 11H17V13H7V11ZM7 15H17V17H7V15Z"/>
+                    </svg>
+                  </div>
+                </motion.button>
+
+                {/* Bit Payment */}
+                <motion.button
+                  onClick={() => {
+                    setSelectedPayment('bit');
+                    console.log('מעבר לתרומה דרך ביט');
+                  }}
+                  className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 cursor-pointer ${
+                    selectedPayment === 'bit' 
+                      ? 'bg-[#f4a282] hover:bg-[#f4a282]/90' 
+                      : 'bg-white hover:bg-gray-50'
+                  }`}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="text-center flex-1">
+                    <div className="text-sm font-bold text-black font-staff">Bit ביט</div>
+                  </div>
+                  <div className="flex items-center justify-center w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
+                    <img src="/pictures/bit.webp" alt="Bit" className="w-full h-full object-cover" />
+                  </div>
+                </motion.button>
+              </motion.div>
+
               {/* Amount Selection */}
               <div className="space-y-4">
                 <Reveal as="h3" type="heading" className="text-lg font-semibold font-staff text-center text-gray-800" style={{ marginBottom: '20px' }}>בחרו סכום לתרומה (₪)</Reveal>
@@ -136,7 +210,7 @@ export default function DonationsSection() {
                   transition={{ duration: 0.5, delay: 0.8 }}
                   style={{ gap: '20px' }}
                 >
-                  {selectedOption?.amounts.map((amount, index) => (
+                  {[50, 100, 200, 500].map((amount, index) => (
                     <motion.div
                       key={amount}
                       initial={{ scale: 0 }}
@@ -152,7 +226,7 @@ export default function DonationsSection() {
                         className={`h-12 w-full sm:w-auto text-lg font-semibold font-staff transition-all duration-300 cursor-pointer ${
                           customAmount === amount.toString()
                             ? "bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] hover:from-[#f5a383]/80 hover:to-[#9dd0bf]/80 text-white border-0"
-                            : "border-2 border-black hover:border-[#f5a383] hover:bg-[#f5a383]/10"
+                            : "border-2 border-black hover:border-[#f5a383] hover:bg-[#f5a383]/10 bg-[#fdf6ed]"
                         }`}
                         onClick={() => setCustomAmount(amount.toString())}
                       >
@@ -171,90 +245,12 @@ export default function DonationsSection() {
                     placeholder="סכום בש״ח"
                     value={customAmount}
                     onChange={(e) => setCustomAmount(e.target.value)}
-                    className="max-w-32 text-center border-2 focus:border-[#9dd0bf] font-bold text-base"
+                    className="max-w-32 text-center border-2 focus:border-[#9dd0bf] font-bold text-base bg-[#fdf6ed]"
                     style={{ marginRight: '15px' }}
                   />
                 </div>
 
-                {/* Payment Options */}
-                <motion.div
-                  className="flex flex-col sm:flex-row justify-center items-center gap-3 mt-6"
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 1.0 }}
-                >
-                  {/* Credit Card Payment */}
-                  <motion.button
-                    onClick={() => {
-                      setSelectedPayment('credit');
-                      console.log('מעבר לתרומה בכרטיס אשראי');
-                    }}
-                    className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 cursor-pointer ${
-                      selectedPayment === 'credit' 
-                        ? 'bg-[#f4a282] hover:bg-[#f4a282]/90' 
-                        : 'bg-white hover:bg-gray-50'
-                    }`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className="text-center flex-1">
-                      <div className="text-sm font-bold text-black font-staff">חיוב בודד / תשלומים</div>
-                      <div className="text-xs text-gray-600">באמצעות אשראי</div>
-                    </div>
-                    <div className="flex items-center justify-center w-10 h-10 bg-[#FFD700] rounded-lg flex-shrink-0">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                        <path d="M20 4H4C2.9 4 2 4.9 2 6V18C2 19.1 2.9 20 4 20H20C21.1 20 22 19.1 22 18V6C22 4.9 21.1 4 20 4ZM20 8H4V6H20V8ZM20 18H4V12H20V18ZM6 15H8V17H6V15ZM10 15H14V17H10V15Z"/>
-                      </svg>
-                    </div>
-                  </motion.button>
 
-                  {/* Israeli Shekel Payment */}
-                  <motion.button
-                    onClick={() => {
-                      setSelectedPayment('shekel');
-                      console.log('מעבר לתרומה בח״פ ישראלי');
-                    }}
-                    className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 cursor-pointer ${
-                      selectedPayment === 'shekel' 
-                        ? 'bg-[#f4a282] hover:bg-[#f4a282]/90' 
-                        : 'bg-white hover:bg-gray-50'
-                    }`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className="text-center flex-1">
-                      <div className="text-sm font-bold text-black font-staff">הו"ק אשראי</div>
-                      <div className="text-xs text-gray-600">ללא תפיסת מסגרת</div>
-                    </div>
-                    <div className="flex items-center justify-center w-10 h-10 bg-[#FFD700] rounded-lg flex-shrink-0">
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
-                        <path d="M12 2C13.1 2 14 2.9 14 4C14 5.1 13.1 6 12 6C10.9 6 10 5.1 10 4C10 2.9 10.9 2 12 2ZM21 9V7L15 1H5C3.9 1 3 1.9 3 3V21C3 22.1 3.9 23 5 23H19C20.1 23 21 22.1 21 21V9ZM19 9H14V4H19V9ZM7 7H12V9H7V7ZM7 11H17V13H7V11ZM7 15H17V17H7V15Z"/>
-                      </svg>
-                    </div>
-                  </motion.button>
-
-                  {/* Bit Payment */}
-                  <motion.button
-                    onClick={() => {
-                      setSelectedPayment('bit');
-                      console.log('מעבר לתרומה דרך ביט');
-                    }}
-                    className={`flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 border-black transition-all duration-300 shadow-md hover:shadow-lg w-full max-w-xs h-16 sm:flex-1 sm:min-w-0 cursor-pointer ${
-                      selectedPayment === 'bit' 
-                        ? 'bg-[#f4a282] hover:bg-[#f4a282]/90' 
-                        : 'bg-white hover:bg-gray-50'
-                    }`}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <div className="text-center flex-1">
-                      <div className="text-sm font-bold text-black font-staff">Bit ביט</div>
-                    </div>
-                    <div className="flex items-center justify-center w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
-                      <img src="/pictures/bit.webp" alt="Bit" className="w-full h-full object-cover" />
-                    </div>
-                  </motion.button>
-                </motion.div>
               </div>
 
               {/* Form Fields */}

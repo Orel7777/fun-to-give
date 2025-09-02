@@ -206,7 +206,7 @@ export default function OrganizationStory() {
                     <Reveal as="p" type="paragraph"
                       className="text-sm leading-relaxed text-gray-800 px-2"
                     >
-                      <strong>מרים אלימלך ז"ל</strong>,<br />
+                      <strong>מרים אלימלך ז"ל</strong><br />
                       שהקדישה את חייה לגידול ילדיה ושמשה כוח עזר בבית החולים סורוקה במסירות רבה ואהבת אדם.
                     </Reveal>
                   </div>
@@ -240,7 +240,7 @@ export default function OrganizationStory() {
                     <Reveal as="p" type="paragraph"
                       className="text-sm leading-relaxed text-gray-800 px-2"
                     >
-                      <strong>יוסף ומסעודה כנפו ז"ל</strong>, שעלו לארץ והקדישו את חייהם לגידול 14 ילדים, שאותם הם חינכו לערכים של אהבת הזולת ואהבת הארץ.
+                      <strong>יוסף ומסעודה כנפו ז"ל</strong><br/>  שהקדישו את חייהם לגידול 14 ילדים, שאותם הם חינכו לערכים של אהבת הזולת ואהבת הארץ.
                     </Reveal>
                   </div>
                 </div>
@@ -273,7 +273,7 @@ export default function OrganizationStory() {
                     <Reveal as="p" type="paragraph"
                       className="text-sm leading-relaxed text-gray-800 px-2"
                     >
-                      <strong>פרופסור יעקב זביצקי ז"ל</strong> ששירת את ישראל בכבוד ונתן בסתר לנצרכים ביחד עם אשתו יהודית תבדל"א.
+                      <strong>פרופסור יעקב זביצקי ז"ל</strong><br/> ששירת את ישראל בכבוד ונתן בסתר לנצרכים ביחד עם אשתו יהודית תבדל"א.
                     </Reveal>
                   </div>
                 </div>
@@ -309,7 +309,7 @@ export default function OrganizationStory() {
               }}
             >
               <div className="flex gap-3 justify-center items-center" dir="rtl">
-                <span>הצטרפו לנתניה</span>
+                <span>הצטרפו לנתינה</span>
                 <svg
                   width="24"
                   height="24"

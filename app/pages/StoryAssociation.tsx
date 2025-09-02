@@ -131,7 +131,7 @@ const BiblicalQuote: React.FC = () => {
   }, []);
 
   return (
-    <div ref={elementRef} className="relative py-16 sm:py-20">
+    <div ref={elementRef} className="relative py-16 sm:py-20" >
       <div className="relative bg-gradient-to-br from-[#f5a383]/10 to-[#9acdbe]/10 rounded-3xl p-12 sm:p-16 lg:p-20 border-2 border-[#f5a383]/20 overflow-hidden">
         {/* Background decorative elements */}
         <div className="absolute inset-0 opacity-10">

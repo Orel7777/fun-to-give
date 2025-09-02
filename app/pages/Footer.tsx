@@ -1,31 +1,63 @@
 import { Clock, Mail, MapPin, Phone, MessageCircle } from "lucide-react"
 import Script from "next/script"
 import Reveal from "../components/Reveal"
+import Image from "next/image"
+import { motion } from "framer-motion"
+import { useState, useEffect } from "react"
 
 export default function Footer() {
+  // זיהוי גודל המסך
+  const [isMobile, setIsMobile] = useState(false);
+  
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    // בדיקה ראשונית
+    checkScreenSize();
+    
+    // האזנה לשינויים בגודל המסך
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#fdf6ed] relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden" style={{ backgroundImage: "url('/pictures/bg-footer.webp')", backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      <style jsx>{`
+        @keyframes glitch {
+          0% { transform: translate(0); }
+          20% { transform: translate(-2px, 2px); }
+          40% { transform: translate(-2px, -2px); }
+          60% { transform: translate(2px, 2px); }
+          80% { transform: translate(2px, -2px); }
+          100% { transform: translate(0); }
+        }
+        @keyframes scanline {
+          0% { transform: translateY(-100vh); }
+          100% { transform: translateY(100vh); }
+        }
+      `}</style>
       {/* Lottie web component loader */}
       <Script
         src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"
         strategy="afterInteractive"
       />
-      {/* Background texture overlay */}
-      <div className="absolute inset-0 bg-[url('/placeholder-gierp.png')] opacity-10 mix-blend-overlay"></div>
+      {/* Top spacer to visually separate the footer background from the section above without shifting content */}
+      <div className="absolute top-0 left-0 right-0 h-10 sm:h-14 bg-[#fdf6ed] z-0"></div>
 
       {/* Main content container */}
       <div className="flex relative z-10 flex-col min-h-screen">
 
-
-
-
         {/* Footer section */}
-        <footer className="pb-8">
+        <footer className="mt-24 sm:mt-32 pb-8">
           <div className="container px-6 mx-auto">
-            <div className="flex justify-start" style={{ marginTop: '100px' }}>
-              {/* Contact section - moved to right */}
-                             <div className="space-y-8 max-w-md">
-                 <Reveal as="h2" type="heading" className="text-4xl md:text-5xl font-staff text-[#f5a383] tracking-wide text-right mt-8 flex items-center justify-start gap-4" dir="rtl">
+            <div className="flex flex-col lg:flex-row justify-between items-center lg:items-start" style={{ marginTop: '300px' }}>
+              
+              {/* Contact section - left side on desktop, top on mobile */}
+              <div className="space-y-8 max-w-md mb-8 lg:mb-0">
+                 <Reveal as="h2" type="heading" className="text-4xl md:text-5xl font-staff text-black tracking-wide text-right mt-8 flex items-center justify-start gap-4" dir="rtl">
                   צור קשר
                   <Reveal type="media" className="flex justify-center items-center w-12 h-12 md:w-16 md:h-16">
                     {/* @ts-expect-error - custom element */}
@@ -39,8 +71,8 @@ export default function Footer() {
                   </Reveal>
                 </Reveal>
 
-                                 {/* Social media icons */}
-                 <Reveal className="flex justify-start mt-8 space-x-6">
+                {/* Social media icons */}
+                <Reveal className="flex justify-start mt-8 space-x-6">
                   <div className="w-14 h-14 rounded-full border border-[#f5a383]/30 flex items-center justify-center hover:bg-[#9acdbe] hover:border-[#9acdbe] hover:scale-110 active:scale-95 transition-all duration-200 cursor-pointer">
                     <svg className="w-7 h-7 text-[#f5a383] hover:text-white transition-colors duration-200" viewBox="0 0 24 24" fill="currentColor">
                       <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43V7.56a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.99z" />
@@ -62,26 +94,98 @@ export default function Footer() {
                 <div className="space-y-8 text-left" dir="rtl">
                   
 
-                                     <div className="flex items-start space-x-4">
-                     <Mail className="w-7 h-7 text-[#f5a383] mt-1 flex-shrink-0" />
-                     <div>
-                     <Reveal as="p" type="paragraph" className="text-[#f5a383]/80 text-xl sm:text-2xl font-staff">keflatet@gmail.com</Reveal>
-                   </div>
-                   </div>
+                  <div className="flex items-start space-x-4">
+                    <Mail className="w-7 h-7 text-[#f5a383] mt-1 flex-shrink-0" />
+                    <div>
+                      <Reveal as="p" type="paragraph" className="text-black text-xl sm:text-2xl font-staff">keflatet@gmail.com</Reveal>
+                    </div>
+                  </div>
 
-                   <div className="flex items-start space-x-4">
-                     <MapPin className="w-7 h-7 text-[#f5a383] mt-1 flex-shrink-0" />
-                     <div className="w-full text-right sm:text-left">
-                     <Reveal as="p" type="paragraph" className="text-[#f5a383]/80 text-xl sm:text-2xl font-staff">חולדה הנביאה 10, ירושלים מיקוד 9511010</Reveal>
-                   </div>
-                   </div>
+                  <div className="flex items-start space-x-4">
+                    <MapPin className="w-7 h-7 text-[#f5a383] mt-1 flex-shrink-0" />
+                    <div className="w-full text-right sm:text-left">
+                      <Reveal as="p" type="paragraph" className="text-black text-xl sm:text-2xl font-staff">חולדה הנביאה 10, ירושלים מיקוד 9511010</Reveal>
+                    </div>
+                  </div>
 
-                   <div className="flex items-start space-x-4">
-                     <Phone className="w-7 h-7 text-[#f5a383] mt-1 flex-shrink-0" />
-                     <div>
-                     <Reveal as="p" type="paragraph" className="text-[#f5a383]/80 text-xl sm:text-2xl font-staff">053-221-7895</Reveal>
-                   </div>
+                  <div className="flex items-start space-x-4">
+                    <Phone className="w-7 h-7 text-[#f5a383] mt-1 flex-shrink-0" />
+                    <div>
+                      <Reveal as="p" type="paragraph" className="text-black text-xl sm:text-2xl font-staff">053-221-7895</Reveal>
+                    </div>
+                  </div>
                 </div>
+              </div>
+
+              {/* Logo section - right side on desktop, bottom on mobile - מוצמד לקצה הימני */}
+              <div className="flex flex-col items-center lg:items-end lg:mr-0 lg:pr-0">
+                {/* Logo with animation */}
+                <div
+                  className="flex relative justify-center items-center mx-auto lg:mx-0 w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56"
+                  style={{
+                    zIndex: 10,
+                    overflow: 'visible'
+                  }}
+                >
+                  <motion.div
+                    initial={{ scale: 1, y: 200 }}
+                    animate={isMobile ? {
+                      x: [0, 100, 100, -220, -220, 0, 0, 0, 0],
+                      y: [0, 0, 300, 300, 0, 0, 0, 0, 85],
+                      rotate: -360,
+                      scale: [1.5, 1.2, 1.3, 1.4, 1.5, 1.4, 1.3, 1.4, 1.5]
+                    } : {
+                      x: [0, 250, 250, -500, -500, 0, 0, 0, 45],
+                      y: [0, 0, 500, 500, 0, 0, 0, 0, 85],
+                      rotate: -360,
+                      scale: [1.5, 1.2, 1.3, 1.4, 1.5, 1.4, 1.3, 1.2, 1.5]
+                    }}
+                    transition={{ 
+                      duration: 6, 
+                      ease: "easeInOut", 
+                      times: [0, 0.02, 0.15, 0.375, 0.5, 0.625, 0.75, 0.875, 1]
+                    }}
+                    className="absolute z-50"
+                    style={{
+                      filter: 'drop-shadow(0 0 20px rgba(245, 163, 131, 0.9))',
+                      willChange: 'transform', 
+                      position: 'absolute',
+                      top: '0px',
+                      left: 0,
+                      right: 0,
+                      margin: '0 auto',
+                      pointerEvents: 'none',
+                      transform: 'translateY(0)'
+                    }}
+                  >
+                    <Image
+                      src="/noBg.png"
+                      alt="Logo"
+                      width={320}
+                      height={320}
+                      className="object-contain w-full h-full transition-all duration-500 ease-in-out cursor-pointer"
+                      style={{
+                        filter: 'drop-shadow(0 0 20px rgba(42, 43, 38, 0.3))',
+                      }}
+                      priority
+                    />
+                  </motion.div>
+                </div>
+
+                {/* Title Image */}
+                <div className="flex relative z-20 justify-center lg:justify-end items-center -mt-4 sm:-mt-4 md:-mt-4 lg:-mt-6 w-[160px] sm:w-[250px] md:w-[300px] transition-all duration-300">
+                  <Image
+                    src="/title.png"
+                    alt="כיף לתת - עם כל נתינה הלב מתמלא"
+                    width={300}
+                    height={100}
+                    className="object-contain transition-all duration-500 ease-in-out cursor-pointer hover:scale-105 hover:rotate-1 active:scale-95"
+                    style={{
+                      animation: 'glitch 3s ease-in-out infinite alternate',
+                      animationDelay: '0.5s'
+                    }}
+                    priority
+                  />
                 </div>
               </div>
             </div>
