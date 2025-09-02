@@ -2,7 +2,7 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import { Textarea } from "../components/ui/textarea"
@@ -23,6 +23,14 @@ export function ContactForm() {
   const [error, setError] = useState<string | null>(null)
   const [warning, setWarning] = useState<string | null>(null)
   const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({})
+
+  // Refs for focusing the first invalid field
+  const subjectRef = useRef<HTMLSelectElement | null>(null)
+  const firstNameRef = useRef<HTMLInputElement | null>(null)
+  const lastNameRef = useRef<HTMLInputElement | null>(null)
+  const phoneRef = useRef<HTMLInputElement | null>(null)
+  const emailRef = useRef<HTMLInputElement | null>(null)
+  const messageRef = useRef<HTMLTextAreaElement | null>(null)
 
   const validateField = (name: string, value: string) => {
     const errors: {[key: string]: string} = {}
@@ -71,6 +79,15 @@ export function ContactForm() {
     })
     
     setValidationErrors(errors)
+
+    // Focus the first invalid field for accessibility
+    if (errors.subject && subjectRef.current) subjectRef.current.focus()
+    else if (errors.firstName && firstNameRef.current) firstNameRef.current.focus()
+    else if (errors.lastName && lastNameRef.current) lastNameRef.current.focus()
+    else if (errors.phone && phoneRef.current) phoneRef.current.focus()
+    else if (errors.email && emailRef.current) emailRef.current.focus()
+    else if (errors.message && messageRef.current) messageRef.current.focus()
+
     return Object.keys(errors).length === 0
   }
 
@@ -146,11 +163,16 @@ export function ContactForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Subject Dropdown */}
         <div className="relative z-50">
+          <label htmlFor="subject" className="sr-only">נושא</label>
           <select 
+            id="subject"
+            ref={subjectRef}
             className={`w-full px-3 py-2 border rounded-md text-right bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer ${validationErrors.subject ? 'border-red-500' : 'border-gray-300'}`}
             value={formData.subject}
             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
             dir="rtl"
+            aria-invalid={Boolean(validationErrors.subject)}
+            aria-describedby={validationErrors.subject ? 'subject-error' : undefined}
           >
             <option value="" className="bg-white text-gray-900">בחר נושא</option>
             <option value="donation" className="bg-white text-gray-900">תרומה</option>
@@ -159,21 +181,26 @@ export function ContactForm() {
             <option value="other" className="bg-white text-gray-900">כל נושא אחר</option>
           </select>
           {validationErrors.subject && (
-            <p className="text-red-500 text-sm mt-1 text-right">{validationErrors.subject}</p>
+            <p id="subject-error" role="alert" aria-live="polite" className="text-red-500 text-sm mt-1 text-right">{validationErrors.subject}</p>
           )}
         </div>
 
         {/* First Name - Mobile first, Desktop second */}
         <div className="order-2 md:order-1">
+          <label htmlFor="firstName" className="sr-only">שם פרטי</label>
           <Input
+            id="firstName"
+            ref={firstNameRef}
             type="text"
             placeholder="שם פרטי"
             className={`text-right ${validationErrors.firstName ? 'border-red-500' : ''}`}
             value={formData.firstName}
             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+            aria-invalid={Boolean(validationErrors.firstName)}
+            aria-describedby={validationErrors.firstName ? 'firstName-error' : undefined}
           />
           {validationErrors.firstName && (
-            <p className="text-red-500 text-sm mt-1 text-right">{validationErrors.firstName}</p>
+            <p id="firstName-error" role="alert" aria-live="polite" className="text-red-500 text-sm mt-1 text-right">{validationErrors.firstName}</p>
           )}
         </div>
       </div>
@@ -181,61 +208,79 @@ export function ContactForm() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Last Name - Mobile second, Desktop first */}
         <div className="order-1 md:order-2">
+          <label htmlFor="lastName" className="sr-only">שם משפחה</label>
           <Input
+            id="lastName"
+            ref={lastNameRef}
             type="text"
             placeholder="שם משפחה"
             className={`text-right ${validationErrors.lastName ? 'border-red-500' : ''}`}
             value={formData.lastName}
             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+            aria-invalid={Boolean(validationErrors.lastName)}
+            aria-describedby={validationErrors.lastName ? 'lastName-error' : undefined}
           />
           {validationErrors.lastName && (
-            <p className="text-red-500 text-sm mt-1 text-right">{validationErrors.lastName}</p>
+            <p id="lastName-error" role="alert" aria-live="polite" className="text-red-500 text-sm mt-1 text-right">{validationErrors.lastName}</p>
           )}
         </div>
 
         {/* Phone - Mobile third, Desktop second */}
         <div className="order-2 md:order-1">
+          <label htmlFor="phone" className="sr-only">מס' נייד</label>
           <Input
+            id="phone"
+            ref={phoneRef}
             type="tel"
             placeholder="מס' נייד"
             className={`text-right ${validationErrors.phone ? 'border-red-500' : ''}`}
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+            aria-invalid={Boolean(validationErrors.phone)}
+            aria-describedby={validationErrors.phone ? 'phone-error' : undefined}
           />
           {validationErrors.phone && (
-            <p className="text-red-500 text-sm mt-1 text-right">{validationErrors.phone}</p>
+            <p id="phone-error" role="alert" aria-live="polite" className="text-red-500 text-sm mt-1 text-right">{validationErrors.phone}</p>
           )}
         </div>
       </div>
 
       {/* Email - Mobile fourth */}
       <div>
+        <label htmlFor="email" className="sr-only">אימייל</label>
         <Input
+          id="email"
+          ref={emailRef}
           type="email"
           placeholder="אימייל"
           className={`text-right ${validationErrors.email ? 'border-red-500' : ''}`}
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+          aria-invalid={Boolean(validationErrors.email)}
+          aria-describedby={validationErrors.email ? 'email-error' : undefined}
         />
         {validationErrors.email && (
-          <p className="text-red-500 text-sm mt-1 text-right">{validationErrors.email}</p>
+          <p id="email-error" role="alert" aria-live="polite" className="text-red-500 text-sm mt-1 text-right">{validationErrors.email}</p>
         )}
       </div>
 
       {/* Message */}
       <div>
+        <label htmlFor="message" className="sr-only">הודעה</label>
         <Textarea
+          id="message"
+          ref={messageRef}
           placeholder="אני מעוניין ב..."
           className={`text-right min-h-[120px] resize-none ${validationErrors.message ? 'border-red-500' : ''}`}
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+          aria-invalid={Boolean(validationErrors.message)}
+          aria-describedby={validationErrors.message ? 'message-error' : undefined}
         />
         {validationErrors.message && (
-          <p className="text-red-500 text-sm mt-1 text-right">{validationErrors.message}</p>
+          <p id="message-error" role="alert" aria-live="polite" className="text-red-500 text-sm mt-1 text-right">{validationErrors.message}</p>
         )}
       </div>
-
-      
 
       {/* Submit Button */}
       <div className="flex justify-center pt-4">

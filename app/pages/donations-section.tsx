@@ -194,7 +194,7 @@ export default function DonationsSection() {
       <div className="space-y-2">
         <label htmlFor="cardNumber" className="flex items-center text-lg font-medium font-staff text-gray-700">
           <CreditCard className="ml-2 w-4 h-4" />
-          מספר כרטיס אשראי *
+          מספר כרטיס אשראי <span className="text-red-500 ml-1">*</span>
         </label>
         <input
           id="cardNumber"
@@ -224,7 +224,7 @@ export default function DonationsSection() {
       <div className="space-y-2">
         <label htmlFor="expiryDate" className="flex items-center text-lg font-medium font-staff text-gray-700">
           <Calendar className="ml-2 w-4 h-4" />
-          תוקף *
+          תוקף <span className="text-red-500 ml-1">*</span>
         </label>
         <input
           id="expiryDate"
@@ -258,7 +258,7 @@ export default function DonationsSection() {
           <span className="ml-2 w-4 h-4 flex items-center justify-center bg-gray-200 rounded text-xs font-bold">
             CVV
           </span>
-          קוד אבטחה *
+          קוד אבטחה <span className="text-red-500 ml-1">*</span>
         </label>
         <input
           id="cvv"
@@ -286,7 +286,7 @@ export default function DonationsSection() {
       <div className="space-y-2 w-full max-w-md">
         <label htmlFor="cardHolder" className="flex items-center text-lg font-medium font-staff text-gray-700">
           <User className="ml-2 w-4 h-4" />
-          שם למחזיק הכרטיס *
+          שם למחזיק הכרטיס <span className="text-red-500 ml-1">*</span>
         </label>
         <input
           id="cardHolder"
@@ -737,7 +737,7 @@ export default function DonationsSection() {
       <div className="space-y-2">
         <label htmlFor="firstName" className="flex items-center text-lg font-medium font-staff text-gray-700">
           <User className="ml-2 w-4 h-4" />
-          שם פרטי *
+          שם פרטי <span className="text-red-500 ml-1">*</span>
         </label>
         <input
           id="firstName"
@@ -751,7 +751,7 @@ export default function DonationsSection() {
       <div className="space-y-2">
         <label htmlFor="lastName" className="flex items-center text-lg font-medium font-staff text-gray-700">
           <User className="ml-2 w-4 h-4" />
-          שם משפחה *
+          שם משפחה <span className="text-red-500 ml-1">*</span>
         </label>
         <input
           id="lastName"

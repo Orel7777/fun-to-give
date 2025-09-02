@@ -55,6 +55,36 @@ export async function POST(req: NextRequest) {
       notifications = false,
     } = body || {};
 
+    // Server-side validation - mirrors client rules
+    const fieldErrors: Record<string, string> = {};
+    const trim = (s: string) => (typeof s === 'string' ? s.trim() : '');
+    const subjectV = trim(subject);
+    const firstV = trim(firstName);
+    const lastV = trim(lastName);
+    const phoneV = trim(phone).replace(/\s/g, '');
+    const emailV = trim(email);
+    const messageV = trim(message);
+
+    if (!subjectV) fieldErrors.subject = 'נא לבחור נושא';
+    if (!firstV) fieldErrors.firstName = 'נא למלא שם פרטי';
+    else if (firstV.length < 2) fieldErrors.firstName = 'שם פרטי חייב להכיל לפחות 2 תווים';
+    if (!lastV) fieldErrors.lastName = 'נא למלא שם משפחה';
+    else if (lastV.length < 2) fieldErrors.lastName = 'שם משפחה חייב להכיל לפחות 2 תווים';
+    if (!phoneV) fieldErrors.phone = 'נא למלא מספר טלפון';
+    else if (!/^0\d{1,2}-?\d{7}$|^05\d-?\d{7}$/.test(phoneV)) fieldErrors.phone = 'נא למלא מספר טלפון תקין';
+    if (!emailV) fieldErrors.email = 'נא למלא כתובת אימייל';
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailV)) fieldErrors.email = 'נא למלא כתובת אימייל תקינה';
+    if (!messageV) fieldErrors.message = 'נא למלא הודעה';
+    else if (messageV.length < 10) fieldErrors.message = 'ההודעה חייבת להכיל לפחות 10 תווים';
+
+    if (Object.keys(fieldErrors).length > 0) {
+      return NextResponse.json(
+        { error: 'קיימות שגיאות בטופס', fieldErrors },
+        { status: 400 }
+      );
+    }
+
+    // Optional fallback: at least some contact is present (redundant after validation but kept defensive)
     if (!email && !phone) {
       return NextResponse.json({ error: 'נא למלא אימייל או טלפון ליצירת קשר' }, { status: 400 });
     }

@@ -1,11 +1,12 @@
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
+import type { Variants } from "framer-motion"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 } 
 
-export const SlidUp = (delay = 0) => {
+export const SlidUp = (delay = 0): Variants => {
   return {
     hidden: {
       opacity: 0,
@@ -18,14 +19,14 @@ export const SlidUp = (delay = 0) => {
       scale: 1,
       transition: {
         duration: 1.2,
-        ease: [0.16, 1, 0.3, 1],
+        ease: [0.16, 1, 0.3, 1] as const,
         delay: delay,
       },
     },
   };
 };
 
-export const SlidUpLeft = (delay = 0) => {
+export const SlidUpLeft = (delay = 0): Variants => {
   return {
     hidden: {
       opacity: 0,
