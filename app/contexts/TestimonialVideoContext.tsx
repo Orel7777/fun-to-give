@@ -47,6 +47,12 @@ export const TestimonialVideoProvider = ({ children }: TestimonialVideoProviderP
   const stopAllVideos = useCallback(() => {
     console.log('⏹️ עצירת כל הסרטונים');
     setCurrentPlayingVideoState(null);
+    // שדר אירוע גלובלי כדי שנוכל למנוע auto-resume בצד הווידאו
+    if (typeof window !== 'undefined') {
+      try {
+        window.dispatchEvent(new CustomEvent('testimonial:forceStop'));
+      } catch {}
+    }
     
     // עצירת כל הסרטונים בדף
     const videos = document.querySelectorAll('video');

@@ -328,6 +328,21 @@ const TestimonialVideo = ({ videoPath, title, className = '', videoId, thumbnail
     userWantsPlayRef.current = false;
   };
 
+  // מאזין גלובלי לעצירה מאולצת (כשלוחצים להפעיל אודיו)
+  useEffect(() => {
+    const onForceStop = () => {
+      stopPlayback();
+    };
+    if (typeof window !== 'undefined') {
+      window.addEventListener('testimonial:forceStop', onForceStop);
+    }
+    return () => {
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('testimonial:forceStop', onForceStop);
+      }
+    };
+  }, []);
+
   if (error) {
     return (
       <div className={`relative aspect-video bg-gray-200 rounded-lg flex items-center justify-center ${className}`}>

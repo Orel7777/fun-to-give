@@ -50,43 +50,46 @@ const testimonials = [
 
 function TestimonialsSection() {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const [currentPlayingFamilyAudio, setCurrentPlayingFamilyAudio] = useState<string | null>(null);
   const [animationsPaused, setAnimationsPaused] = useState(false);
   const [buttonPressed, setButtonPressed] = useState<'prev' | 'next' | null>(null);
   const [isNavigating, setIsNavigating] = useState(false); // מניעת לחיצות כפולות
+  const { stopAllVideos, setCurrentPlayingFamilyAudio, currentPlayingFamilyAudio, stopFamilyAudio } = useTestimonialVideo();
 
-  // פונקציה לטיפול בהשמעת אודיו
+  // פונקציה לטיפול בהשמעת אודיו (בבלעדיות מול וידאו)
   const handleAudioPlay = (audioPath: string) => {
-    // עצור כל אודיו אחר
+    const audio = document.getElementById(audioPath) as HTMLAudioElement | null;
+    if (!audio) return;
+
+    if (currentPlayingFamilyAudio === audioPath) {
+      // אם לוחצים שוב על אותו אודיו – עצירה
+      audio.pause();
+      audio.currentTime = 0;
+      setCurrentPlayingFamilyAudio(null);
+      setAnimationsPaused(false);
+      return;
+    }
+
+    // מתחילים אודיו חדש: עצור כל הסרטונים שרצים
+    stopAllVideos();
+
+    // עצור אודיו קודם אם יש
     if (currentPlayingFamilyAudio) {
-      const currentAudio = document.getElementById(currentPlayingFamilyAudio) as HTMLAudioElement;
-      if (currentAudio) {
-        currentAudio.pause();
-        currentAudio.currentTime = 0;
+      const prev = document.getElementById(currentPlayingFamilyAudio) as HTMLAudioElement | null;
+      if (prev) {
+        prev.pause();
+        prev.currentTime = 0;
       }
     }
 
-    const audio = document.getElementById(audioPath) as HTMLAudioElement;
-    if (audio) {
-      if (currentPlayingFamilyAudio === audioPath) {
-        // אם לוחצים על אותו אודיו, עצור אותו
-        audio.pause();
-        audio.currentTime = 0;
-        setCurrentPlayingFamilyAudio(null);
-        setAnimationsPaused(false);
-      } else {
-        // נגן אודיו חדש ועצור אנימציות
-        audio.play();
-        setCurrentPlayingFamilyAudio(audioPath);
-        setAnimationsPaused(true);
-        
-        // חזור לאנימציות כשהאודיו נגמר
-        audio.onended = () => {
-          setCurrentPlayingFamilyAudio(null);
-          setAnimationsPaused(false);
-        };
-      }
-    }
+    // נגן אודיו חדש
+    audio.play();
+    setCurrentPlayingFamilyAudio(audioPath);
+    setAnimationsPaused(true);
+
+    audio.onended = () => {
+      setCurrentPlayingFamilyAudio(null);
+      setAnimationsPaused(false);
+    };
   };
 
   // פונקציות לניווט בקרוסלה
