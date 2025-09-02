@@ -116,7 +116,8 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
                 className="flex relative justify-center items-center mx-auto -mt-16 w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 hero-image-container"
                 style={{
                   zIndex: 10,
-                  overflow: 'visible'
+                  overflow: 'visible',
+                  marginTop: '-24px'
                 }}
               >
                 {/* זו האנימציה של הלבבות - כאן תוכל להתאים את המסלול */}
