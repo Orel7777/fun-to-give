@@ -51,7 +51,7 @@ export default function Footer() {
       <div className="flex relative z-10 flex-col min-h-screen">
 
         {/* Footer section */}
-        <footer className="mt-24 sm:mt-32 pb-8">
+        <footer className="">
           <div className="container px-6 mx-auto">
             <div className="flex flex-col lg:flex-row justify-between items-center lg:items-start" style={{ marginTop: '300px' }}>
               
@@ -192,6 +192,29 @@ export default function Footer() {
 
 
           </div>
+        </footer>
+        {/* Copyright footer (no background) */}
+        <footer className="text-center py-6">
+          <p className="text-sm text-black">
+            © {new Date().getFullYear()} כל הזכויות שמורות | האתר נבנה בשיתוף פעולה בין{" "}
+            <a
+              href="https://www.orelweb.co.il/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              אוראל בוקריס
+            </a>{" "}
+            לבין{" "}
+            <a
+              href="https://www.codesculpt.co.il/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:underline"
+            >
+              אייל יחיא
+            </a>
+          </p>
         </footer>
       </div>
     </div>
