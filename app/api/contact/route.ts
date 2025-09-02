@@ -2,9 +2,10 @@ import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
-// Function to simulate WhatsApp message sending (for testing)
+// WhatsApp sender (Twilio or simulated)
 async function sendWhatsAppMessage(phoneNumber: string, message: string) {
-  const whatsappPhone = '972532217895'; // Convert 0532217895 to international format
+  // Destination number: env > argument > default
+  const whatsappPhone = (process.env.WHATSAPP_TO_NUMBER || phoneNumber || '972532217895').replace(/^\+/, '');
   
   // Check if Twilio credentials are available
   const twilioAccountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -93,7 +94,8 @@ export async function POST(req: NextRequest) {
 
     // Email sending
     try {
-      const to = 'keflatet@gmail.com'; // Fixed typo from gamil to gmail
+      // Destination email: env > default
+      const to = process.env.CONTACT_TO_EMAIL || 'keflatet@gmail.com';
       
       // Check if email credentials are available
       const smtpHost = process.env.SMTP_HOST;
@@ -164,7 +166,7 @@ export async function POST(req: NextRequest) {
 הודעה: ${message || '-'}
       `.trim();
 
-      await sendWhatsAppMessage('972532217895', whatsappMessage);
+      await sendWhatsAppMessage(process.env.WHATSAPP_TO_NUMBER || '972532217895', whatsappMessage);
       results.whatsapp = true;
     } catch (whatsappError: any) {
       console.error('WhatsApp sending failed:', whatsappError);
