@@ -14,7 +14,7 @@ export default function JobPostPage() {
       <div className="container mx-auto px-4 pt-32 py-8 max-w-6xl">
         {/* Page Title */}
         <motion.h1
-          className="mb-8 text-3xl md:text-4xl font-bold font-staff text-center text-gray-800"
+          className="mb-8 text-3xl md:text-4xl font-bold font-staff text-center text-gray-800" style={{ marginTop: '120px' }}
           variants={SlidUpRight(0) as any}
           initial="hidden"
           animate="visible"

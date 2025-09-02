@@ -70,14 +70,13 @@ const FormsDownload: React.FC = () => {
       <NavigationBar />
       <div className="container px-4 pt-32 py-12 mx-auto">
         <motion.h1
-          className="mb-4 md:mb-6 text-4xl font-bold font-staff text-center text-gray-800"
+          className="mb-4 md:mb-6 text-4xl font-bold font-staff text-center text-gray-800" style={{ marginTop: '120px' }}
           variants={SlidUpLeft(0)}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
         >
-          טפסים רשמיים
-        </motion.h1>
+          טפסים רשמיים של העמותה </motion.h1>
         
         {/* Icons row under the title */}
         <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mt-10 md:mt-14 mb-10">
