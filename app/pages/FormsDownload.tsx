@@ -101,10 +101,10 @@ const FormsDownload: React.FC = () => {
         {/* Forms Grid */}
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4" style={{ marginTop: '90px' }}>
           {formsData.map((form, index) => (
-            <div key={index} className="flex flex-col">
+            <div key={index} className="flex flex-col h-full">
               {/* כותרת הטופס - מחוץ למסגרת */}
               <motion.h3
-                className="text-xl font-bold font-staff text-gray-800 text-center"
+                className="text-xl font-bold font-staff text-gray-800 text-center h-16 flex items-center justify-center"
                 style={{ marginBottom: '20px' }}
                 variants={SlidUpLeft(0.05)}
                 initial="hidden"
@@ -115,54 +115,56 @@ const FormsDownload: React.FC = () => {
               </motion.h3>
 
               {/* הטופס במסגרת */}
-              <Card>
-                <motion.div
-                  className="text-center bg-white rounded-lg shadow-lg flex flex-col h-full p-0 cursor-pointer"
-                  variants={SlidUpLeft(0.05)}
+              <div className="flex-1 flex flex-col">
+                <Card>
+                  <motion.div
+                    className="text-center bg-white rounded-lg shadow-lg flex flex-col h-full p-0 cursor-pointer"
+                    variants={SlidUpLeft(0.05)}
+                    initial="hidden"
+                    whileInView="visible"
+                    viewport={{ once: true, amount: 0.2 }}
+                    onClick={() => {
+                      const link = document.createElement('a');
+                      link.href = form.pdfPath;
+                      link.download = form.downloadName;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <motion.div
+                      className="relative w-full h-80 mx-auto"
+                      variants={SlidUpLeft(0.15)}
+                    >
+                      <Image
+                        src={form.imageSrc}
+                        alt={form.imageAlt}
+                        fill
+                        sizes="(max-width: 640px) 100vw, 300px"
+                        className="rounded-lg shadow-md object-contain object-center"
+                      />
+                    </motion.div>
+                  </motion.div>
+                </Card>
+
+                {/* כפתור צפייה - מחוץ למסגרת */}
+                <motion.a
+                  href={form.pdfPath}
+                  download={form.downloadName}
+                  className="block text-center px-4 py-3 bg-white border-2 border-[#f5a383] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer mt-4"
+                  style={{ color: '#f5a383' }}
+                  variants={SlidUpLeft(0.1)}
                   initial="hidden"
                   whileInView="visible"
                   viewport={{ once: true, amount: 0.2 }}
-                  onClick={() => {
-                    const link = document.createElement('a');
-                    link.href = form.pdfPath;
-                    link.download = form.downloadName;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                  }}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  <motion.div
-                    className="relative w-full max-w-[320px] sm:max-w-[340px] aspect-[210/297] mx-auto"
-                    variants={SlidUpLeft(0.15)}
-                  >
-                    <Image
-                      src={form.imageSrc}
-                      alt={form.imageAlt}
-                      fill
-                      sizes="(max-width: 640px) 100vw, 300px"
-                      className="rounded-lg shadow-md object-cover object-center"
-                    />
-                  </motion.div>
-                </motion.div>
-              </Card>
-
-              {/* כפתור צפייה - מחוץ למסגרת */}
-              <motion.a
-                href={form.pdfPath}
-                download={form.downloadName}
-                className="block text-center px-4 py-3 bg-white border-2 border-[#f5a383] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer mt-4"
-                style={{ color: '#f5a383' }}
-                variants={SlidUpLeft(0.1)}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, amount: 0.2 }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                לצפייה בתעודה לחץ על הטופס
-              </motion.a>
+                  לצפייה בתעודה לחץ על הטופס
+                </motion.a>
+              </div>
             </div>
           ))}
         </div>

@@ -9,7 +9,7 @@ import NavigationBar from "../pages/Navbar"
 
 export default function JobPostPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#fdf6ed' }}>
       <NavigationBar />
       <div className="container mx-auto px-4 pt-32 py-8 max-w-6xl">
         {/* Page Title */}

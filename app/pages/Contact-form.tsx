@@ -22,6 +22,57 @@ export function ContactForm() {
   const [sent, setSent] = useState<null | boolean>(null)
   const [error, setError] = useState<string | null>(null)
   const [warning, setWarning] = useState<string | null>(null)
+  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({})
+
+  const validateField = (name: string, value: string) => {
+    const errors: {[key: string]: string} = {}
+    
+    switch (name) {
+      case 'subject':
+        if (!value.trim()) errors.subject = 'נא לבחור נושא'
+        break
+      case 'firstName':
+        if (!value.trim()) errors.firstName = 'נא למלא שם פרטי'
+        else if (value.trim().length < 2) errors.firstName = 'שם פרטי חייב להכיל לפחות 2 תווים'
+        break
+      case 'lastName':
+        if (!value.trim()) errors.lastName = 'נא למלא שם משפחה'
+        else if (value.trim().length < 2) errors.lastName = 'שם משפחה חייב להכיל לפחות 2 תווים'
+        break
+      case 'phone':
+        if (!value.trim()) errors.phone = 'נא למלא מספר טלפון'
+        else if (!/^0\d{1,2}-?\d{7}$|^05\d-?\d{7}$/.test(value.replace(/\s/g, ''))) {
+          errors.phone = 'נא למלא מספר טלפון תקין'
+        }
+        break
+      case 'email':
+        if (!value.trim()) errors.email = 'נא למלא כתובת אימייל'
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          errors.email = 'נא למלא כתובת אימייל תקינה'
+        }
+        break
+      case 'message':
+        if (!value.trim()) errors.message = 'נא למלא הודעה'
+        else if (value.trim().length < 10) errors.message = 'ההודעה חייבת להכיל לפחות 10 תווים'
+        break
+    }
+    
+    return errors
+  }
+
+  const validateForm = () => {
+    const errors: {[key: string]: string} = {}
+    
+    Object.keys(formData).forEach(key => {
+      if (key !== 'notifications') {
+        const fieldErrors = validateField(key, formData[key as keyof typeof formData] as string)
+        Object.assign(errors, fieldErrors)
+      }
+    })
+    
+    setValidationErrors(errors)
+    return Object.keys(errors).length === 0
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,11 +80,15 @@ export function ContactForm() {
     setSent(null)
     setError(null)
     setWarning(null)
+    setValidationErrors({})
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      setSubmitting(false)
+      return
+    }
+    
     try {
-      // Basic client validation
-      if (!formData.email && !formData.phone) {
-        throw new Error("נא למלא אימייל או טלפון ליצירת קשר")
-      }
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -92,7 +147,7 @@ export function ContactForm() {
         {/* Subject Dropdown */}
         <div className="relative z-50">
           <select 
-            className="w-full px-3 py-2 border border-gray-300 rounded-md text-right bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
+            className={`w-full px-3 py-2 border rounded-md text-right bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer ${validationErrors.subject ? 'border-red-500' : 'border-gray-300'}`}
             value={formData.subject}
             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
             dir="rtl"
@@ -103,63 +158,81 @@ export function ContactForm() {
             <option value="about" className="bg-white text-gray-900">על העמותה</option>
             <option value="other" className="bg-white text-gray-900">כל נושא אחר</option>
           </select>
+          {validationErrors.subject && (
+            <p className="text-red-500 text-sm mt-1 text-right">{validationErrors.subject}</p>
+          )}
         </div>
 
-        {/* First Name */}
-        <div>
+        {/* First Name - Mobile first, Desktop second */}
+        <div className="order-2 md:order-1">
           <Input
             type="text"
             placeholder="שם פרטי"
-            className="text-right"
+            className={`text-right ${validationErrors.firstName ? 'border-red-500' : ''}`}
             value={formData.firstName}
             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
           />
+          {validationErrors.firstName && (
+            <p className="text-red-500 text-sm mt-1 text-right">{validationErrors.firstName}</p>
+          )}
         </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Phone */}
-        <div>
-          <Input
-            type="tel"
-            placeholder="מס' נייד"
-            className="text-right"
-            value={formData.phone}
-            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-          />
-        </div>
-
-        {/* Last Name */}
-        <div>
+        {/* Last Name - Mobile second, Desktop first */}
+        <div className="order-1 md:order-2">
           <Input
             type="text"
             placeholder="שם משפחה"
-            className="text-right"
+            className={`text-right ${validationErrors.lastName ? 'border-red-500' : ''}`}
             value={formData.lastName}
             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
           />
+          {validationErrors.lastName && (
+            <p className="text-red-500 text-sm mt-1 text-right">{validationErrors.lastName}</p>
+          )}
+        </div>
+
+        {/* Phone - Mobile third, Desktop second */}
+        <div className="order-2 md:order-1">
+          <Input
+            type="tel"
+            placeholder="מס' נייד"
+            className={`text-right ${validationErrors.phone ? 'border-red-500' : ''}`}
+            value={formData.phone}
+            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+          />
+          {validationErrors.phone && (
+            <p className="text-red-500 text-sm mt-1 text-right">{validationErrors.phone}</p>
+          )}
         </div>
       </div>
 
-      {/* Email */}
+      {/* Email - Mobile fourth */}
       <div>
         <Input
           type="email"
           placeholder="אימייל"
-          className="text-right"
+          className={`text-right ${validationErrors.email ? 'border-red-500' : ''}`}
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         />
+        {validationErrors.email && (
+          <p className="text-red-500 text-sm mt-1 text-right">{validationErrors.email}</p>
+        )}
       </div>
 
       {/* Message */}
       <div>
         <Textarea
           placeholder="אני מעוניין ב..."
-          className="text-right min-h-[120px] resize-none"
+          className={`text-right min-h-[120px] resize-none ${validationErrors.message ? 'border-red-500' : ''}`}
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
         />
+        {validationErrors.message && (
+          <p className="text-red-500 text-sm mt-1 text-right">{validationErrors.message}</p>
+        )}
       </div>
 
       

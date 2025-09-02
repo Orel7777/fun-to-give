@@ -16,16 +16,16 @@ export default function ContactFormPage() {
   // 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen" style={{ backgroundColor: '#fdf6ed' }}>
       <NavigationBar />
-      <div className="pt-20 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mx-auto">
+      <div className="flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8 pt-24">
+        <div className="w-full max-w-2xl">
         <motion.div
           variants={SlidUpRight(0)}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
-          className="bg-white rounded-2xl shadow-xl p-8"
+          className="bg-white rounded-2xl shadow-xl p-8 mb-8"
         >
           <ContactForm />
         </motion.div>
@@ -36,7 +36,7 @@ export default function ContactFormPage() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
-          className="flex justify-center mt-8"
+          className="flex justify-center"
         >
           <Button
             onClick={handleBackToSite}

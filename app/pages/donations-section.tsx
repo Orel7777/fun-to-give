@@ -8,6 +8,157 @@ export default function DonationsSection() {
   const [donationType, setDonationType] = useState('monthly')
   const [customAmount, setCustomAmount] = useState("")
   const [selectedPayment, setSelectedPayment] = useState("")
+  const [donationAmount, setDonationAmount] = useState("")
+  const [termsAccepted, setTermsAccepted] = useState(false)
+  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({})
+
+  // Validation functions
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    return emailRegex.test(email)
+  }
+
+  const validatePhone = (phone: string) => {
+    const phoneRegex = /^[0-9\-\+\s\(\)]{9,15}$/
+    return phoneRegex.test(phone)
+  }
+
+  const validateCreditCard = (cardNumber: string) => {
+    const cleanNumber = cardNumber.replace(/\s/g, '')
+    return cleanNumber.length >= 13 && cleanNumber.length <= 19 && /^\d+$/.test(cleanNumber)
+  }
+
+  const validateCVV = (cvv: string) => {
+    return /^\d{3,4}$/.test(cvv)
+  }
+
+  const validateExpiryDate = (expiry: string) => {
+    const expiryRegex = /^(0[1-9]|1[0-2])\/([0-9]{2})$/
+    return expiryRegex.test(expiry)
+  }
+
+  const handleFieldValidation = (fieldId: string, value: string, type: string) => {
+    let errorMessage = ""
+    
+    switch (type) {
+      case 'email':
+        if (value && !validateEmail(value)) {
+          errorMessage = "כתובת דוא״ל לא תקינה. אנא הזינו כתובת דוא״ל תקינה"
+        }
+        break
+      case 'phone':
+        if (value && !validatePhone(value)) {
+          errorMessage = "מספר טלפון לא תקין. אנא הזינו מספר טלפון תקין"
+        }
+        break
+      case 'creditCard':
+        if (value && !validateCreditCard(value)) {
+          errorMessage = "מספר כרטיס אשראי לא תקין. אנא הזינו מספר כרטיס תקין"
+        }
+        break
+      case 'cvv':
+        if (value && !validateCVV(value)) {
+          errorMessage = "קוד אבטחה לא תקין. אנא הזינו 3-4 ספרות"
+        }
+        break
+      case 'expiry':
+        if (value && !validateExpiryDate(value)) {
+          errorMessage = "תאריך תוקף לא תקין. אנא הזינו בפורמט MM/YY"
+        }
+        break
+    }
+
+    setValidationErrors(prev => ({
+      ...prev,
+      [fieldId]: errorMessage
+    }))
+  }
+
+  const handleSubmit = () => {
+    if (!termsAccepted) {
+      alert("יש לאשר את תקנון האתר על מנת להמשיך")
+      return
+    }
+
+    // Check if donation amount is selected
+    if (!donationAmount || donationAmount === "0") {
+      alert("אנא בחרו סכום תרומה")
+      return
+    }
+
+    // Validate required fields based on selected payment method
+    const missingFields: string[] = []
+    
+    if (selectedPayment === 'credit') {
+      const cardNumber = (document.getElementById('cardNumber') as HTMLInputElement)?.value
+      const expiryDate = (document.getElementById('expiryDate') as HTMLInputElement)?.value
+      const cvv = (document.getElementById('cvv') as HTMLInputElement)?.value
+      const cardHolder = (document.getElementById('cardHolder') as HTMLInputElement)?.value
+      const email = (document.getElementById('email') as HTMLInputElement)?.value
+      const phone = (document.getElementById('phone') as HTMLInputElement)?.value
+
+      if (!cardNumber) missingFields.push("מספר כרטיס אשראי")
+      if (!expiryDate) missingFields.push("תאריך תוקף")
+      if (!cvv) missingFields.push("קוד אבטחה")
+      if (!cardHolder) missingFields.push("שם מחזיק הכרטיס")
+      if (!email) missingFields.push("דוא״ל")
+      if (!phone) missingFields.push("טלפון")
+    } else if (selectedPayment === 'shekel') {
+      const cardNumberShekel = (document.getElementById('cardNumberShekel') as HTMLInputElement)?.value
+      const validityShekel = (document.getElementById('validityShekel') as HTMLInputElement)?.value
+      const shekelFullName = (document.getElementById('shekelFullName') as HTMLInputElement)?.value
+      const shekelEmail = (document.getElementById('shekelEmail') as HTMLInputElement)?.value
+      const shekelPhone = (document.getElementById('shekelPhone') as HTMLInputElement)?.value
+      const dayOfMonthShekel = (document.getElementById('dayOfMonthShekel') as HTMLInputElement)?.value
+
+      if (!cardNumberShekel) missingFields.push("מספר כרטיס אשראי")
+      if (!validityShekel) missingFields.push("תאריך תוקף")
+      if (!shekelFullName) missingFields.push("שם מלא")
+      if (!shekelEmail) missingFields.push("דוא״ל")
+      if (!shekelPhone) missingFields.push("טלפון")
+      if (!dayOfMonthShekel) missingFields.push("יום גביה בחודש")
+    } else if (selectedPayment === 'bit') {
+      const bitFullName = (document.getElementById('bitFullName') as HTMLInputElement)?.value
+      const bitEmail = (document.getElementById('bitEmail') as HTMLInputElement)?.value
+      const bitPhone = (document.getElementById('bitPhone') as HTMLInputElement)?.value
+
+      if (!bitFullName) missingFields.push("שם מלא")
+      if (!bitEmail) missingFields.push("דוא״ל")
+      if (!bitPhone) missingFields.push("טלפון")
+    } else {
+      // Original fields validation
+      const firstName = (document.getElementById('firstName') as HTMLInputElement)?.value
+      const lastName = (document.getElementById('lastName') as HTMLInputElement)?.value
+      const email = (document.getElementById('email') as HTMLInputElement)?.value
+      const phone = (document.getElementById('phone') as HTMLInputElement)?.value
+
+      if (!firstName) missingFields.push("שם פרטי")
+      if (!lastName) missingFields.push("שם משפחה")
+      if (!email) missingFields.push("דוא״ל")
+      if (!phone) missingFields.push("טלפון")
+    }
+
+    if (missingFields.length > 0) {
+      alert(`אנא מלאו את השדות הבאים: ${missingFields.join(', ')}`)
+      return
+    }
+
+    // Check for validation errors
+    const hasErrors = Object.values(validationErrors).some(error => error !== "")
+    if (hasErrors) {
+      alert("אנא תקנו את השגיאות בטופס לפני המשך")
+      return
+    }
+
+    // Continue with form submission logic
+    console.log('כפתור תרומה נלחץ - כל הוולידציות עברו')
+  }
+
+  const ValidationError = ({ fieldId }: { fieldId: string }) => (
+    validationErrors[fieldId] ? (
+      <p className="text-red-500 text-sm mt-1">{validationErrors[fieldId]}</p>
+    ) : null
+  )
 
   const donationOptions = [
     {
@@ -50,10 +201,24 @@ export default function DonationsSection() {
           type="text"
           placeholder="0000 0000 0000 0000"
           required
-          className="border-2 border-black focus:border-[#9dd0bf] w-60 px-3 py-2 rounded-md"
+          pattern="[0-9\s]{13,19}"
+          className="border-2 border-black focus:border-[#9dd0bf] w-60 px-3 py-2 rounded-md bg-[#fdf6ed]"
           aria-label="מספר כרטיס אשראי - שדה חובה"
           maxLength={19}
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            let value = target.value.replace(/\D/g, '');
+            value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+            target.value = value;
+          }}
+          onBlur={(e) => handleFieldValidation('cardNumber', e.target.value, 'creditCard')}
+          onChange={(e) => {
+            if (validationErrors['cardNumber']) {
+              handleFieldValidation('cardNumber', e.target.value, 'creditCard')
+            }
+          }}
         />
+        <ValidationError fieldId="cardNumber" />
       </div>
 
       <div className="space-y-2">
@@ -66,10 +231,26 @@ export default function DonationsSection() {
           type="text"
           placeholder="MM/YY"
           required
-          className="border-2 border-black focus:border-[#9dd0bf] w-32 px-3 py-2 rounded-md text-center"
+          pattern="(0[1-9]|1[0-2])\/([0-9]{2})"
+          className="border-2 border-black focus:border-[#9dd0bf] w-32 px-3 py-2 rounded-md text-center bg-[#fdf6ed]"
           aria-label="תאריך תוקף - שדה חובה"
           maxLength={5}
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            let value = target.value.replace(/\D/g, '');
+            if (value.length >= 2) {
+              value = value.substring(0, 2) + '/' + value.substring(2, 4);
+            }
+            target.value = value;
+          }}
+          onBlur={(e) => handleFieldValidation('expiryDate', e.target.value, 'expiry')}
+          onChange={(e) => {
+            if (validationErrors['expiryDate']) {
+              handleFieldValidation('expiryDate', e.target.value, 'expiry')
+            }
+          }}
         />
+        <ValidationError fieldId="expiryDate" />
       </div>
 
       <div className="space-y-2">
@@ -84,10 +265,22 @@ export default function DonationsSection() {
           type="text"
           placeholder="123"
           required
-          className="border-2 border-black focus:border-[#9dd0bf] w-24 px-3 py-2 rounded-md text-center"
+          pattern="[0-9]{3,4}"
+          className="border-2 border-black focus:border-[#9dd0bf] w-24 px-3 py-2 rounded-md text-center bg-[#fdf6ed]"
           aria-label="קוד אבטחה - שדה חובה"
           maxLength={4}
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            target.value = target.value.replace(/\D/g, '');
+          }}
+          onBlur={(e) => handleFieldValidation('cvv', e.target.value, 'cvv')}
+          onChange={(e) => {
+            if (validationErrors['cvv']) {
+              handleFieldValidation('cvv', e.target.value, 'cvv')
+            }
+          }}
         />
+        <ValidationError fieldId="cvv" />
       </div>
 
       <div className="space-y-2 w-full max-w-md">
@@ -100,7 +293,7 @@ export default function DonationsSection() {
           type="text"
           placeholder="כפי שמופיע על הכרטיס"
           required
-          className="border-2 border-black focus:border-[#9dd0bf] w-full px-3 py-2 rounded-md"
+          className="border-2 border-black focus:border-[#9dd0bf] w-full px-3 py-2 rounded-md bg-[#fdf6ed]"
           aria-label="שם מחזיק הכרטיס - שדה חובה"
         />
       </div>
@@ -112,7 +305,7 @@ export default function DonationsSection() {
         </label>
         <select
           id="installments"
-          className="border-2 border-black focus:border-[#9dd0bf] w-40 px-3 py-2 rounded-md"
+          className="border-2 border-black focus:border-[#9dd0bf] w-40 px-3 py-2 rounded-md bg-[#fdf6ed]"
           aria-label="בחירת מספר תשלומים"
         >
           <option value="1">תשלום אחד</option>
@@ -128,27 +321,54 @@ export default function DonationsSection() {
       <div className="space-y-2">
         <label htmlFor="email" className="flex items-center text-lg font-medium font-staff text-gray-700">
           <Mail className="ml-2 w-4 h-4" />
-          דוא״ל
+          <span className="text-red-500">*</span>
+          דוא״ל:
         </label>
         <input
           id="email"
           type="email"
-          className="border-2 border-black focus:border-[#9dd0bf] w-56 px-3 py-2 rounded-md"
-          aria-label="כתובת דוא״ל - שדה אופציונלי"
+          required
+          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+          className="border-2 border-black focus:border-[#9dd0bf] w-64 px-3 py-2 rounded-md bg-[#fdf6ed]"
+          aria-label="כתובת דוא״ל - שדה חובה"
+          placeholder="example@email.com"
+          onBlur={(e) => handleFieldValidation('email', e.target.value, 'email')}
+          onChange={(e) => {
+            if (validationErrors['email']) {
+              handleFieldValidation('email', e.target.value, 'email')
+            }
+          }}
         />
+        <ValidationError fieldId="email" />
       </div>
 
       <div className="space-y-2">
         <label htmlFor="phone" className="flex items-center text-lg font-medium font-staff text-gray-700">
           <Phone className="ml-2 w-4 h-4" />
-          טלפון
+          <span className="text-red-500">*</span>
+          טלפון:
         </label>
         <input
           id="phone"
           type="tel"
-          className="border-2 border-black focus:border-[#9dd0bf] w-44 px-3 py-2 rounded-md"
-          aria-label="מספר טלפון - שדה אופציונלי"
+          required
+          pattern="[0-9\-\+\s\(\)]{9,15}"
+          className="border-2 border-black focus:border-[#9dd0bf] w-48 px-3 py-2 rounded-md bg-[#fdf6ed]"
+          aria-label="מספר טלפון - שדה חובה"
+          placeholder="050-1234567"
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            let value = target.value.replace(/[^0-9\-\+\s\(\)]/g, '');
+            target.value = value;
+          }}
+          onBlur={(e) => handleFieldValidation('phone', e.target.value, 'phone')}
+          onChange={(e) => {
+            if (validationErrors['phone']) {
+              handleFieldValidation('phone', e.target.value, 'phone')
+            }
+          }}
         />
+        <ValidationError fieldId="phone" />
       </div>
 
       <div className="space-y-2 w-full max-w-md">
@@ -159,7 +379,7 @@ export default function DonationsSection() {
         <textarea
           id="comments"
           rows={3}
-          className="border-2 border-black focus:border-[#9dd0bf] resize-none w-full px-3 py-2 rounded-md"
+          className="border-2 border-black focus:border-[#9dd0bf] resize-none w-full px-3 py-2 rounded-md bg-[#fdf6ed]"
           placeholder="הערות או הקדשה מיוחדת (אופציונלי)"
           aria-label="הערות או הקדשה - שדה אופציונלי"
         />
@@ -169,27 +389,30 @@ export default function DonationsSection() {
 
   const renderShekelFields = () => (
     <motion.div
-      className="space-y-6 pt-6 border-t border-gray-200"
+      className="space-y-8 pt-6 border-t border-gray-200"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 1.0 }}
     >
+      {/* First Row - Amount and Day */}
       <div className="flex flex-wrap gap-6 justify-center">
         <div className="space-y-2">
           <label htmlFor="monthlyAmountShekel" className="flex items-center text-lg font-medium font-staff text-gray-700">
-            <span className="text-red-500">*</span>
+            <span className="text-red-500 ml-1">*</span>
             סכום לחיוב בכל חודש:
           </label>
           <div className="flex items-center gap-2">
             <input
               id="monthlyAmountShekel"
               type="number"
+              value={donationAmount}
+              onChange={(e) => setDonationAmount(e.target.value)}
               placeholder="400"
               required
-              className="border-2 border-black focus:border-[#9dd0bf] w-32 px-3 py-2 rounded-md text-center font-bold"
+              className="border-2 border-black focus:border-[#9dd0bf] w-40 px-3 py-2 rounded-md text-center font-bold text-lg bg-[#fdf6ed]"
               aria-label="סכום חיוב חודשי - שדה חובה"
             />
-            <span className="text-gray-500">₪</span>
+            <span className="text-gray-500 font-medium">₪</span>
           </div>
         </div>
 
@@ -197,14 +420,14 @@ export default function DonationsSection() {
           <label htmlFor="fixedAmountShekel" className="flex items-center text-lg font-medium font-staff text-gray-700">
             מספר תשלומים לחיוב:
           </label>
-          <div className="flex items-center gap-2">
-            <span className="text-gray-500">ללא הגבלה</span>
+          <div className="flex items-center justify-center h-[42px] px-4 bg-gray-50 border-2 border-gray-300 rounded-md">
+            <span className="text-gray-600 font-medium">ללא הגבלה</span>
           </div>
         </div>
 
         <div className="space-y-2">
           <label htmlFor="dayOfMonthShekel" className="flex items-center text-lg font-medium font-staff text-gray-700">
-            <span className="text-red-500">*</span>
+            <span className="text-red-500 ml-1">*</span>
             יום גביה בכל חודש:
           </label>
           <input
@@ -214,70 +437,178 @@ export default function DonationsSection() {
             max="31"
             placeholder="1"
             required
-            className="border-2 border-black focus:border-[#9dd0bf] w-24 px-3 py-2 rounded-md text-center"
+            className="border-2 border-black focus:border-[#9dd0bf] w-32 px-3 py-2 rounded-md text-center font-medium bg-[#fdf6ed]"
             aria-label="יום בחודש לגביה - שדה חובה"
           />
         </div>
+      </div>
 
+      {/* Second Row - Card Details */}
+      <div className="flex flex-wrap gap-6 justify-center">
         <div className="space-y-2">
           <label htmlFor="cardNumberShekel" className="flex items-center text-lg font-medium font-staff text-gray-700">
-            <span className="text-red-500">*</span>
+            <CreditCard className="ml-2 w-4 h-4" />
+            <span className="text-red-500 ml-1">*</span>
             מספר כרטיס אשראי:
           </label>
           <input
             id="cardNumberShekel"
             type="text"
             required
-            className="border-2 border-black focus:border-[#9dd0bf] w-56 px-3 py-2 rounded-md"
+            pattern="[0-9\s]{13,19}"
+            className="border-2 border-black focus:border-[#9dd0bf] w-64 px-3 py-2 rounded-md font-medium bg-[#fdf6ed]"
             aria-label="מספר כרטיס אשראי - שדה חובה"
             placeholder="0000 0000 0000 0000"
+            maxLength={19}
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              let value = target.value.replace(/\D/g, '');
+              value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+              target.value = value;
+            }}
+            onBlur={(e) => handleFieldValidation('cardNumberShekel', e.target.value, 'creditCard')}
+            onChange={(e) => {
+              if (validationErrors['cardNumberShekel']) {
+                handleFieldValidation('cardNumberShekel', e.target.value, 'creditCard')
+              }
+            }}
           />
+          <ValidationError fieldId="cardNumberShekel" />
         </div>
 
         <div className="space-y-2">
           <label htmlFor="validityShekel" className="flex items-center text-lg font-medium font-staff text-gray-700">
-            <span className="text-red-500">*</span>
+            <Calendar className="ml-2 w-4 h-4" />
+            <span className="text-red-500 ml-1">*</span>
             תוקף:
           </label>
           <input
             id="validityShekel"
             type="text"
-            placeholder="07/2026 0426"
+            placeholder="MM/YY"
             required
-            className="border-2 border-black focus:border-[#9dd0bf] w-40 px-3 py-2 rounded-md text-center"
+            pattern="(0[1-9]|1[0-2])\/([0-9]{2})"
+            className="border-2 border-black focus:border-[#9dd0bf] w-32 px-3 py-2 rounded-md text-center font-medium bg-[#fdf6ed]"
             aria-label="תוקף כרטיס - שדה חובה"
-            maxLength={11}
+            maxLength={5}
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              let value = target.value.replace(/\D/g, '');
+              if (value.length >= 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2, 4);
+              }
+              target.value = value;
+            }}
+            onBlur={(e) => handleFieldValidation('validityShekel', e.target.value, 'expiry')}
+            onChange={(e) => {
+              if (validationErrors['validityShekel']) {
+                handleFieldValidation('validityShekel', e.target.value, 'expiry')
+              }
+            }}
           />
+          <ValidationError fieldId="validityShekel" />
         </div>
 
-        <div className="space-y-2 w-full">
-          <label htmlFor="installmentsShekel" className="flex items-center justify-center text-lg font-medium font-staff text-gray-700">
-            3 ספרות נגד הכרטיס:
+        <div className="space-y-2">
+          <label htmlFor="installmentsShekel" className="flex items-center text-lg font-medium font-staff text-gray-700">
+            <span className="ml-2 w-4 h-4 flex items-center justify-center bg-gray-200 rounded text-xs font-bold">
+              CVV
+            </span>
+            קוד אבטחה:
           </label>
-          <div className="flex justify-center">
-            <input
-              id="installmentsShekel"
-              type="text"
-              maxLength={3}
-              className="border-2 border-black focus:border-[#9dd0bf] w-24 px-3 py-2 rounded-md text-center"
-              aria-label="3 ספרות נגד הכרטיס"
-              placeholder="123"
-            />
-          </div>
+          <input
+            id="installmentsShekel"
+            type="text"
+            maxLength={4}
+            pattern="[0-9]{3,4}"
+            className="border-2 border-black focus:border-[#9dd0bf] w-24 px-3 py-2 rounded-md text-center font-medium bg-[#fdf6ed]"
+            aria-label="קוד אבטחה"
+            placeholder="123"
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              target.value = target.value.replace(/\D/g, '');
+            }}
+            onBlur={(e) => handleFieldValidation('installmentsShekel', e.target.value, 'cvv')}
+            onChange={(e) => {
+              if (validationErrors['installmentsShekel']) {
+                handleFieldValidation('installmentsShekel', e.target.value, 'cvv')
+              }
+            }}
+          />
+          <ValidationError fieldId="installmentsShekel" />
         </div>
       </div>
 
-      <div className="text-center">
-        <label className="flex items-center justify-center gap-2 text-base text-gray-700">
+      {/* Third Row - Personal Details */}
+      <div className="flex flex-wrap gap-6 justify-center">
+        <div className="space-y-2">
+          <label htmlFor="shekelFullName" className="flex items-center text-lg font-medium font-staff text-gray-700">
+            <User className="ml-2 w-4 h-4" />
+            <span className="text-red-500 ml-1">*</span>
+            שם מלא:
+          </label>
           <input
-            type="checkbox"
-            className="w-4 h-4 text-[#9dd0bf] border-2 border-gray-300 rounded focus:ring-[#9dd0bf]"
-            defaultChecked
+            id="shekelFullName"
+            type="text"
+            required
+            className="border-2 border-black focus:border-[#9dd0bf] w-64 px-3 py-2 rounded-md font-medium bg-[#fdf6ed]"
+            aria-label="שם מלא - שדה חובה"
+            maxLength={50}
           />
-          <span className="text-blue-600 underline cursor-pointer">
-            אני מסכים לתקנון האתר
-          </span>
-        </label>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="shekelEmail" className="flex items-center text-lg font-medium font-staff text-gray-700">
+            <Mail className="ml-2 w-4 h-4" />
+            <span className="text-red-500 ml-1">*</span>
+            דוא״ל:
+          </label>
+          <input
+            id="shekelEmail"
+            type="email"
+            required
+            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+            className="border-2 border-black focus:border-[#9dd0bf] w-64 px-3 py-2 rounded-md font-medium bg-[#fdf6ed]"
+            aria-label="כתובת דוא״ל - שדה חובה"
+            placeholder="example@email.com"
+            onBlur={(e) => handleFieldValidation('shekelEmail', e.target.value, 'email')}
+            onChange={(e) => {
+              if (validationErrors['shekelEmail']) {
+                handleFieldValidation('shekelEmail', e.target.value, 'email')
+              }
+            }}
+          />
+          <ValidationError fieldId="shekelEmail" />
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="shekelPhone" className="flex items-center text-lg font-medium font-staff text-gray-700">
+            <Phone className="ml-2 w-4 h-4" />
+            <span className="text-red-500 ml-1">*</span>
+            טלפון:
+          </label>
+          <input
+            id="shekelPhone"
+            type="tel"
+            required
+            pattern="[0-9\-\+\s\(\)]{9,15}"
+            className="border-2 border-black focus:border-[#9dd0bf] w-48 px-3 py-2 rounded-md font-medium bg-[#fdf6ed]"
+            aria-label="מספר טלפון - שדה חובה"
+            placeholder="050-1234567"
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              let value = target.value.replace(/[^0-9\-\+\s\(\)]/g, '');
+              target.value = value;
+            }}
+            onBlur={(e) => handleFieldValidation('shekelPhone', e.target.value, 'phone')}
+            onChange={(e) => {
+              if (validationErrors['shekelPhone']) {
+                handleFieldValidation('shekelPhone', e.target.value, 'phone')
+              }
+            }}
+          />
+          <ValidationError fieldId="shekelPhone" />
+        </div>
       </div>
 
       <div className="text-center">
@@ -291,39 +622,101 @@ export default function DonationsSection() {
 
   const renderBitFields = () => (
     <motion.div
-      className="space-y-6 pt-6 border-t border-gray-200"
+      className="space-y-8 pt-6 border-t border-gray-200"
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, delay: 1.0 }}
     >
+      {/* First Row - Amount */}
       <div className="flex justify-center">
         <div className="space-y-2">
-          <label htmlFor="bitAmount" className="flex items-center justify-center text-lg font-medium font-staff text-gray-700">
-            <span className="text-red-500">*</span>
+          <label htmlFor="bitAmount" className="flex items-center text-lg font-medium font-staff text-gray-700">
+            <span className="text-red-500 ml-1">*</span>
             סכום לתרומה:
           </label>
           <input
             id="bitAmount"
             type="number"
+            value={donationAmount}
+            onChange={(e) => setDonationAmount(e.target.value)}
             placeholder="400"
             required
-            className="border-2 border-black focus:border-[#9dd0bf] w-32 px-3 py-2 rounded-md text-center font-bold text-lg"
+            className="border-2 border-black focus:border-[#9dd0bf] w-40 px-3 py-2 rounded-md text-center font-bold text-lg bg-[#fdf6ed]"
             aria-label="סכום לתרומה - שדה חובה"
           />
         </div>
       </div>
 
-      <div className="text-center">
-        <label className="flex items-center justify-center gap-2 text-base text-gray-700">
+      {/* Second Row - Personal Details */}
+      <div className="flex flex-wrap gap-6 justify-center">
+        <div className="space-y-2">
+          <label htmlFor="bitFullName" className="flex items-center text-lg font-medium font-staff text-gray-700">
+            <User className="ml-2 w-4 h-4" />
+            <span className="text-red-500 ml-1">*</span>
+            שם מלא:
+          </label>
           <input
-            type="checkbox"
-            className="w-4 h-4 text-[#9dd0bf] border-2 border-gray-300 rounded focus:ring-[#9dd0bf]"
-            defaultChecked
+            id="bitFullName"
+            type="text"
+            required
+            className="border-2 border-black focus:border-[#9dd0bf] w-64 px-3 py-2 rounded-md font-medium bg-[#fdf6ed]"
+            aria-label="שם מלא - שדה חובה"
+            maxLength={50}
           />
-          <span className="text-blue-600 underline cursor-pointer">
-            אני מסכים לתקנון האתר
-          </span>
-        </label>
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="bitEmail" className="flex items-center text-lg font-medium font-staff text-gray-700">
+            <Mail className="ml-2 w-4 h-4" />
+            <span className="text-red-500 ml-1">*</span>
+            דוא״ל:
+          </label>
+          <input
+            id="bitEmail"
+            type="email"
+            required
+            pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+            className="border-2 border-black focus:border-[#9dd0bf] w-64 px-3 py-2 rounded-md font-medium bg-[#fdf6ed]"
+            aria-label="כתובת דוא״ל - שדה חובה"
+            placeholder="example@email.com"
+            onBlur={(e) => handleFieldValidation('bitEmail', e.target.value, 'email')}
+            onChange={(e) => {
+              if (validationErrors['bitEmail']) {
+                handleFieldValidation('bitEmail', e.target.value, 'email')
+              }
+            }}
+          />
+          <ValidationError fieldId="bitEmail" />
+        </div>
+
+        <div className="space-y-2">
+          <label htmlFor="bitPhone" className="flex items-center text-lg font-medium font-staff text-gray-700">
+            <Phone className="ml-2 w-4 h-4" />
+            <span className="text-red-500 ml-1">*</span>
+            טלפון:
+          </label>
+          <input
+            id="bitPhone"
+            type="tel"
+            required
+            pattern="[0-9\-\+\s\(\)]{9,15}"
+            className="border-2 border-black focus:border-[#9dd0bf] w-48 px-3 py-2 rounded-md font-medium bg-[#fdf6ed]"
+            aria-label="מספר טלפון - שדה חובה"
+            placeholder="050-1234567"
+            onInput={(e) => {
+              const target = e.target as HTMLInputElement;
+              let value = target.value.replace(/[^0-9\-\+\s\(\)]/g, '');
+              target.value = value;
+            }}
+            onBlur={(e) => handleFieldValidation('bitPhone', e.target.value, 'phone')}
+            onChange={(e) => {
+              if (validationErrors['bitPhone']) {
+                handleFieldValidation('bitPhone', e.target.value, 'phone')
+              }
+            }}
+          />
+          <ValidationError fieldId="bitPhone" />
+        </div>
       </div>
 
       <div className="text-center">
@@ -372,27 +765,54 @@ export default function DonationsSection() {
       <div className="space-y-2">
         <label htmlFor="email" className="flex items-center text-lg font-medium font-staff text-gray-700">
           <Mail className="ml-2 w-4 h-4" />
-          דוא״ל
+          <span className="text-red-500">*</span>
+          דוא״ל:
         </label>
         <input
           id="email"
           type="email"
-          className="border-2 border-black focus:border-[#9dd0bf] w-56 px-3 py-2 rounded-md"
-          aria-label="כתובת דוא״ל - שדה אופציונלי"
+          required
+          pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}"
+          className="border-2 border-black focus:border-[#9dd0bf] w-64 px-3 py-2 rounded-md bg-[#fdf6ed]"
+          aria-label="כתובת דוא״ל - שדה חובה"
+          placeholder="example@email.com"
+          onBlur={(e) => handleFieldValidation('emailOriginal', e.target.value, 'email')}
+          onChange={(e) => {
+            if (validationErrors['emailOriginal']) {
+              handleFieldValidation('emailOriginal', e.target.value, 'email')
+            }
+          }}
         />
+        <ValidationError fieldId="emailOriginal" />
       </div>
 
       <div className="space-y-2">
         <label htmlFor="phone" className="flex items-center text-lg font-medium font-staff text-gray-700">
           <Phone className="ml-2 w-4 h-4" />
-          טלפון
+          <span className="text-red-500">*</span>
+          טלפון:
         </label>
         <input
           id="phone"
           type="tel"
-          className="border-2 border-black focus:border-[#9dd0bf] w-44 px-3 py-2 rounded-md"
-          aria-label="מספר טלפון - שדה אופציונלי"
+          required
+          pattern="[0-9\-\+\s\(\)]{9,15}"
+          className="border-2 border-black focus:border-[#9dd0bf] w-48 px-3 py-2 rounded-md bg-[#fdf6ed]"
+          aria-label="מספר טלפון - שדה חובה"
+          placeholder="050-1234567"
+          onInput={(e) => {
+            const target = e.target as HTMLInputElement;
+            let value = target.value.replace(/[^0-9\-\+\s\(\)]/g, '');
+            target.value = value;
+          }}
+          onBlur={(e) => handleFieldValidation('phoneOriginal', e.target.value, 'phone')}
+          onChange={(e) => {
+            if (validationErrors['phoneOriginal']) {
+              handleFieldValidation('phoneOriginal', e.target.value, 'phone')
+            }
+          }}
         />
+        <ValidationError fieldId="phoneOriginal" />
       </div>
 
       <div className="space-y-2 w-full max-w-md">
@@ -403,7 +823,7 @@ export default function DonationsSection() {
         <textarea
           id="comments"
           rows={3}
-          className="border-2 border-black focus:border-[#9dd0bf] resize-none w-full px-3 py-2 rounded-md"
+          className="border-2 border-black focus:border-[#9dd0bf] resize-none w-full px-3 py-2 rounded-md bg-[#fdf6ed]"
           placeholder="הערות או הקדשה מיוחדת (אופציונלי)"
           aria-label="הערות או הקדשה - שדה אופציונלי"
         />
@@ -449,10 +869,10 @@ export default function DonationsSection() {
                 <p className="mb-2">
                   התרומה שלכם מאפשרת לנו להמשיך בפעילותנו החשובה.
                 </p>
-                <p>
+                {/* <p>
                   <span className="font-semibold font-staff text-[#f5a383]">רק שם ושם משפחה נדרשים</span> - כל השדות האחרים הם
                   אופציונליים לנוחותכם.
-                </p>
+                </p> */}
               </div>
             </div>
 
@@ -532,9 +952,11 @@ export default function DonationsSection() {
                     <div className="text-sm font-bold text-black font-staff">Bit ביט</div>
                   </div>
                   <div className="flex items-center justify-center w-10 h-10 rounded-lg overflow-hidden flex-shrink-0">
-                    <div className="w-full h-full bg-blue-500 rounded flex items-center justify-center text-white text-xs font-bold">
-                      BIT
-                    </div>
+                    <img 
+                      src="/pictures/bit.png" 
+                      alt="Bit" 
+                      className="w-full h-full object-cover rounded"
+                    />
                   </div>
                 </motion.button>
               </motion.div>
@@ -565,7 +987,11 @@ export default function DonationsSection() {
                             ? "bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] text-white border-0"
                             : "border-2 border-black hover:border-[#f5a383] hover:bg-[#f5a383]/10 bg-[#fdf6ed]"
                         }`}
-                        onClick={() => setCustomAmount(amount.toString())}
+                        onClick={() => {
+                          const amountStr = amount.toString();
+                          setCustomAmount(amountStr);
+                          setDonationAmount(amountStr);
+                        }}
                       >
                         {amount}₪
                       </button>
@@ -581,7 +1007,10 @@ export default function DonationsSection() {
                     type="number"
                     placeholder="סכום בש״ח"
                     value={customAmount}
-                    onChange={(e) => setCustomAmount(e.target.value)}
+                    onChange={(e) => {
+                      setCustomAmount(e.target.value);
+                      setDonationAmount(e.target.value);
+                    }}
                     className="max-w-32 text-center border-2 focus:border-[#9dd0bf] font-bold text-base bg-[#fdf6ed] px-3 py-2 rounded-md"
                     style={{ marginRight: '15px' }}
                   />
@@ -593,6 +1022,21 @@ export default function DonationsSection() {
               {selectedPayment === 'shekel' && renderShekelFields()}
               {selectedPayment === 'bit' && renderBitFields()}
               {!selectedPayment && renderOriginalFields()}
+
+              {/* Terms and Conditions Checkbox */}
+              <div className="w-full text-center mt-6 mb-4">
+                <label className="flex items-center justify-center gap-2 text-base text-gray-700">
+                  <input
+                    type="checkbox"
+                    checked={termsAccepted}
+                    onChange={(e) => setTermsAccepted(e.target.checked)}
+                    className="w-4 h-4 text-[#9dd0bf] border-2 border-gray-300 rounded focus:ring-[#9dd0bf]"
+                  />
+                  <a href="/website-terms" target="_blank" className="text-blue-600 underline cursor-pointer hover:text-blue-800">
+                    אני מסכים לתקנון האתר
+                  </a>
+                </label>
+              </div>
 
               {/* CTA Button */}
               <motion.div
@@ -609,9 +1053,7 @@ export default function DonationsSection() {
                   <button
                     className="w-full md:w-auto px-12 py-4 text-xl font-bold font-staff bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] text-white border-0 shadow-lg hover:shadow-xl transform hover:scale-110 transition-all duration-300 cursor-pointer rounded-lg"
                     aria-label="לחצו כאן לביצוע התרומה"
-                    onClick={() => {
-                      console.log('כפתור תרומה נלחץ')
-                    }}
+                    onClick={handleSubmit}
                   >
                     <motion.div
                       animate={{
