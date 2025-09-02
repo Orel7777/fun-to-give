@@ -95,7 +95,7 @@ export default function OrganizationStory() {
                   למה קראנו לעמותה כיף לתת?
                 </Reveal>
                 <motion.div
-                  className="space-y-4 text-lg leading-relaxed text-gray-800"
+                  className="space-y-4 text-lg leading-relaxed text-gray-800 mt-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
@@ -136,7 +136,7 @@ export default function OrganizationStory() {
                   "ואהבת לרעך כמוך"
                 </Reveal>
                 <motion.div
-                  className="space-y-4 text-lg leading-relaxed text-gray-800"
+                  className="space-y-4 text-lg leading-relaxed text-gray-800 mt-4"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
