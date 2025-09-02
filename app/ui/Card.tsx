@@ -19,7 +19,7 @@ const StyledWrapper = styled.div`
   .card {
     width: 100%;
     height: 100%;
-    background-image: linear-gradient(163deg, #00ff75 0%, #3700ff 100%);
+    background-image: linear-gradient(163deg, #dfe8e0 0%, #c8d8d0 100%);
     border-radius: 28px;
     transition: all 0.3s;
     padding: 4px; /* thicker gradient border for visibility */
@@ -37,10 +37,12 @@ const StyledWrapper = styled.div`
   .card2:hover {
     transform: scale(0.98);
     border-radius: 26px;
+    background-color: #f8faf8;
   }
 
   .card:hover {
-    box-shadow: 0px 0px 30px 1px rgba(0, 255, 117, 0.3);
+    box-shadow: 0px 0px 30px 1px rgba(223, 232, 224, 0.4);
+    transform: scale(1.02);
   }
 `;
 

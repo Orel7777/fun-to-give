@@ -34,8 +34,39 @@ const FormsDownload: React.FC = () => {
     load();
   }, []);
 
+  const formsData = [
+    {
+      title: "תעודת רישום עמותה",
+      imageSrc: "/טפסים/תעודת רישום עמותה.png",
+      imageAlt: "תעודת רישום עמותה",
+      pdfPath: "/טפסים/תעודת רישום עמותה.pdf",
+      downloadName: "תעודת רישום עמותה.pdf"
+    },
+    {
+      title: "אישור מוסד ציבורי לעניין תרומות (טופס 46)",
+      imageSrc: "/טפסים/טופס 46.png",
+      imageAlt: "אישור מוסד ציבורי לעניין תרומות",
+      pdfPath: "/טפסים/טופס 46.pdf",
+      downloadName: "טופס 46.pdf"
+    },
+    {
+      title: "אישור ניהול תקין לשנת 2025",
+      imageSrc: "/טפסים/אישור הגשת מסמכים.png",
+      imageAlt: "אישור ניהול תקין",
+      pdfPath: "/טפסים/אישור הגשת מסמכים.pdf",
+      downloadName: "אישור הגשת מסמכים.pdf"
+    },
+    {
+      title: "אישור ניכוי מס במקור",
+      imageSrc: "/טפסים/ניכוי מס.png",
+      imageAlt: "אישור ניכוי מס במקור",
+      pdfPath: "/טפסים/ניכוי מס.pdf",
+      downloadName: "ניכוי מס.pdf"
+    }
+  ];
+
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#fdf6ed' }}>
+    <div className="min-h-screen pb-20" style={{ backgroundColor: '#fdf6ed' }}>
       <NavigationBar />
       <div className="container px-4 pt-32 py-12 mx-auto">
         <motion.h1
@@ -47,6 +78,7 @@ const FormsDownload: React.FC = () => {
         >
           טפסים רשמיים
         </motion.h1>
+        
         {/* Icons row under the title */}
         <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mt-10 md:mt-14 mb-10">
           {registrationAnim && (
@@ -65,171 +97,74 @@ const FormsDownload: React.FC = () => {
             </div>
           )}
         </div>
-        
+
+        {/* Forms Grid */}
         <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4" style={{ marginTop: '90px' }}>
-          {/* תעודת רישום עמותה */}
-          <Card>
-            <motion.div
-              className="text-center bg-white rounded-lg shadow-lg flex flex-col h-full p-0"
-              variants={SlidUpLeft(0.05)}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-            >
-              <motion.h2
-                className="mb-0 text-xl font-bold font-staff text-gray-800 text-center"
-                variants={SlidUpLeft(0.1)}
+          {formsData.map((form, index) => (
+            <div key={index} className="flex flex-col">
+              {/* כותרת הטופס - מחוץ למסגרת */}
+              <motion.h3
+                className="text-xl font-bold font-staff text-gray-800 text-center"
+                style={{ marginBottom: '20px' }}
+                variants={SlidUpLeft(0.05)}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
               >
-                תעודת רישום עמותה
-              </motion.h2>
-              <motion.div
-                className="relative w-full max-w-[320px] sm:max-w-[340px] aspect-[210/297] mx-auto"
-                variants={SlidUpLeft(0.15)}
-              >
-                <Image
-                  src="/טפסים/תעודת רישום עמותה.png"
-                  alt="תעודת רישום עמותה"
-                  fill
-                  sizes="(max-width: 640px) 100vw, 300px"
-                  className="rounded-lg shadow-md object-cover object-center"
-                />
-              </motion.div>
-              <motion.div variants={SlidUpLeft(0.2)}>
-                <motion.a
-                  href="/טפסים/תעודת רישום עמותה.png"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-blue-600 underline hover:text-blue-800 cursor-pointer"
-                  style={{ color: '#f5a383' }}
-                >
-                  לצפייה בתעודה לחץ כאן
-                </motion.a>
-              </motion.div>
-            </motion.div>
-          </Card>
+                {form.title}
+              </motion.h3>
 
-          {/* אישור מוסד ציבורי לעניין תרומות */}
-          <Card>
-            <motion.div
-              className="text-center bg-white rounded-lg shadow-lg flex flex-col h-full p-0"
-              variants={SlidUpLeft(0.05)}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-            >
-              <motion.h2
-                className="mb-0 text-xl font-bold font-staff text-gray-800 text-center"
-                variants={SlidUpLeft(0.1)}
-              >
-                אישור מוסד ציבורי לעניין תרומות (טופס 46)
-              </motion.h2>
-              <motion.div
-                className="relative w-full max-w-[320px] sm:max-w-[340px] aspect-[210/297] mx-auto"
-                variants={SlidUpLeft(0.15)}
-              >
-                <Image
-                  src="/טפסים/טופס 46.png"
-                  alt="אישור מוסד ציבורי לעניין תרומות"
-                  fill
-                  sizes="(max-width: 640px) 100vw, 300px"
-                  className="rounded-lg shadow-md object-cover object-center"
-                />
-              </motion.div>
-              <motion.div variants={SlidUpLeft(0.2)}>
-                <motion.a
-                  href="/טפסים/טופס 46.png"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-blue-600 underline hover:text-blue-800"
-                  style={{ color: '#f5a383' }}
+              {/* הטופס במסגרת */}
+              <Card>
+                <motion.div
+                  className="text-center bg-white rounded-lg shadow-lg flex flex-col h-full p-0 cursor-pointer"
+                  variants={SlidUpLeft(0.05)}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.2 }}
+                  onClick={() => {
+                    const link = document.createElement('a');
+                    link.href = form.pdfPath;
+                    link.download = form.downloadName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  לצפייה בתעודה לחץ כאן
-                </motion.a>
-              </motion.div>
-            </motion.div>
-          </Card>
+                  <motion.div
+                    className="relative w-full max-w-[320px] sm:max-w-[340px] aspect-[210/297] mx-auto"
+                    variants={SlidUpLeft(0.15)}
+                  >
+                    <Image
+                      src={form.imageSrc}
+                      alt={form.imageAlt}
+                      fill
+                      sizes="(max-width: 640px) 100vw, 300px"
+                      className="rounded-lg shadow-md object-cover object-center"
+                    />
+                  </motion.div>
+                </motion.div>
+              </Card>
 
-          {/* אישור ניהול תקין */}
-          <Card>
-            <motion.div
-              className="text-center bg-white rounded-lg shadow-lg flex flex-col h-full p-0"
-              variants={SlidUpLeft(0.05)}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-            >
-              <motion.h2
-                className="mb-0 text-xl font-bold font-staff text-gray-800 text-center"
+              {/* כפתור צפייה - מחוץ למסגרת */}
+              <motion.a
+                href={form.pdfPath}
+                download={form.downloadName}
+                className="block text-center px-4 py-3 bg-white border-2 border-[#f5a383] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer mt-4"
+                style={{ color: '#f5a383' }}
                 variants={SlidUpLeft(0.1)}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, amount: 0.2 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                אישור ניהול תקין לשנת 2025
-              </motion.h2>
-              <motion.div
-                className="relative w-full max-w-[320px] sm:max-w-[340px] aspect-[210/297] mx-auto"
-                variants={SlidUpLeft(0.15)}
-              >
-                <Image
-                  src="/טפסים/אישור הגשת מסמכים.png"
-                  alt="אישור ניהול תקין"
-                  fill
-                  sizes="(max-width: 640px) 100vw, 300px"
-                  className="rounded-lg shadow-md object-cover object-center"
-                />
-              </motion.div>
-              <motion.div variants={SlidUpLeft(0.2)}>
-                <motion.a
-                  href="/טפסים/אישור הגשת מסמכים.png"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-blue-600 underline hover:text-blue-800 cursor-pointer"
-                  style={{ color: '#f5a383' }}
-                >
-                  לצפייה בתעודה לחץ כאן
-                </motion.a>
-              </motion.div>
-            </motion.div>
-          </Card>
-
-          {/* אישור ניכוי מס במקור */}
-          <Card>
-            <motion.div
-              className="text-center bg-white rounded-lg shadow-lg flex flex-col h-full p-0"
-              variants={SlidUpLeft(0.05)}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.2 }}
-            >
-              <motion.h2
-                className="mb-0 text-xl font-bold font-staff text-gray-800 text-center"
-                variants={SlidUpLeft(0.1)}
-              >
-                אישור ניכוי מס במקור
-              </motion.h2>
-              <motion.div
-                className="relative w-full max-w-[320px] sm:max-w-[340px] aspect-[210/297] mx-auto"
-                variants={SlidUpLeft(0.15)}
-              >
-                <Image
-                  src="/טפסים/ניכוי מס.png"
-                  alt="אישור ניכוי מס במקור"
-                  fill
-                  sizes="(max-width: 640px) 100vw, 300px"
-                  className="rounded-lg shadow-md object-cover object-center"
-                />
-              </motion.div>
-              <motion.div variants={SlidUpLeft(0.2)}>
-                <motion.a
-                  href="/טפסים/ניכוי מס.png"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block text-blue-600 underline hover:text-blue-800 cursor-pointer"
-                  style={{ color: '#f5a383' }}
-                >
-                  לצפייה בתעודה לחץ כאן
-                </motion.a>
-              </motion.div>
-            </motion.div>
-          </Card>
+                לצפייה בתעודה לחץ על הטופס
+              </motion.a>
+            </div>
+          ))}
         </div>
         
         {/* כפתור חזרה לאתר */}
@@ -246,6 +181,9 @@ const FormsDownload: React.FC = () => {
             </button>
           </Link>
         </motion.div>
+        
+        {/* מרווח נוסף בתחתית */}
+        <div className="h-20 md:h-32 lg:h-40"></div>
       </div>
     </div>
   );
