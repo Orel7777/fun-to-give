@@ -2,10 +2,11 @@
 
 import type React from "react"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { Button } from "../components/ui/button"
 import { Input } from "../components/ui/input"
 import { Textarea } from "../components/ui/textarea"
+import Lottie from "lottie-react"
 
 export function ContactForm() {
   const [formData, setFormData] = useState({
@@ -23,6 +24,22 @@ export function ContactForm() {
   const [error, setError] = useState<string | null>(null)
   const [warning, setWarning] = useState<string | null>(null)
   const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({})
+
+  // Lottie icon above the title
+  const [iconAnim, setIconAnim] = useState<any>(null)
+  const [starsAnim, setStarsAnim] = useState<any>(null)
+  useEffect(() => {
+    let isMounted = true
+    fetch('/animation-json/email.json')
+      .then((res) => res.json())
+      .then((data) => { if (isMounted) setIconAnim(data) })
+      .catch(() => {})
+    fetch('/animation-json/stars.json')
+      .then((res) => res.json())
+      .then((data) => { if (isMounted) setStarsAnim(data) })
+      .catch(() => {})
+    return () => { isMounted = false }
+  }, [])
 
   // Refs for focusing the first invalid field
   const subjectRef = useRef<HTMLSelectElement | null>(null)
@@ -143,8 +160,25 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 overflow-visible">
+    <>
+      <style jsx>{`
+        select {
+          background-color: #fdf6ed !important;
+        }
+        select:focus {
+          background-color: #fdf6ed !important;
+        }
+        select option {
+          background-color: #fdf6ed !important;
+        }
+      `}</style>
+      <form onSubmit={handleSubmit} className="space-y-6 overflow-visible">
       <div className="text-center mb-8">
+        {iconAnim && (
+          <div className="flex justify-center mb-2">
+            <Lottie animationData={iconAnim} loop autoplay style={{ width: 64, height: 64 }} />
+          </div>
+        )}
         <h2 className="text-xl font-semibold font-staff text-gray-700">נשמח לדבר</h2>
       </div>
 
@@ -167,18 +201,19 @@ export function ContactForm() {
           <select 
             id="subject"
             ref={subjectRef}
-            className={`w-full px-3 py-2 border rounded-md text-right bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer ${validationErrors.subject ? 'border-red-500' : 'border-gray-300'}`}
+            className={`w-full px-3 py-2 border rounded-md text-right text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer ${validationErrors.subject ? 'border-red-500' : 'border-gray-300'}`}
+            style={{ backgroundColor: '#fdf6ed' }}
             value={formData.subject}
             onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
             dir="rtl"
             aria-invalid={Boolean(validationErrors.subject)}
             aria-describedby={validationErrors.subject ? 'subject-error' : undefined}
           >
-            <option value="" className="bg-white text-gray-900">בחר נושא</option>
-            <option value="donation" className="bg-white text-gray-900">תרומה</option>
-            <option value="jobs" className="bg-white text-gray-900">דרושים</option>
-            <option value="about" className="bg-white text-gray-900">על העמותה</option>
-            <option value="other" className="bg-white text-gray-900">כל נושא אחר</option>
+            <option value="" style={{ backgroundColor: '#fdf6ed' }} className="text-gray-900">בחר נושא</option>
+            <option value="donation" style={{ backgroundColor: '#fdf6ed' }} className="text-gray-900">תרומה</option>
+            <option value="jobs" style={{ backgroundColor: '#fdf6ed' }} className="text-gray-900">דרושים</option>
+            <option value="about" style={{ backgroundColor: '#fdf6ed' }} className="text-gray-900">על העמותה</option>
+            <option value="other" style={{ backgroundColor: '#fdf6ed' }} className="text-gray-900">כל נושא אחר</option>
           </select>
           {validationErrors.subject && (
             <p id="subject-error" role="alert" aria-live="polite" className="text-red-500 text-sm mt-1 text-right">{validationErrors.subject}</p>
@@ -194,6 +229,7 @@ export function ContactForm() {
             type="text"
             placeholder="שם פרטי"
             className={`text-right ${validationErrors.firstName ? 'border-red-500' : ''}`}
+            style={{ backgroundColor: '#fdf6ed' }}
             value={formData.firstName}
             onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
             aria-invalid={Boolean(validationErrors.firstName)}
@@ -215,6 +251,7 @@ export function ContactForm() {
             type="text"
             placeholder="שם משפחה"
             className={`text-right ${validationErrors.lastName ? 'border-red-500' : ''}`}
+            style={{ backgroundColor: '#fdf6ed' }}
             value={formData.lastName}
             onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
             aria-invalid={Boolean(validationErrors.lastName)}
@@ -234,6 +271,7 @@ export function ContactForm() {
             type="tel"
             placeholder="מס' נייד"
             className={`text-right ${validationErrors.phone ? 'border-red-500' : ''}`}
+            style={{ backgroundColor: '#fdf6ed' }}
             value={formData.phone}
             onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
             aria-invalid={Boolean(validationErrors.phone)}
@@ -254,6 +292,7 @@ export function ContactForm() {
           type="email"
           placeholder="אימייל"
           className={`text-right ${validationErrors.email ? 'border-red-500' : ''}`}
+          style={{ backgroundColor: '#fdf6ed' }}
           value={formData.email}
           onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           aria-invalid={Boolean(validationErrors.email)}
@@ -272,6 +311,7 @@ export function ContactForm() {
           ref={messageRef}
           placeholder="אני מעוניין ב..."
           className={`text-right min-h-[120px] resize-none ${validationErrors.message ? 'border-red-500' : ''}`}
+          style={{ backgroundColor: '#fdf6ed' }}
           value={formData.message}
           onChange={(e) => setFormData({ ...formData, message: e.target.value })}
           aria-invalid={Boolean(validationErrors.message)}
@@ -282,16 +322,24 @@ export function ContactForm() {
         )}
       </div>
 
+      {/* Stars icon above Submit */}
+      {starsAnim && (
+        <div className="flex justify-center">
+          <Lottie animationData={starsAnim} loop autoplay style={{ width: 72, height: 72 }} />
+        </div>
+      )}
+
       {/* Submit Button */}
       <div className="flex justify-center pt-4">
         <Button
           type="submit"
           disabled={submitting}
-          className="bg-blue-600 hover:bg-blue-700 disabled:opacity-70 disabled:cursor-not-allowed text-white px-12 py-3 rounded-full text-lg font-medium font-staff cursor-pointer"
+          className="bg-[#f4a282] hover:bg-[#ec8d66] disabled:opacity-70 disabled:cursor-not-allowed text-white px-12 py-3 rounded-full text-lg font-medium font-staff cursor-pointer"
         >
           {submitting ? 'שולח…' : 'שליחה'}
         </Button>
       </div>
     </form>
+    </>
   )
 }
