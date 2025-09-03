@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
 import { Heart, Calendar, Gift, CreditCard, User, Mail, Phone, MessageSquare } from "lucide-react"
+import Lottie from "lottie-react"
 
 export default function DonationsSection() {
   const [donationType, setDonationType] = useState('monthly')
@@ -11,6 +12,16 @@ export default function DonationsSection() {
   const [donationAmount, setDonationAmount] = useState("")
   const [termsAccepted, setTermsAccepted] = useState(false)
   const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({})
+  const [birdAnim, setBirdAnim] = useState<any>(null)
+
+  useEffect(() => {
+    let isMounted = true
+    fetch('/animation-json/bird.json')
+      .then(res => res.json())
+      .then(data => { if (isMounted) setBirdAnim(data) })
+      .catch(() => {})
+    return () => { isMounted = false }
+  }, [])
 
   // Validation functions
   const validateEmail = (email: string) => {
@@ -848,23 +859,24 @@ export default function DonationsSection() {
         >
           <div className="border-0 shadow-xl backdrop-blur-sm bg-[#f2f2e8] rounded-lg">
             <div className="pb-2 pt-6 px-6">
-              <motion.div
-                className="flex justify-center mb-4"
-                animate={{
-                  y: [0, -10, 0],
-                  rotate: [0, 5, -5, 0],
-                }}
-                transition={{
-                  duration: 3,
-                  repeat: Infinity,
-                  ease: "easeInOut",
-                }}
-              >
-                <div className="p-3 bg-gradient-to-r from-[#f5a383] to-[#9dd0bf] rounded-full">
-                  <Heart className="w-8 h-8 text-white" />
-                </div>
-              </motion.div>
-              <h2 className="text-3xl font-bold tracking-tighter text-[#2a2b26] font-staff mb-4 text-center">הצטרפו אלינו לעשות שינוי</h2>
+              <h2 className="text-3xl font-bold tracking-tighter text-[#2a2b26] font-staff mb-2 text-center">הצטרפו אלינו לעשות שינוי</h2>
+              <div className="flex justify-center mb-4">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="flex items-center justify-center"
+                >
+                  {birdAnim && (
+                    <Lottie
+                      animationData={birdAnim}
+                      loop
+                      autoplay
+                      style={{ width: 80, height: 80 }}
+                    />
+                  )}
+                </motion.div>
+              </div>
               <div className="mx-auto max-w-2xl text-lg leading-relaxed text-gray-600 text-center mb-4">
                 <p className="mb-2">
                   התרומה שלכם מאפשרת לנו להמשיך בפעילותנו החשובה.

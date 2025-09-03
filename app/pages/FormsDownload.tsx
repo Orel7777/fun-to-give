@@ -13,6 +13,8 @@ const FormsDownload: React.FC = () => {
   const [registrationAnim, setRegistrationAnim] = useState<any>(null);
   const [generateInitialAnim, setGenerateInitialAnim] = useState<any>(null);
   const [writingExamAnim, setWritingExamAnim] = useState<any>(null);
+  const [selectedForm, setSelectedForm] = useState<any>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     // Load animations from public
@@ -123,12 +125,8 @@ const FormsDownload: React.FC = () => {
                     whileInView="visible"
                     viewport={{ once: true, amount: 0.2 }}
                     onClick={() => {
-                      const link = document.createElement('a');
-                      link.href = form.pdfPath;
-                      link.download = form.downloadName;
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
+                      setSelectedForm(form);
+                      setIsModalOpen(true);
                     }}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -149,10 +147,12 @@ const FormsDownload: React.FC = () => {
                 </Card>
 
                 {/* כפתור צפייה - מחוץ למסגרת */}
-                <motion.a
-                  href={form.pdfPath}
-                  download={form.downloadName}
-                  className="block text-center px-4 py-3 bg-white border-2 border-[#f5a383] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer mt-4"
+                <motion.button
+                  onClick={() => {
+                    setSelectedForm(form);
+                    setIsModalOpen(true);
+                  }}
+                  className="block text-center px-4 py-3 bg-white border-2 border-[#f5a383] rounded-lg shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer mt-4 w-full"
                   style={{ color: '#f5a383' }}
                   variants={SlidUpLeft(0.1)}
                   initial="hidden"
@@ -162,7 +162,7 @@ const FormsDownload: React.FC = () => {
                   whileTap={{ scale: 0.95 }}
                 >
                   לצפייה בתעודה לחץ על הטופס
-                </motion.a>
+                </motion.button>
               </div>
             </div>
           ))}
@@ -186,6 +186,79 @@ const FormsDownload: React.FC = () => {
         {/* מרווח נוסף בתחתית */}
         <div className="h-20 md:h-32 lg:h-40"></div>
       </div>
+
+      {/* Modal for displaying form */}
+      {isModalOpen && selectedForm && (
+        <div 
+          className="fixed inset-0 z-50 flex items-center justify-center p-4" 
+          style={{ backgroundColor: '#fdf6ed' }}
+          onClick={() => setIsModalOpen(false)}
+        >
+          <motion.div
+            className="bg-white rounded-lg shadow-2xl max-w-5xl w-full max-h-[85vh] overflow-auto"
+            style={{ marginTop: '64px' }}
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="relative p-4 border-b border-gray-200">
+              <h3 className="text-xl font-bold font-staff text-gray-800 text-center">{selectedForm.title}</h3>
+              <button
+                aria-label="סגירת חלון"
+                onClick={() => setIsModalOpen(false)}
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+              >
+                ×
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-6 text-center">
+              <div className="relative w-full h-96 md:h-[500px] lg:h-[600px] mb-6">
+                <Image
+                  src={selectedForm.imageSrc}
+                  alt={selectedForm.imageAlt}
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 800px, 1000px"
+                  className="object-contain"
+                />
+              </div>
+
+              {/* Download Button */}
+              <motion.button
+                onClick={() => {
+                  const link = document.createElement('a');
+                  link.href = selectedForm.pdfPath;
+                  link.download = selectedForm.downloadName;
+                  document.body.appendChild(link);
+                  link.click();
+                  document.body.removeChild(link);
+                }}
+                className="px-6 py-2 bg-[#f5a383] text-white font-semibold font-staff rounded-lg hover:bg-[#e0ccbc] transition-all duration-300 shadow-lg hover:shadow-xl mb-3"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                להורדה
+              </motion.button>
+
+              {/* Close Button */}
+              <div>
+                <motion.button
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-6 py-2 bg-gray-500 text-white font-semibold font-staff rounded-lg hover:bg-gray-600 transition-all duration-300 shadow-lg hover:shadow-xl"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  ✕ סגירה
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };
