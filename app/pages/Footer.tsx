@@ -118,7 +118,8 @@ export default function Footer() {
               </div>
 
               {/* Logo section - right side on desktop, bottom on mobile - מוצמד לקצה הימני */}
-              <div className="flex flex-col items-center lg:items-end lg:mr-0 lg:pr-0">
+              <div className="flex flex-col items-center lg:items-end lg:mr-0 lg:pr-0 lg:justify-center lg:h-full"
+                   style={{ marginTop: '-80px' }}>
                 {/* Logo with animation */}
                 <div
                   className="flex relative justify-center items-center mx-auto lg:mx-0 w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56"
