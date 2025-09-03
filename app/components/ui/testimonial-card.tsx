@@ -40,7 +40,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, onAudioP
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.3 }}
-      className="bg-[#fdf6ed] rounded-xl p-6 shadow-lg border border-[#f5a383]/20 relative overflow-hidden max-w-full"
+      className="bg-[#f2f2e8] rounded-xl p-6 shadow-lg border border-[#f5a383]/20 relative overflow-hidden max-w-full"
     >
       {/* רקע דקורטיבי */}
       <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl from-[#f5a383]/10 to-transparent rounded-bl-full"></div>
