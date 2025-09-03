@@ -742,7 +742,7 @@ export default function DonationsSection() {
         <input
           id="firstName"
           required
-          className="border-2 border-black focus:border-[#9dd0bf] w-40 px-3 py-2 rounded-md"
+          className="border-2 border-black focus:border-[#9dd0bf] w-40 px-3 py-2 rounded-md bg-[#fdf6ed]"
           aria-label="שם פרטי - שדה חובה"
           maxLength={20}
         />
@@ -756,7 +756,7 @@ export default function DonationsSection() {
         <input
           id="lastName"
           required
-          className="border-2 border-black focus:border-[#9dd0bf] w-40 px-3 py-2 rounded-md"
+          className="border-2 border-black focus:border-[#9dd0bf] w-40 px-3 py-2 rounded-md bg-[#fdf6ed]"
           aria-label="שם משפחה - שדה חובה"
           maxLength={20}
         />
