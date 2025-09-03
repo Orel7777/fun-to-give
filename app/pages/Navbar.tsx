@@ -277,6 +277,40 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
         </motion.svg>
       )
     },
+    { 
+      title: "תקנון האתר", 
+      url: "/website-terms",
+      icon: (
+        <motion.svg 
+          xmlns="http://www.w3.org/2000/svg" 
+          width="20" 
+          height="20" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          strokeWidth="2" 
+          strokeLinecap="round" 
+          strokeLinejoin="round" 
+          className="shrink-0"
+          whileHover={{ 
+            scale: 1.2,
+            rotate: 15,
+            transition: { duration: 0.3, ease: "easeInOut" }
+          }}
+          animate={{
+            y: [0, -3, 0],
+            transition: { 
+              duration: 2, 
+              repeat: Infinity, 
+              ease: "easeInOut" 
+            }
+          }}
+        >
+          <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+          <circle cx="12" cy="12" r="4"/>
+        </motion.svg>
+      )
+    },
   ];
 
   // Generic smooth scroll or navigate for any hash id
