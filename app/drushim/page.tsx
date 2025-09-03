@@ -89,17 +89,17 @@ export default function JobPostPage() {
               { title: 'בעלי רכבים גדולים - שמעוניינים לעזור בשינוע סלי המזון.', type: 'משרה מלאה', location: 'מרכז, ת"א' },
               { title: 'מנהלת תוכן מדיה חברתית ופרסום העמותה, מנהלת קמפיינים לתרומות ברשת.', type: 'משרה חלקית', location: 'מרכז, ת"א' },
             ].map((job, i) => (
-              <Card key={i} className="w-full max-w-md mx-auto rounded-xl shadow-md bg-[#f2f2e8] overflow-hidden">
+              <Card key={i} className="w-full max-w-xs sm:max-w-sm lg:max-w-md mx-auto rounded-xl shadow-md bg-[#f2f2e8] overflow-hidden">
                 {/* Header */}
-                <div className="bg-[#f4a282] px-4 py-3 rounded-t-xl">
-                  <h3 className="text-center text-black font-bold font-staff text-base md:text-lg leading-snug">
+                <div className="bg-[#f4a282] px-3 py-2 sm:px-4 sm:py-3 rounded-t-xl h-20 sm:h-24 flex items-center justify-center">
+                  <h3 className="text-center text-black font-bold font-staff text-sm sm:text-base md:text-lg leading-snug">
                     {job.title}
                   </h3>
                 </div>
                 {/* Body */}
-                <div className="px-4 py-4 flex flex-col gap-4">
-                  <div className="text-center">
-                    <Button asChild variant="outline" className="rounded-full px-6 transition-transform duration-200 hover:scale-105 active:scale-95 cursor-pointer bg-[#f4a282] hover:bg-[#ec8d66] text-black border-transparent">
+                <div className="px-3 py-3 sm:px-4 sm:py-4 flex flex-col justify-end items-center h-20 sm:h-24">
+                  <div className="flex justify-center w-full">
+                    <Button asChild variant="outline" className="rounded-full px-6 transition-transform duration-200 hover:scale-105 active:scale-95 cursor-pointer bg-[#fdf6ed] hover:bg-[#f5f1e8] text-black border-transparent">
                       <Link href="/contact-form">הגשת מועמדות</Link>
                     </Button>
                   </div>
