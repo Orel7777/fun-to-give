@@ -32,8 +32,8 @@ export default function Home() {
 
   return (
     <div suppressHydrationWarning>
-      {/* Eruda devtools: mobile-only (enabled in all environments) */}
-      <Script id="eruda-loader" strategy="afterInteractive">
+      {/* Eruda devtools: mobile-only (enabled in all environments) - COMMENTED OUT */}
+      {/* <Script id="eruda-loader" strategy="afterInteractive">
         {`
           try {
             if (typeof window !== 'undefined') {
@@ -48,7 +48,7 @@ export default function Home() {
             }
           } catch (e) { console.warn('Eruda load failed', e); }
         `}
-      </Script>
+      </Script> */}
       {/* SplashCursor פעיל תמיד */}
       <SplashCursor />
       
