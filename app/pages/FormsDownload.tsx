@@ -41,29 +41,29 @@ const FormsDownload: React.FC = () => {
       title: "תעודת רישום עמותה",
       imageSrc: "/טפסים/תעודת רישום עמותה.png",
       imageAlt: "תעודת רישום עמותה",
-      pdfPath: "/טפסים/תעודת רישום עמותה.pdf",
-      downloadName: "תעודת רישום עמותה.pdf"
+      pdfPath: "/טפסים/תעודת רישום עמותה.png",
+      downloadName: "תעודת רישום עמותה.png"
     },
     {
       title: "אישור מוסד ציבורי לעניין תרומות (טופס 46)",
       imageSrc: "/טפסים/טופס 46.png",
       imageAlt: "אישור מוסד ציבורי לעניין תרומות",
-      pdfPath: "/טפסים/טופס 46.pdf",
-      downloadName: "טופס 46.pdf"
+      pdfPath: "/טפסים/טופס 46.png",
+      downloadName: "טופס 46.png"
     },
     {
       title: "אישור ניהול תקין לשנת 2025",
       imageSrc: "/טפסים/אישור הגשת מסמכים.png",
       imageAlt: "אישור ניהול תקין",
-      pdfPath: "/טפסים/אישור הגשת מסמכים.pdf",
-      downloadName: "אישור הגשת מסמכים.pdf"
+      pdfPath: "/טפסים/אישור הגשת מסמכים.png",
+      downloadName: "אישור הגשת מסמכים.png"
     },
     {
       title: "אישור ניכוי מס במקור",
       imageSrc: "/טפסים/ניכוי מס.png",
       imageAlt: "אישור ניכוי מס במקור",
-      pdfPath: "/טפסים/ניכוי מס.pdf",
-      downloadName: "ניכוי מס.pdf"
+      pdfPath: "/טפסים/ניכוי מס.png",
+      downloadName: "ניכוי מס.png"
     }
   ];
 

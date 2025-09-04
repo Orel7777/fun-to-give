@@ -382,7 +382,7 @@ const StoryAssociation: React.FC<StoryAssociationProps> = ({ className = '' }) =
                 onLetterAnimationComplete={() => console.log("סיום אנימציה של השאלה")}
               />
               <p className="text-xl sm:text-2xl lg:text-3xl text-[#2a2b26] font-staff leading-relaxed font-semibold">
-                אם ישאלו אותנו מה הדבר שאנחנו הכי אוהבים, נעמה חד משמעית ש
+                אם ישאלו אותנו מה הדבר שאנחנו הכי אוהבים, נענה חד משמעית ש
                 <span className="relative inline-block mx-2 px-4 py-2 bg-gradient-to-r from-[#f5a383]/20 to-[#9acdbe]/20 rounded-xl font-extrabold hover:scale-110 transition-transform duration-300 cursor-pointer">
                   לתת לאחר
                 </span>
