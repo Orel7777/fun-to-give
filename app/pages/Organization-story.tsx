@@ -100,7 +100,7 @@ export default function OrganizationStory() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: 0.4 }}
                 >
-                  <Reveal as="p" type="paragraph">אם ישאלו אותנו מה הדבר שאנחנו הכי אוהבים, נעמה חד משמעית שלתת לאחר זה הדבר הכי כיף בעולם!</Reveal>
+                  <Reveal as="p" type="paragraph">אם ישאלו אותנו מה הדבר שאנחנו הכי אוהבים, נענה חד משמעית שלתת לאחר זה הדבר הכי כיף בעולם!</Reveal>
                   
                   {/* Lottie Animation */}
                   <div className="flex justify-center mt-6">
