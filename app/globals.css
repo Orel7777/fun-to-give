@@ -15,6 +15,11 @@
   --font-staff: 'Staff-Regular', serif;
 }
 
+/* Force light color scheme across browsers (prevents auto dark mode) */
+html {
+  color-scheme: light;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -118,6 +123,8 @@ option {
   font-family: var(--font-staff);
   direction: rtl;
 }
+
+
 
 select:focus {
   outline: none;

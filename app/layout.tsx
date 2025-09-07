@@ -15,6 +15,13 @@ export const metadata: Metadata = {
   title: "כיף לתת",
   description: "אפליקציית כיף לתת",
   viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+  // Ensure browsers do not auto-apply dark mode
+  themeColor: "#fdf6ed",
+  other: {
+    "color-scheme": "light",
+    // Older iOS/Safari hint
+    "supported-color-schemes": "light",
+  },
   icons: {
     icon: '/logo.png',
     apple: '/logo.png',
