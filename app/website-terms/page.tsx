@@ -22,6 +22,9 @@ export default function WebsiteTerms() {
             תקנון האתר ומדיניות פרטיות
           </h1>
           <p className="text-lg text-gray-600">עמותת "כיף לתת"</p>
+          <div className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#eaf6f2] text-[#2a2b26] font-staff font-bold">
+            מס' עמותה: <span className="text-[#5fb3a3]">580772994</span>
+          </div>
           <Link 
             href="/#תרומה"
             className="inline-flex items-center gap-2 mt-6 text-[#5fb3a3] hover:text-[#4a9d8e] font-medium transition-colors"
@@ -48,7 +51,7 @@ export default function WebsiteTerms() {
               <h3 className="text-xl font-semibold text-[#2a2b26] mb-3">1. הגדרות</h3>
               <div className="space-y-2">
                 <p><strong>"האתר"</strong> – https://fun-to-give.vercel.app/</p>
-                <p><strong>"העמותה"</strong> – עמותת כיף לתת, ח"פ/מס׳ עמותה: _______</p>
+                <p><strong>"העמותה"</strong> – עמותת כיף לתת, ח"פ/מס׳ עמותה: 580772994</p>
                 <p><strong>"משתמש/ת"</strong> – כל גולש/ת באתר.</p>
                 <p><strong>"תרומה"</strong> – כל העברה כספית לעמותה דרך האתר או קישור חיצוני.</p>
               </div>

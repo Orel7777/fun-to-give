@@ -4,7 +4,6 @@ import "./globals.css";
 import "./fonts/almoni.css";
 import "./fonts/quicksand.css";
 import { VideoProvider } from "./contexts/VideoContext";
-import { AudioProvider } from "./contexts/AudioContext";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -88,13 +87,11 @@ export default function RootLayout({
         className={`${playfair.className} antialiased`}
         suppressHydrationWarning={true}
       >
-        <AudioProvider>
-          <VideoProvider>
-            {children}
-            <WhatsAppIcon />
-            <EmailIcon />
-          </VideoProvider>
-        </AudioProvider>
+        <VideoProvider>
+          {children}
+          <WhatsAppIcon />
+          <EmailIcon />
+        </VideoProvider>
       </body>
     </html>
   );

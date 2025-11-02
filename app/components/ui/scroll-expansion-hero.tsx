@@ -200,6 +200,29 @@ const ScrollExpandMedia = ({
     try { v.preload = 'auto'; v.load(); } catch {}
   }, []);
 
+  // Start muted playback immediately once the media enters the viewport (no delay)
+  useEffect(() => {
+    const el = mediaRef.current;
+    const v = videoRef.current;
+    if (!el || !v) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          try {
+            v.muted = true;
+            v.playsInline = true;
+            const p = v.play();
+            if (p && typeof p.catch === 'function') p.catch(() => {});
+          } catch {}
+        }
+      },
+      { threshold: 0.1 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
   // Listen for fullscreen changes to sync state
   useEffect(() => {
     const doc = document as FullscreenDocument;

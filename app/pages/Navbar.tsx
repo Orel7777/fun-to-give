@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Menu } from "lucide-react";
 import { motion } from "framer-motion";
-import { useAudio } from "../contexts/AudioContext";
+import Image from "next/image";
 
 interface NavigationBarProps {
   className?: string;
@@ -22,7 +22,6 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
 
   // בדיקה אם זה מובייל
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 768;
-  const { isSoundOn, toggleSound } = useAudio();
 
   const router = useRouter();
   const pathname = usePathname();
@@ -366,26 +365,32 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
             {/* Logo - הכי ימין */}
           <div className="flex-shrink-0">
               <Link href="/" className="flex gap-2 items-center" onClick={handleLogoClick} scroll>
-            <motion.img
-              src="/logo.png"
-              alt="כיף לתת"
-              className="w-auto h-16"
-              loading="eager"
-              whileHover={{ 
-                scale: 1.1,
-                rotate: 5,
-                transition: { 
-                  duration: 0.4, 
-                  ease: "easeInOut",
-                  type: "spring",
-                  stiffness: 300
-                }
-              }}
-              whileTap={{ 
-                scale: 0.95,
-                transition: { duration: 0.1 }
-              }}
-            />
+                <motion.div
+                  whileHover={{ 
+                    scale: 1.1,
+                    rotate: 5,
+                    transition: { 
+                      duration: 0.4, 
+                      ease: "easeInOut",
+                      type: "spring",
+                      stiffness: 300
+                    }
+                  }}
+                  whileTap={{ 
+                    scale: 0.95,
+                    transition: { duration: 0.1 }
+                  }}
+                  className="h-16 flex items-center"
+                >
+                  <Image
+                    src="/logo.png"
+                    alt="כיף לתת"
+                    width={144}
+                    height={64}
+                    priority
+                    className="w-auto h-16"
+                  />
+                </motion.div>
               </Link>
             </div>
             
@@ -427,58 +432,7 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
             </button>
           </div>
 
-                      {/* Music Icon - במרכז */}
-            <div className="hidden absolute left-1/2 justify-center items-center transform -translate-x-1/2 lg:flex">
-              <motion.button
-                onClick={toggleSound}
-                className="p-2 rounded-full transition-colors duration-200 hover:bg-gray-100"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <motion.svg
-                  width="24"
-                  height="24"
-                  viewBox="0 0 512 512"
-                  className="shrink-0"
-                  xmlns="http://www.w3.org/2000/svg"
-                  animate={{ 
-                    rotateY: isSoundOn ? 0 : 180,
-                    scale: isSoundOn ? 1 : 1.1
-                  }}
-                  transition={{ 
-                    duration: 0.6, 
-                    ease: "easeInOut",
-                    type: "spring",
-                    stiffness: 200
-                  }}
-                >
-                  {isSoundOn ? (
-                    // Sound ON Icon
-                    <g fill="#f5a383">
-                      <path fillRule="evenodd" clipRule="evenodd" d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256
-                        S397.391,0,256,0z M256,472c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"/>
-                      <path d="M331.141,148.297L232.156,208H168c-4.422,0-8,3.578-8,8v80c0,4.422,3.578,8,8,8h67.5l95.641,59.719
-                        c17.031,9.969,20.859,1.938,20.859-17.844V166.109C352,146.359,348.172,138.312,331.141,148.297z"/>
-                    </g>
-                  ) : (
-                    // Sound OFF Icon
-                    <g fill="#f5a383">
-                      <path d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472
-                        c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"/>
-                      <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594l233.938,233.938
-                        c4.312,4.312,11.297,4.312,15.594,0C385.078,376.469,385.078,369.484,380.766,365.172z"/>
-                      <g>
-                        <path d="M352,325.094V166.109c0-19.75-3.828-27.797-20.859-17.812l-97.266,58.672L352,325.094z"/>
-                        <path d="M181.094,208H168c-4.422,0-8,3.578-8,8v80c0,4.422,3.578,8,8,8h67.5l95.641,59.719c3.891,2.281,7.031,3.5,9.656,3.984
-                          L181.094,208z"/>
-                      </g>
-                      <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594l233.938,233.938
-                        c4.312,4.312,11.297,4.312,15.594,0C385.078,376.469,385.078,369.484,380.766,365.172z"/>
-                    </g>
-                  )}
-                </motion.svg>
-              </motion.button>
-          </div>
+                      {/* Music toggle removed */}
 
           {/* Auth Buttons - בצד ימין */}
           <div className="hidden items-center space-x-4 md:flex">
@@ -620,55 +574,6 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
 
           {/* Mobile menu button */}
           <div className="flex gap-2 items-center lg:hidden">
-            <motion.button
-              onClick={toggleSound}
-              className="p-1 rounded-full transition-colors duration-200 hover:bg-gray-100"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <motion.svg 
-                width="20" 
-                height="20" 
-                viewBox="0 0 512 512" 
-                className="shrink-0" 
-                xmlns="http://www.w3.org/2000/svg"
-                animate={{ 
-                  rotateY: isSoundOn ? 0 : 180,
-                  scale: isSoundOn ? 1 : 1.1
-                }}
-                transition={{ 
-                  duration: 0.6, 
-                  ease: "easeInOut",
-                  type: "spring",
-                  stiffness: 200
-                }}
-              >
-                {isSoundOn ? (
-                  // Sound ON Icon
-                  <g fill="#f5a383">
-                    <path fillRule="evenodd" clipRule="evenodd" d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256
-                      S397.391,0,256,0z M256,472c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"/>
-                    <path d="M331.141,148.297L232.156,208H168c-4.422,0-8,3.578-8,8v80c0,4.422,3.578,8,8,8h67.5l95.641,59.719
-                      c17.031,9.969,20.859,1.938,20.859-17.844V166.109C352,146.359,348.172,138.312,331.141,148.297z"/>
-                  </g>
-                ) : (
-                  // Sound OFF Icon
-                  <g fill="#f5a383">
-                    <path d="M256,0C114.609,0,0,114.609,0,256s114.609,256,256,256s256-114.609,256-256S397.391,0,256,0z M256,472
-                      c-119.297,0-216-96.703-216-216S136.703,40,256,40s216,96.703,216,216S375.297,472,256,472z"/>
-                    <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594l233.938,233.938
-                      c4.312,4.312,11.297,4.312,15.594,0C385.078,376.469,385.078,369.484,380.766,365.172z"/>
-                    <g>
-                      <path d="M352,325.094V166.109c0-19.75-3.828-27.797-20.859-17.812l-97.266,58.672L352,325.094z"/>
-                      <path d="M181.094,208H168c-4.422,0-8,3.578-8,8v80c0,4.422,3.578,8,8,8h67.5l95.641,59.719c3.891,2.281,7.031,3.5,9.656,3.984
-                        L181.094,208z"/>
-                    </g>
-                    <path d="M380.766,365.172L146.844,131.234c-4.312-4.312-11.297-4.312-15.609,0s-4.312,11.266,0,15.594l233.938,233.938
-                      c4.312,4.312,11.297,4.312,15.594,0C385.078,376.469,385.078,369.484,380.766,365.172z"/>
-                  </g>
-                )}
-              </motion.svg>
-            </motion.button>
             <button
               onClick={toggleMenu}
               className="text-gray-800 transition-colors duration-200 cursor-pointer hover:text-[#f5a383] focus:outline-none focus:text-[#f5a383]"

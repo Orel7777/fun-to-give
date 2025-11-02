@@ -1,4 +1,4 @@
-import { Clock, Mail, MapPin, Phone, MessageCircle } from "lucide-react"
+import { Clock, Mail, Phone, MessageCircle } from "lucide-react"
 import Script from "next/script"
 import Reveal from "../components/Reveal"
 import Image from "next/image"
@@ -101,12 +101,7 @@ export default function Footer() {
                     </div>
                   </div>
 
-                  <div className="flex items-start space-x-4">
-                    <MapPin className="w-7 h-7 text-[#f5a383] mt-1 flex-shrink-0" />
-                    <div className="w-full text-right sm:text-left">
-                      <Reveal as="p" type="paragraph" className="text-black text-xl sm:text-2xl font-staff">חולדה הנביאה 10, ירושלים מיקוד 9511010</Reveal>
-                    </div>
-                  </div>
+                  
 
                   <div className="flex items-start space-x-4">
                     <Phone className="w-7 h-7 text-[#f5a383] mt-1 flex-shrink-0" />
