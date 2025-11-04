@@ -149,7 +149,7 @@ export function CardStack3D({
             key={index}
             {...image}
             index={index}
-            isHovered={isHovered}
+            isHovered={isMobile ? true : isHovered}
             isFirstCard={index === 0}
             isMobile={isMobile}
             isFront={frontCardIndex === index}

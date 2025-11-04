@@ -1545,8 +1545,13 @@ export default function SplashCursor({
   }
 
   return (
-    <div className="fixed top-0 left-0 z-[-1] pointer-events-none w-full h-full" suppressHydrationWarning>
-      <canvas ref={canvasRef} id="fluid" className="block w-screen h-screen" style={{ opacity: 0.4 }} />
+    <div className="fixed top-0 left-0 z-[9999] pointer-events-none w-full h-full" suppressHydrationWarning>
+      <canvas
+        ref={canvasRef}
+        id="fluid"
+        className="block w-screen h-screen mix-blend-screen select-none"
+        style={{ opacity: 0.3 }}
+      />
     </div>
   );
 }

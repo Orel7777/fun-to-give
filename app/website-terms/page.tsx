@@ -50,7 +50,7 @@ export default function WebsiteTerms() {
             <section>
               <h3 className="text-xl font-semibold text-[#2a2b26] mb-3">1. הגדרות</h3>
               <div className="space-y-2">
-                <p><strong>"האתר"</strong> – https://fun-to-give.vercel.app/</p>
+                <p><strong>"האתר"</strong> – keflatet.com</p>
                 <p><strong>"העמותה"</strong> – עמותת כיף לתת, ח"פ/מס׳ עמותה: 580772994</p>
                 <p><strong>"משתמש/ת"</strong> – כל גולש/ת באתר.</p>
                 <p><strong>"תרומה"</strong> – כל העברה כספית לעמותה דרך האתר או קישור חיצוני.</p>
