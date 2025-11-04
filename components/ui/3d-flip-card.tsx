@@ -60,7 +60,7 @@ const Card = ({
         transformStyle: 'preserve-3d',
         transformOrigin: isMobile ? 'top center' : 'left center',
         zIndex: isFront ? 20 : 5 - index,
-        filter: isFront || frontCardIndex === null ? 'none' : 'blur(5px)', 
+        filter: isFront ? 'none' : 'blur(6px)', 
       }}
       initial={{
         rotateY: 0,
@@ -122,7 +122,7 @@ export function CardStack3D({
 }: CardStackProps) {
   const [isHovered, setIsHovered] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const [frontCardIndex, setFrontCardIndex] = useState<number | null>(null);
+  const [frontCardIndex, setFrontCardIndex] = useState<number>(0);
   
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -132,7 +132,7 @@ export function CardStack3D({
   }, []);
 
   const handleCardClick = (idx: number) => {
-    setFrontCardIndex(prev => (prev === idx ? null : idx));
+    setFrontCardIndex(idx);
     if (onImageClick) onImageClick(idx);
   };
 

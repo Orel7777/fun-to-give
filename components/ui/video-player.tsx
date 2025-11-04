@@ -24,7 +24,7 @@ className?: string;
 return (
   <motion.div
     className={cn(
-      "relative w-full h-1 bg-white/20 rounded-full cursor-pointer",
+      "relative w-full h-[3px] sm:h-1 bg-white/20 rounded-full cursor-pointer",
       className
     )}
     onClick={(e) => {
@@ -155,14 +155,14 @@ return (
     <AnimatePresence>
       {showControls && (
         <motion.div
-          className="absolute bottom-0 mx-auto max-w-xl left-0 right-0 p-4 m-2 bg-[#11111198] backdrop-blur-md rounded-2xl"
+          className="absolute bottom-0 mx-auto max-w-md sm:max-w-xl left-0 right-0 p-2 sm:p-4 m-2 bg-[#11111198] backdrop-blur-md rounded-2xl"
           initial={{ y: 20, opacity: 0, filter: "blur(10px)" }}
           animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
           exit={{ y: 20, opacity: 0, filter: "blur(10px)" }}
           transition={{ duration: 0.6, ease: "circInOut", type: "spring" }}
         >
           <div className="flex items-center gap-2 mb-2">
-            <span className="text-white text-sm">
+            <span className="text-white text-xs sm:text-sm">
               {formatTime(currentTime)}
             </span>
             <CustomSlider
@@ -170,7 +170,7 @@ return (
               onChange={handleSeek}
               className="flex-1"
             />
-            <span className="text-white text-sm">{formatTime(duration)}</span>
+            <span className="text-white text-xs sm:text-sm">{formatTime(duration)}</span>
           </div>
 
           <div className="flex items-center justify-between">
@@ -186,9 +186,9 @@ return (
                   className="text-white hover:bg-[#111111d1] hover:text-white"
                 >
                   {isPlaying ? (
-                    <Pause className="h-5 w-5" />
+                    <Pause className="h-4 w-4 sm:h-5 sm:w-5" />
                   ) : (
-                    <Play className="h-5 w-5" />
+                    <Play className="h-4 w-4 sm:h-5 sm:w-5" />
                   )}
                 </Button>
               </motion.div>
@@ -204,16 +204,16 @@ return (
                     className="text-white hover:bg-[#111111d1] hover:text-white"
                   >
                     {isMuted ? (
-                      <VolumeX className="h-5 w-5" />
+                      <VolumeX className="h-4 w-4 sm:h-5 sm:w-5" />
                     ) : volume > 0.5 ? (
-                      <Volume2 className="h-5 w-5" />
+                      <Volume2 className="h-4 w-4 sm:h-5 sm:w-5" />
                     ) : (
-                      <Volume1 className="h-5 w-5" />
+                      <Volume1 className="h-4 w-4 sm:h-5 sm:w-5" />
                     )}
                   </Button>
                 </motion.div>
 
-                <div className="w-24">
+                <div className="w-16 sm:w-24">
                   <CustomSlider
                     value={volume * 100}
                     onChange={handleVolumeChange}
@@ -234,7 +234,7 @@ return (
                     variant="ghost"
                     size="icon"
                     className={cn(
-                      "text-white hover:bg-[#111111d1] hover:text-white",
+                      "text-white hover:bg-[#111111d1] hover:text-white text-xs sm:text-sm",
                       playbackSpeed === speed && "bg-[#111111d1]"
                     )}
                   >
