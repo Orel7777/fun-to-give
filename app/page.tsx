@@ -10,12 +10,23 @@ import Footer from './pages/Footer';
 import Script from 'next/script';
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const shown = window.sessionStorage.getItem('splashShown');
+        const hasHash = window.location.hash && window.location.hash.length > 1;
+        // אם כבר ראינו את מסך הטעינה או יש קפיצה לעוגן, אל תציג טעינה שוב
+        return shown ? false : !hasHash;
+      } catch {}
+    }
+    return true;
+  });
   const [showTextAnimation, setShowTextAnimation] = useState(false);
   const mainContentRef = useRef<HTMLDivElement>(null);
 
   const handleLoadComplete = () => {
     setIsLoading(false);
+    try { window.sessionStorage.setItem('splashShown', '1'); } catch {}
     
     // אפקט GSAP רק לתוכן הראשי (ללא אפקט על הניווט)
 
@@ -29,6 +40,20 @@ export default function Home() {
       setShowTextAnimation(true);
     }, 1500);
   };
+
+  // אם יש hash בכתובת, גלול אליו לאחר שהמסך הראשי מוצג
+  if (typeof window !== 'undefined') {
+    // ריצה לאחר שה-state מתעדכן
+    setTimeout(() => {
+      if (!isLoading && window.location.hash) {
+        const id = window.location.hash.replace('#', '');
+        const el = document.getElementById(id);
+        if (el) {
+          try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch {}
+        }
+      }
+    }, 0);
+  }
 
   return (
     <div suppressHydrationWarning>

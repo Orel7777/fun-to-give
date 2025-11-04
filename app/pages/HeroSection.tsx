@@ -355,7 +355,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       )}
 
       {/* גלריה של תמונות פעילות העמותה */}
-      <div id="תמונות-ווידאו" className="bg-[#fdf6ed] py-0 sm:py-1 md:py-1 lg:py-2 text-center">
+      <div id="תמונות-ווידאו" className="bg[#fdf6ed] py-6 sm:py-8 md:py-12 lg:py-16 text-center">
         <Reveal as="h2" type="heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-6 sm:mb-8 md:mb-10 flex items-center justify-center gap-3">
           תמונות מפעילות העמותה
           <svg 
@@ -393,16 +393,36 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
 
         return (
           <>
-            {/* Mobile: 3D flip stack */}
+            {/* Mobile: horizontal scrollable grid */}
             {isMobile && (
               <div className="sm:hidden">
-                <CardStack3D
-                  images={galleryImages.map((src, i) => ({ src, alt: `תמונה ${i + 1} מפעילות העמותה` }))}
-                  cardWidth={260}
-                  cardHeight={260}
-                  spacing={{ x: 60, y: 0 }}
-                  onImageClick={(idx) => { setCurrentImageIndex(idx); setDialogOpen(true); }}
-                />
+                <div className="overflow-x-auto pb-4">
+                  <div className="flex gap-4 px-4" style={{ width: 'max-content' }}>
+                    {galleryImages.map((src, index) => (
+                      <motion.div
+                        key={src}
+                        className="flex-shrink-0 relative overflow-hidden rounded-xl shadow-lg cursor-pointer"
+                        style={{ width: 200, height: 200 }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        whileInView={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.4, delay: index * 0.05 }}
+                        viewport={{ once: true }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={() => { setCurrentImageIndex(index); setDialogOpen(true); }}
+                      >
+                        <Image
+                          src={src}
+                          alt={`תמונה ${index + 1} מפעילות העמותה`}
+                          fill
+                          style={{ objectFit: 'cover' }}
+                          className="rounded-xl"
+                          sizes="200px"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity duration-300" />
+                      </motion.div>
+                    ))}
+                  </div>
+                </div>
                 <ImageDialog
                   images={galleryImages}
                   isOpen={dialogOpen}
@@ -422,15 +442,26 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         );
       })()}
 
+      {/* מרווח בין גלריה ל'סיפורי משפחות' */}
+      <div className="h-8 sm:h-10 md:h-12" />
 
       {/* סיפורי משפחות עם עדויות אודיו */}
       <FamiliesTestimonials />
 
+      {/* מרווח בין 'סיפורי משפחות' ל'תרומה' */}
+      <div className="h-8 sm:h-10 md:h-12" />
+
       {/* תרומה - מוצג מיד אחרי משפחות מספרות */}
       <DonationsSection />
 
+      {/* מרווח בין 'תרומה' ל'ייעוד העמותה' */}
+      <div className="h-8 sm:h-10 md:h-12" />
+
       {/* ייעוד העמותה - מוצג אחרי סעיף התרומה ללא מרווח */}
       <OrganizationPurpose />
+
+      {/* מרווח בין 'ייעוד העמותה' ל'סיפור העמותה' */}
+      <div className="h-8 sm:h-10 md:h-12" />
 
       {/* סיפור העמותה - מוצג אחרי ייעוד העמותה */}
       <OrganizationStory />

@@ -7,87 +7,79 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const formatTime = (seconds: number) => {
-const minutes = Math.floor(seconds / 60);
-const remainingSeconds = Math.floor(seconds % 60);
-return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 };
 
 const CustomSlider = ({
-value,
-onChange,
-className,
+  value,
+  onChange,
+  className,
+  variant = 'progress',
 }: {
-value: number;
-onChange: (value: number) => void;
-className?: string;
+  value: number;
+  onChange: (value: number) => void;
+  className?: string;
+  variant?: 'progress' | 'volume';
 }) => {
-return (
-  <motion.div
-    className={cn(
-      "relative w-full h-[3px] sm:h-1 bg-white/20 rounded-full cursor-pointer",
-      className
-    )}
-    onClick={(e) => {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const percentage = (x / rect.width) * 100;
-      onChange(Math.min(Math.max(percentage, 0), 100));
-    }}
-  >
+  return (
     <motion.div
-      className="absolute top-0 left-0 h-full bg-white rounded-full"
-      style={{ width: `${value}%` }}
-      initial={{ width: 0 }}
-      animate={{ width: `${value}%` }}
-      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-    />
-  </motion.div>
-);
+      className={cn(
+        variant === 'progress'
+          ? "relative w-full h-[6px] sm:h-[7px] rounded-full cursor-pointer bg-[#b8a99b]/50"
+          : "relative w-full h-[3px] sm:h-1 bg-white/20 rounded-full cursor-pointer",
+        className
+      )}
+      onClick={(e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const percentage = (x / rect.width) * 100;
+        onChange(Math.min(Math.max(percentage, 0), 100));
+      }}
+    >
+      <motion.div
+        className={cn(
+          "absolute top-0 left-0 h-full rounded-full",
+          variant === 'progress'
+            ? "bg-gradient-to-r from-[#9fd6cc] via-[#cfc6b8] to-[#f2a7a0]"
+            : "bg-white"
+        )}
+        style={{ width: `${value}%` }}
+        initial={{ width: 0 }}
+        animate={{ width: `${value}%` }}
+        transition={{ type: "spring", stiffness: 300, damping: 30 }}
+      />
+      {variant === 'progress' && (
+        <div
+          className="absolute top-1/2 -translate-y-1/2"
+          style={{ left: `calc(${value}% - 8px)` }}
+        >
+          <div className="w-3.5 h-3.5 rounded-full bg-[#f2a7a0] shadow-[0_0_0_3px_rgba(255,255,255,0.4)]" />
+        </div>
+      )}
+    </motion.div>
+  );
 };
 
 const VideoPlayer = ({ src }: { src: string }) => {
-const videoRef = useRef<HTMLVideoElement>(null);
-const [isPlaying, setIsPlaying] = useState(false);
-const [volume, setVolume] = useState(1);
-const [progress, setProgress] = useState(0);
-const [isMuted, setIsMuted] = useState(true);
-const [playbackSpeed, setPlaybackSpeed] = useState(1);
-const [showControls, setShowControls] = useState(false);
-const [currentTime, setCurrentTime] = useState(0);
-const [duration, setDuration] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  const [duration, setDuration] = useState(0);
 
-const togglePlay = () => {
-  const video = videoRef.current;
-  if (!video) return;
-  // If currently playing muted, first click on Play should unmute and keep playing
-  if (!video.paused && isMuted) {
-    video.muted = false;
-    setIsMuted(false);
-    if (volume === 0) {
-      video.volume = 1;
-      setVolume(1);
+  const togglePlay = () => {
+    const video = videoRef.current;
+    if (!video) return;
+    if (video.paused) {
+      video.play();
+      setIsPlaying(true);
+    } else {
+      video.pause();
+      setIsPlaying(false);
     }
-    setIsPlaying(true);
-    return;
-  }
-  if (video.paused) {
-    video.play();
-    // If it was muted when starting via Play, keep muted until user explicitly unmutes
-    setIsPlaying(true);
-  } else {
-    video.pause();
-    setIsPlaying(false);
-  }
-};
-
-const handleVolumeChange = (value: number) => {
-  if (videoRef.current) {
-    const newVolume = value / 100;
-    videoRef.current.volume = newVolume;
-    setVolume(newVolume);
-    setIsMuted(newVolume === 0);
-  }
-};
+  };
 
 const handleTimeUpdate = () => {
   if (videoRef.current) {
@@ -109,25 +101,6 @@ const handleSeek = (value: number) => {
   }
 };
 
-const toggleMute = () => {
-  if (videoRef.current) {
-    videoRef.current.muted = !isMuted;
-    setIsMuted(!isMuted);
-    if (!isMuted) {
-      setVolume(0);
-    } else {
-      setVolume(1);
-      videoRef.current.volume = 1;
-    }
-  }
-};
-
-const setSpeed = (speed: number) => {
-  if (videoRef.current) {
-    videoRef.current.playbackRate = speed;
-    setPlaybackSpeed(speed);
-  }
-};
 
 return (
   <motion.div
@@ -135,8 +108,6 @@ return (
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5 }}
-    onMouseEnter={() => setShowControls(true)}
-    onMouseLeave={() => setShowControls(false)}
   >
     <video
       ref={videoRef}
@@ -147,106 +118,26 @@ return (
       muted
       autoPlay
       playsInline
-      preload="metadata"
+      preload="auto"
       onPlay={() => setIsPlaying(true)}
       onPause={() => setIsPlaying(false)}
     />
 
-    <AnimatePresence>
-      {showControls && (
-        <motion.div
-          className="absolute bottom-0 mx-auto max-w-md sm:max-w-xl left-0 right-0 p-2 sm:p-4 m-2 bg-[#11111198] backdrop-blur-md rounded-2xl"
-          initial={{ y: 20, opacity: 0, filter: "blur(10px)" }}
-          animate={{ y: 0, opacity: 1, filter: "blur(0px)" }}
-          exit={{ y: 20, opacity: 0, filter: "blur(10px)" }}
-          transition={{ duration: 0.6, ease: "circInOut", type: "spring" }}
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-white text-xs sm:text-sm">
-              {formatTime(currentTime)}
-            </span>
-            <CustomSlider
-              value={progress}
-              onChange={handleSeek}
-              className="flex-1"
-            />
-            <span className="text-white text-xs sm:text-sm">{formatTime(duration)}</span>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <motion.div
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Button
-                  onClick={togglePlay}
-                  variant="ghost"
-                  size="icon"
-                  className="text-white hover:bg-[#111111d1] hover:text-white"
-                >
-                  {isPlaying ? (
-                    <Pause className="h-4 w-4 sm:h-5 sm:w-5" />
-                  ) : (
-                    <Play className="h-4 w-4 sm:h-5 sm:w-5" />
-                  )}
-                </Button>
-              </motion.div>
-              <div className="flex items-center gap-x-1">
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <Button
-                    onClick={toggleMute}
-                    variant="ghost"
-                    size="icon"
-                    className="text-white hover:bg-[#111111d1] hover:text-white"
-                  >
-                    {isMuted ? (
-                      <VolumeX className="h-4 w-4 sm:h-5 sm:w-5" />
-                    ) : volume > 0.5 ? (
-                      <Volume2 className="h-4 w-4 sm:h-5 sm:w-5" />
-                    ) : (
-                      <Volume1 className="h-4 w-4 sm:h-5 sm:w-5" />
-                    )}
-                  </Button>
-                </motion.div>
-
-                <div className="w-16 sm:w-24">
-                  <CustomSlider
-                    value={volume * 100}
-                    onChange={handleVolumeChange}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2">
-              {[0.5, 1, 1.5, 2].map((speed) => (
-                <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  whileTap={{ scale: 0.9 }}
-                  key={speed}
-                >
-                  <Button
-                    onClick={() => setSpeed(speed)}
-                    variant="ghost"
-                    size="icon"
-                    className={cn(
-                      "text-white hover:bg-[#111111d1] hover:text-white text-xs sm:text-sm",
-                      playbackSpeed === speed && "bg-[#111111d1]"
-                    )}
-                  >
-                    {speed}x
-                  </Button>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    {/* Simple timeline overlay - always visible */}
+    <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2">
+      <span className="text-white text-xs sm:text-sm font-medium drop-shadow-lg">
+        {formatTime(currentTime)}
+      </span>
+      <CustomSlider
+        value={progress}
+        onChange={handleSeek}
+        className="flex-1"
+        variant="progress"
+      />
+      <span className="text-white text-xs sm:text-sm font-medium drop-shadow-lg">
+        {formatTime(duration)}
+      </span>
+    </div>
   </motion.div>
 );
 };

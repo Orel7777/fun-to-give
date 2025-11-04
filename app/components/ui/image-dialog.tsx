@@ -178,7 +178,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
             {/* מיכל התמונה בגודל אחיד לכל התמונות */}
             <div
               className="relative mx-auto rounded-xl overflow-hidden shadow-2xl"
-              style={{ width: isMobile ? 340 : 800, height: isMobile ? 440 : 550 }}
+              style={{ width: isMobile ? 300 : 720, height: isMobile ? 360 : 480 }}
             >
               <AnimatePresence mode="wait">
                 <motion.div
@@ -198,7 +198,7 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
                     src={images[currentIndex]}
                     fill
                     quality={85}
-                    sizes={isMobile ? "340px" : "800px"}
+                    sizes={isMobile ? "300px" : "720px"}
                     style={{ objectFit: "cover" }}
                     alt={`תמונה ${currentIndex + 1} מפעילות העמותה`}
                     className="cursor-pointer"
