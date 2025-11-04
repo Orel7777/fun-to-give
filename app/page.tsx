@@ -87,7 +87,7 @@ export default function Home() {
       <SplashCursor />
       
       {isLoading && <LoadPage onLoadComplete={handleLoadComplete} duration={2500} videoPath="כיף לתת מקוצר.mp4" />}
-      <NavigationBar />
+      {!isLoading && <NavigationBar />}
 
       <main ref={mainContentRef}>
       {/* className="pt-32" */}

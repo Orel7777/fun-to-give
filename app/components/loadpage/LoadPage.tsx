@@ -216,8 +216,11 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
   useEffect(() => {
     if (progress >= 100) {
       if (videoStatusRef.current.isReady) {
+        console.log('✅ מסך הטעינה מסתיים - וידאו מוכן');
         setIsVisible(false);
         onLoadComplete?.();
+      } else {
+        console.log('⏳ מחכה לוידאו להיות מוכן...');
       }
     }
   }, [progress, onLoadComplete]);

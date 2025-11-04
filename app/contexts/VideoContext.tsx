@@ -89,7 +89,7 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
           console.log('📊 מטאדטה של הוידאו נטענה');
           // במובייל - אם זה רק מטאדטה, נחשב מוכן אבל נמתין עוד קצת
           if (isMobile && video.preload === 'metadata') {
-            setTimeout(() => safeResolveOnce(), 1000); // ממתין שנייה לוודא שהמטאדטה נטענה
+            setTimeout(() => resolveOnce(), 1000); // ממתין שנייה לוודא שהמטאדטה נטענה
           }
         };
         
@@ -101,20 +101,20 @@ export const VideoProvider = ({ children }: VideoProviderProps) => {
         // המתנה לטעינה מלאה
         video.oncanplaythrough = () => {
           console.log('🎬 הוידאו מוכן לנגינה מלאה');
-          safeResolveOnce();
+          resolveOnce();
         };
         
         // המתנה לטעינה מלאה (גיבוי)
         video.oncanplay = () => {
           console.log('🎬 הוידאו מוכן לנגינה');
           // בדיקה אם יש מספיק נתונים לנגינה
-          if (video.readyState >= 3) { // שינוי מ-4 ל-3 לטעינה מהירה יותר
-            safeResolveOnce();
+          if (video.readyState >= 4) { // חזרה ל-4 לטעינה מלאה
+            resolveOnce();
           } else {
             // אם אין מספיק נתונים, נמתין עוד קצת
             setTimeout(() => {
-              if (video.readyState >= 2) { // אפילו עם נתונים חלקיים
-                safeResolveOnce();
+              if (video.readyState >= 3) { // עם נתונים חלקיים
+                resolveOnce();
               }
             }, 2000);
           }
