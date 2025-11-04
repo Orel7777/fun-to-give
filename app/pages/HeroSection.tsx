@@ -108,7 +108,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         />
 
         {/* Text Content */}
-        <div className="flex relative z-20 flex-col justify-center items-center px-10 min-h-screen text-center" style={{ overflow: 'visible', paddingBottom: '95px' }}>
+        <div className="flex relative z-20 flex-col justify-center items-center px-10 text-center min-h-[55vh] sm:min-h-[55vh] md:min-h-[60vh] lg:min-h-[65vh]" style={{ overflow: 'visible', paddingBottom: '24px' }}>
           <div 
             className="opacity-100 transition-all transform -translate-y-[60px] sm:-translate-y-[30px] md:-translate-y-[60px] duration-2000"
           >

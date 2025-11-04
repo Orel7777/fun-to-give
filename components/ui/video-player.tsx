@@ -68,6 +68,8 @@ const VideoPlayer = ({ src }: { src: string }) => {
   const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
+  const [showControls, setShowControls] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -79,6 +81,14 @@ const VideoPlayer = ({ src }: { src: string }) => {
       video.pause();
       setIsPlaying(false);
     }
+    // הסתר את הכפתור אחרי לחיצה
+    setShowControls(false);
+    // הצג שוב אחרי 3 שניות אם עדיין מרחפים
+    setTimeout(() => {
+      if (isHovering) {
+        setShowControls(true);
+      }
+    }, 3000);
   };
 
 const handleTimeUpdate = () => {
@@ -108,13 +118,34 @@ return (
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.5 }}
+    onMouseEnter={() => {
+      setIsHovering(true);
+      setShowControls(true);
+    }}
+    onMouseLeave={() => {
+      setIsHovering(false);
+      setTimeout(() => {
+        if (!isHovering) {
+          setShowControls(false);
+        }
+      }, 1000);
+    }}
+    onTouchStart={() => {
+      setIsHovering(true);
+      setShowControls(true);
+    }}
+    onTouchEnd={() => {
+      setTimeout(() => {
+        setIsHovering(false);
+        setShowControls(false);
+      }, 3000);
+    }}
   >
     <video
       ref={videoRef}
       className="w-full"
       onTimeUpdate={handleTimeUpdate}
       src={src}
-      onClick={togglePlay}
       muted
       autoPlay
       playsInline
@@ -122,6 +153,30 @@ return (
       onPlay={() => setIsPlaying(true)}
       onPause={() => setIsPlaying(false)}
     />
+
+    {/* כפתור Play/Pause במרכז */}
+    <AnimatePresence>
+      {showControls && (
+        <motion.div
+          className="absolute inset-0 flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Button
+            onClick={togglePlay}
+            className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white/30 transition-all duration-300 flex items-center justify-center group"
+          >
+            {isPlaying ? (
+              <Pause className="w-8 h-8 sm:w-10 sm:h-10 text-white group-hover:scale-110 transition-transform" />
+            ) : (
+              <Play className="w-8 h-8 sm:w-10 sm:h-10 text-white group-hover:scale-110 transition-transform ml-1" />
+            )}
+          </Button>
+        </motion.div>
+      )}
+    </AnimatePresence>
 
     {/* Simple timeline overlay - always visible */}
     <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2">
