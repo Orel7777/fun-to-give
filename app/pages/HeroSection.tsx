@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Script from 'next/script';
 import { HorizontalScrollCarousel } from '../components';
-import ScrollExpandMedia from '../components/ui/scroll-expansion-hero';
+import VideoPlayer from '@/components/ui/video-player';
 import FamiliesTestimonials from './Testimonials';
 import { useVideo } from '../contexts/VideoContext';
 import { PulseBeamsFirstDemo } from '../components/call to action/demo';
@@ -345,16 +345,9 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       )}
       
       {!loading && !error && isReady && (
-        <ScrollExpandMedia
-          mediaType="video"
-          mediaSrc={mainVideo.videoUrl}
-          bgImageSrc="/pictures/1.webp"
-          title="עמותת כיף לתת"
-          date="כיף לתת"
-          scrollToExpand="גלול/י להרחבה"
-          textBlend
-        >
-        </ScrollExpandMedia>
+        <div className="bg-[#fdf6ed] px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10">
+          <VideoPlayer src={mainVideo.videoUrl} />
+        </div>
       )}
 
       {/* גלריה של תמונות פעילות העמותה */}
