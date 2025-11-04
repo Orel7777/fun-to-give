@@ -14,8 +14,9 @@ export default function Home() {
     if (typeof window !== 'undefined') {
       try {
         const shown = window.sessionStorage.getItem('splashShown');
-        // אם כבר ראינו את מסך הטעינה, אל תציג אותו שוב
-        return !shown;
+        const hasHash = window.location.hash && window.location.hash.length > 1;
+        // אם כבר ראינו את מסך הטעינה או יש hash, אל תציג אותו שוב
+        return shown ? false : !hasHash;
       } catch {}
     }
     return true;

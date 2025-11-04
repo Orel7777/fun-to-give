@@ -41,7 +41,7 @@ interface HeroSectionProps {
 
 const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
   // קבלת הוידאו מהקונטקסט (הוא נטען מראש בLoadPage)
-  const { mainVideo } = useVideo();
+  const { mainVideo, preloadVideo } = useVideo();
   const { loading, error, isReady } = mainVideo;
   
   // זיהוי גודל המסך
@@ -60,8 +60,17 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
     // האזנה לשינויים בגודל המסך
     window.addEventListener('resize', checkScreenSize);
     
+    // ניקוי
     return () => window.removeEventListener('resize', checkScreenSize);
   }, []);
+
+  // וידוא שהוידאו נטען תמיד, גם ברענון
+  useEffect(() => {
+    if (!isReady && !loading && !error) {
+      console.log('🎬 טוען וידאו ב-HeroSection (ברענון)');
+      preloadVideo('כיף לתת מקוצר.mp4');
+    }
+  }, [isReady, loading, error, preloadVideo]);
   
   // Only show the futuristic hero when text animation should be visible
   if (!showTextAnimation) {
