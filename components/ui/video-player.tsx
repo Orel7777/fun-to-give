@@ -70,11 +70,20 @@ const VideoPlayer = ({ src }: { src: string }) => {
   const [duration, setDuration] = useState(0);
   const [showControls, setShowControls] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
 
   const togglePlay = () => {
     const video = videoRef.current;
     if (!video) return;
-    if (video.paused) {
+    // If video is playing but muted, first click should unmute and keep playing
+    if (!video.paused && isMuted) {
+      try { video.muted = false; } catch {}
+      setIsMuted(false);
+      setIsPlaying(true);
+    } else if (video.paused) {
+      // Start playing with sound
+      try { video.muted = false; } catch {}
+      setIsMuted(false);
       video.play();
       setIsPlaying(true);
     } else {
@@ -146,7 +155,7 @@ return (
       className="w-full"
       onTimeUpdate={handleTimeUpdate}
       src={src}
-      muted
+      muted={isMuted}
       autoPlay
       playsInline
       preload="auto"
