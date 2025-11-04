@@ -1,6 +1,6 @@
 
 "use client";
-import { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { SplashCursor } from './components';
 import NavigationBar from './pages/Navbar';
@@ -14,14 +14,22 @@ export default function Home() {
     if (typeof window !== 'undefined') {
       try {
         const shown = window.sessionStorage.getItem('splashShown');
-        const hasHash = window.location.hash && window.location.hash.length > 1;
-        // אם כבר ראינו את מסך הטעינה או יש קפיצה לעוגן, אל תציג טעינה שוב
-        return shown ? false : !hasHash;
+        // אם כבר ראינו את מסך הטעינה, אל תציג אותו שוב
+        return !shown;
       } catch {}
     }
     return true;
   });
-  const [showTextAnimation, setShowTextAnimation] = useState(false);
+  const [showTextAnimation, setShowTextAnimation] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const shown = window.sessionStorage.getItem('splashShown');
+        // אם כבר ראינו את מסך הטעינה, הראה את האנימציה מיד
+        return !!shown;
+      } catch {}
+    }
+    return false;
+  });
   const mainContentRef = useRef<HTMLDivElement>(null);
 
   const handleLoadComplete = () => {
@@ -42,9 +50,9 @@ export default function Home() {
   };
 
   // אם יש hash בכתובת, גלול אליו לאחר שהמסך הראשי מוצג
-  if (typeof window !== 'undefined') {
-    // ריצה לאחר שה-state מתעדכן
-    setTimeout(() => {
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const timer = window.setTimeout(() => {
       if (!isLoading && window.location.hash) {
         const id = window.location.hash.replace('#', '');
         const el = document.getElementById(id);
@@ -52,8 +60,9 @@ export default function Home() {
           try { el.scrollIntoView({ behavior: 'smooth', block: 'start' }); } catch {}
         }
       }
-    }, 0);
-  }
+    }, 100);
+    return () => window.clearTimeout(timer);
+  }, [isLoading]);
 
   return (
     <div suppressHydrationWarning>
@@ -78,7 +87,7 @@ export default function Home() {
       <SplashCursor />
       
       {isLoading && <LoadPage onLoadComplete={handleLoadComplete} duration={2500} videoPath="כיף לתת מקוצר.mp4" />}
-      {!isLoading && <NavigationBar />}
+      <NavigationBar />
 
       <main ref={mainContentRef}>
       {/* className="pt-32" */}

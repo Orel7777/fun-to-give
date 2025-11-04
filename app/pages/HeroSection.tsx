@@ -108,7 +108,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         />
 
         {/* Text Content */}
-        <div className="flex relative z-20 flex-col justify-center items-center px-10 h-full text-center" style={{ overflow: 'visible', marginBottom: '95px' }}>
+        <div className="flex relative z-20 flex-col justify-center items-center px-10 min-h-screen text-center" style={{ overflow: 'visible', paddingBottom: '95px' }}>
           <div 
             className="opacity-100 transition-all transform -translate-y-[60px] sm:-translate-y-[30px] md:-translate-y-[60px] duration-2000"
           >
@@ -247,9 +247,8 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         </div>
       )}
       
-      {!loading && !error && isReady && (
-        <div className="bg-[#fdf6ed] py-8 sm:py-10 md:py-12 lg:py-16">
-          <div id="הפעילות-שלנו" className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8">
+      <div className="bg-[#fdf6ed] py-8 sm:py-10 md:py-12 lg:py-16">
+        <div id="הפעילות-שלנו" className="px-4 mx-auto max-w-3xl text-center sm:px-6 md:px-8">
             {/* תמונה עם אנימציה */}
             <div className="flex justify-center mb-2 sm:mb-3" style={{ marginBottom: '-35px' }}>
               <div className="relative group">
@@ -346,16 +345,15 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
             </div>
           </div>
         </div>
-      )}
       
-      {!loading && !error && isReady && (
+      {!loading && !error && (
         <div className="bg-[#fdf6ed] px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10">
           <VideoPlayer src={mainVideo.videoUrl} />
         </div>
       )}
 
       {/* גלריה של תמונות פעילות העמותה */}
-      <div id="תמונות-ווידאו" className="bg[#fdf6ed] py-6 sm:py-8 md:py-12 lg:py-16 text-center">
+      <div id="תמונות-ווידאו" className="bg-[#fdf6ed] py-6 sm:py-8 md:py-12 lg:py-16 text-center">
         <Reveal as="h2" type="heading" className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tighter text-center text-[#2a2b26] font-staff mb-6 sm:mb-8 md:mb-10 flex items-center justify-center gap-3">
           תמונות מפעילות העמותה
           <svg 
