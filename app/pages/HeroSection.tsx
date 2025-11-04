@@ -11,6 +11,8 @@ import OrganizationPurpose from './organization-purpose';
 import OrganizationStory from './Organization-story';
 import Reveal from '../components/Reveal';
 import { motion } from 'framer-motion';
+import { CardStack3D } from '@/components/ui/3d-flip-card';
+import { ImageDialog } from '../components/ui/image-dialog';
 
 // Declare the custom element so TSX recognizes <lottie-player />
 /* eslint-disable @typescript-eslint/no-namespace */
@@ -44,6 +46,8 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
   
   // זיהוי גודל המסך
   const [isMobile, setIsMobile] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   useEffect(() => {
     const checkScreenSize = () => {
@@ -371,8 +375,8 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         </Reveal>
       </div>
       
-      <HorizontalScrollCarousel
-        images={[
+      {(() => {
+        const galleryImages = [
           "/pictures/1.webp",
           "/pictures/2.webp",
           "/pictures/3.webp",
@@ -385,8 +389,38 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
           "/pictures/12.webp",
           "/pictures/13.webp",
           "/pictures/14.webp"
-        ]}
-      />
+        ];
+
+        return (
+          <>
+            {/* Mobile: 3D flip stack */}
+            {isMobile && (
+              <div className="sm:hidden">
+                <CardStack3D
+                  images={galleryImages.map((src, i) => ({ src, alt: `תמונה ${i + 1} מפעילות העמותה` }))}
+                  cardWidth={260}
+                  cardHeight={260}
+                  spacing={{ x: 60, y: 0 }}
+                  onImageClick={(idx) => { setCurrentImageIndex(idx); setDialogOpen(true); }}
+                />
+                <ImageDialog
+                  images={galleryImages}
+                  isOpen={dialogOpen}
+                  currentIndex={currentImageIndex}
+                  onClose={() => setDialogOpen(false)}
+                  onNext={() => setCurrentImageIndex((prev) => (prev + 1) % galleryImages.length)}
+                  onPrev={() => setCurrentImageIndex((prev) => (prev - 1 + galleryImages.length) % galleryImages.length)}
+                />
+              </div>
+            )}
+
+            {/* Desktop/tablet: existing grid */}
+            {!isMobile && (
+              <HorizontalScrollCarousel images={galleryImages} />
+            )}
+          </>
+        );
+      })()}
 
 
       {/* סיפורי משפחות עם עדויות אודיו */}

@@ -26,6 +26,14 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
   const [buttonPressed, setButtonPressed] = React.useState<'prev' | 'next' | null>(null)
   const [isNavigating, setIsNavigating] = React.useState(false)
   const [blurDataUrls, setBlurDataUrls] = React.useState<{ [key: string]: string }>({})
+  const [isMobile, setIsMobile] = React.useState(false)
+
+  React.useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768)
+    onResize()
+    window.addEventListener('resize', onResize)
+    return () => window.removeEventListener('resize', onResize)
+  }, [])
 
   const handleNext = React.useCallback(() => {
     if (isNavigating) return
@@ -167,12 +175,15 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
               </svg>
             </motion.button>
 
-            {/* מיכל התמונה */}
-            <div className="relative flex-1 max-w-3xl">
+            {/* מיכל התמונה בגודל אחיד לכל התמונות */}
+            <div
+              className="relative mx-auto rounded-xl overflow-hidden shadow-2xl"
+              style={{ width: isMobile ? 340 : 800, height: isMobile ? 440 : 550 }}
+            >
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentIndex}
-                  className="relative flex items-center justify-center"
+                  className="relative w-full h-full"
                   initial={{ x: 300, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   exit={{ x: -300, opacity: 0 }}
@@ -185,19 +196,12 @@ const ImageDialog: React.FC<ImageDialogProps> = ({
                 >
                   <Image
                     src={images[currentIndex]}
-                    width={800}
-                    height={600}
+                    fill
                     quality={85}
-                    sizes="(max-width: 768px) 70vw, (max-width: 1200px) 60vw, 50vw"
-                    style={{ 
-                      objectFit: "contain", 
-                      width: "100%", 
-                      height: "auto",
-                      maxWidth: "60vw",
-                      maxHeight: "60vh"
-                    }}
+                    sizes={isMobile ? "340px" : "800px"}
+                    style={{ objectFit: "cover" }}
                     alt={`תמונה ${currentIndex + 1} מפעילות העמותה`}
-                    className="rounded-lg shadow-2xl"
+                    className="cursor-pointer"
                     priority
                     placeholder={blurDataUrls[images[currentIndex]] ? "blur" : "empty"}
                     blurDataURL={blurDataUrls[images[currentIndex]] || undefined}
