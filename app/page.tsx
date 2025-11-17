@@ -25,9 +25,9 @@ export default function Home() {
     if (typeof window === 'undefined') return;
     try {
       const shown = window.sessionStorage.getItem('splashShown');
-      const hasHash = window.location.hash && window.location.hash.length > 1;
-      // אם כבר ראינו את מסך הטעינה או יש hash, אל תציג אותו שוב
-      setIsLoading(shown ? false : !hasHash);
+      // במסך הראשון תמיד מציגים את מסך הטעינה, גם אם נכנסנו עם hash לקטע בעמוד
+      // רק אם כבר ראינו את מסך הטעינה (splashShown), נדלג עליו בביקורים הבאים
+      setIsLoading(!shown);
       // אם כבר ראינו את מסך הטעינה, הראה את האנימציה מיד
       setShowTextAnimation(!!shown);
     } catch {
