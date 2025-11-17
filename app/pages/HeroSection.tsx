@@ -241,13 +241,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
         </div>
       </div>
 
-      {/* הוידאו מתחת לטקסט */}
-      {loading && (
-        <div className="flex justify-center items-center py-0 sm:py-1 md:py-2 lg:py-4 bg-[#fdf6ed]">
-          <Reveal as="p" type="paragraph" className="text-[#2a2b26] font-staff text-lg sm:text-xl">טוען וידאו...</Reveal>
-        </div>
-      )}
-      
+      {/* הודעת שגיאה לוידאו */}
       {error && (
         <div className="flex justify-center items-center py-1 sm:py-2 md:py-4 lg:py-6 bg-[#fdf6ed]">
           <Reveal as="p" type="paragraph" className="text-lg text-center text-red-600 sm:text-xl font-staff">
@@ -355,11 +349,20 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
           </div>
         </div>
       
-      {!loading && !error && mainVideo.isReady && (
-        <div className="bg-[#fdf6ed] px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10">
+      {/* הוידאו מתחת לטקסט – במקומו תוצג גם הודעת 'טוען וידאו' */}
+      <div className="bg-[#fdf6ed] px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10">
+        {loading && !error && (
+          <div className="flex justify-center items-center min-h-[200px] sm:min-h-[260px] md:min-h-[320px]">
+            <Reveal as="p" type="paragraph" className="text-[#2a2b26] font-staff text-lg sm:text-xl">
+              טוען וידאו...
+            </Reveal>
+          </div>
+        )}
+
+        {!loading && !error && mainVideo.isReady && (
           <VideoPlayer src={mainVideo.videoUrl} />
-        </div>
-      )}
+        )}
+      </div>
 
       {/* גלריה של תמונות פעילות העמותה */}
       <div id="תמונות-ווידאו" className="bg-[#fdf6ed] py-6 sm:py-8 md:py-12 lg:py-16 text-center">
