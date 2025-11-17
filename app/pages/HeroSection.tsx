@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Script from 'next/script';
 import { HorizontalScrollCarousel } from '../components';
 import VideoPlayer from '@/components/ui/video-player';
+import VideoLoader from '@/components/ui/VideoLoader';
 import FamiliesTestimonials from './Testimonials';
 import { useVideo } from '../contexts/VideoContext';
 import { PulseBeamsFirstDemo } from '../components/call to action/demo';
@@ -352,10 +353,8 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
       {/* הוידאו מתחת לטקסט – במקומו תוצג גם הודעת 'טוען וידאו' */}
       <div className="bg-[#fdf6ed] px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10">
         {loading && !error && (
-          <div className="flex justify-center items-center min-h-[200px] sm:min-h-[260px] md:min-h-[320px]">
-            <Reveal as="p" type="paragraph" className="text-[#2a2b26] font-staff text-lg sm:text-xl">
-              טוען וידאו...
-            </Reveal>
+          <div className="relative flex justify-center items-center min-h-[200px] sm:min-h-[260px] md:min-h-[320px]">
+            <VideoLoader />
           </div>
         )}
 
