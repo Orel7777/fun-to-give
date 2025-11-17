@@ -19,6 +19,8 @@ export function ContactForm() {
     notifications: false,
   })
 
+  const formDataRef = useRef<typeof formData | null>(null)
+
   const [submitting, setSubmitting] = useState(false)
   const [sent, setSent] = useState<null | boolean>(null)
   const [error, setError] = useState<string | null>(null)
@@ -122,24 +124,22 @@ export function ContactForm() {
       return
     }
     
+    // Save current form data for WhatsApp sending after success
+    formDataRef.current = formData
+
     try {
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
-      const data = await res.json().catch(() => ({}))
-      
+
       if (!res.ok) {
-        throw new Error(data?.error || 'שליחה נכשלה, אנא נסו שוב')
+        const text = await res.text().catch(() => '')
+        throw new Error(text || 'שליחה נכשלה, אנא נסו שוב')
       }
-      
+
       setSent(true)
-      
-      // Handle partial success with warnings
-      if (data.warning && data.errors?.length > 0) {
-        setWarning(`${data.warning}: ${data.errors.join(', ')}`)
-      }
       
       // Reset form on success
       setFormData({
@@ -156,6 +156,29 @@ export function ContactForm() {
       setError(err?.message || 'שליחה נכשלה, אנא נסו שוב')
     } finally {
       setSubmitting(false)
+    }
+  }
+
+  const sendToWhatsApp = () => {
+    if (!formDataRef.current) return
+
+    const data = formDataRef.current
+
+    const message = `
+פנייה חדשה מהאתר
+נושא: ${data.subject}
+שם פרטי: ${data.firstName}
+שם משפחה: ${data.lastName}
+טלפון: ${data.phone}
+אימייל: ${data.email}
+הודעה: ${data.message}
+    `.trim()
+
+    const phoneNumber = '972548119221'
+    const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
+
+    if (typeof window !== 'undefined') {
+      window.open(url, '_blank')
     }
   }
 
@@ -188,6 +211,15 @@ export function ContactForm() {
           {warning && (
             <p className="text-yellow-600 text-sm mt-1">{warning}</p>
           )}
+          <div className="mt-4 flex justify-center">
+            <Button
+              type="button"
+              onClick={sendToWhatsApp}
+              className="bg-[#25D366] hover:bg-[#1ebe5d] text-white px-8 py-2 rounded-full text-base font-medium font-staff cursor-pointer"
+            >
+              שלח/י גם בוואטסאפ
+            </Button>
+          </div>
         </div>
       )}
       {sent === false && error && (
