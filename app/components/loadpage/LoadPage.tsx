@@ -260,18 +260,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
         {Math.round(progress).toString().padStart(3, '0')}
       </div>
 
-      {/* הודעת "טוען וידאו..." - מופיעה אם הווידאו לוקח זמן */}
-      {showVideoLoadingHint && (
-        <div 
-          ref={videoLoadingTextRef}
-          className="absolute bottom-20 left-4 sm:bottom-24 sm:left-6 text-[#fdf6ed] text-lg sm:text-2xl font-staff animate-pulse"
-        >
-          טוען וידאו<span className="inline-block animate-bounce">...</span>
-        </div>
-      )}
-
-
-
+      {/* ביטול טקסט "טוען וידאו..." לפי בקשת הלקוח – משאירים את ההיגיון הפנימי ללא הצגת מילים */}
       {/* לוגו מעל הסרגל עם רקע מונפש */}
       <div className="flex relative justify-center items-center mb-8 sm:mb-16">
         {/* רקע מונפש מסביב ללוגו */}
