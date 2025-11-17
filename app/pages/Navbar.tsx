@@ -667,12 +667,21 @@ export default function NavigationBar({ className = "" }: NavigationBarProps) {
             {menuItems.map((item, index) => (
               <a
                 key={index}
-                      href={item.url}
-                                             className="block px-4 py-3 text-base text-gray-600 rounded-lg transition-all duration-300 cursor-pointer hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:shadow-sm hover:scale-105 active:scale-95 menu-item"
-                onClick={closeMenu}
-                      style={{
-                        animationDelay: `${index * 100}ms`,
-                      }}
+                href={item.url}
+                className="block px-4 py-3 text-base text-gray-600 rounded-lg transition-all duration-300 cursor-pointer hover:bg-gradient-to-r hover:from-[#9acdbe]/10 hover:to-[#9acdbe]/5 hover:shadow-sm hover:scale-105 active:scale-95 menu-item"
+                onClick={(e) => {
+                  if (item.url.startsWith('#') || item.url.startsWith('/#')) {
+                    e.preventDefault();
+                    const id = item.url.replace('/#', '').replace('#', '');
+                    goToSectionById(id);
+                    closeMenu();
+                  } else {
+                    closeMenu();
+                  }
+                }}
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                }}
               >
                       <div className="flex justify-between items-center">
                         <span className="font-bold font-staff text-gray-800 transition-all duration-300">{item.title}</span>
