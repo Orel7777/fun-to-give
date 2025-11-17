@@ -10,28 +10,30 @@ import Footer from './pages/Footer';
 import Script from 'next/script';
 
 export default function Home() {
-  const [isLoading, setIsLoading] = useState<boolean>(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const shown = window.sessionStorage.getItem('splashShown');
-        const hasHash = window.location.hash && window.location.hash.length > 1;
-        // אם כבר ראינו את מסך הטעינה או יש hash, אל תציג אותו שוב
-        return shown ? false : !hasHash;
-      } catch {}
-    }
-    return true;
-  });
-  const [showTextAnimation, setShowTextAnimation] = useState(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const shown = window.sessionStorage.getItem('splashShown');
-        // אם כבר ראינו את מסך הטעינה, הראה את האנימציה מיד
-        return !!shown;
-      } catch {}
-    }
-    return false;
-  });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [showTextAnimation, setShowTextAnimation] = useState(false);
+  const [isHydrated, setIsHydrated] = useState(false);
   const mainContentRef = useRef<HTMLDivElement>(null);
+
+  // סימון שהקומפוננטה רצה בצד הקליינט בלבד (אחרי Hydration)
+  useEffect(() => {
+    setIsHydrated(true);
+  }, []);
+
+  // קביעת מצב ראשוני בצד לקוח בלבד כדי למנוע Hydration mismatch בערכי isLoading/showTextAnimation
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const shown = window.sessionStorage.getItem('splashShown');
+      const hasHash = window.location.hash && window.location.hash.length > 1;
+      // אם כבר ראינו את מסך הטעינה או יש hash, אל תציג אותו שוב
+      setIsLoading(shown ? false : !hasHash);
+      // אם כבר ראינו את מסך הטעינה, הראה את האנימציה מיד
+      setShowTextAnimation(!!shown);
+    } catch {
+      // במקרה של שגיאה נשאיר את ברירת המחדל (isLoading=true, showTextAnimation=false)
+    }
+  }, []);
 
   const handleLoadComplete = () => {
     setIsLoading(false);
@@ -86,9 +88,16 @@ export default function Home() {
       </Script> */}
       {/* SplashCursor פעיל תמיד */}
       <SplashCursor />
-      
-      {isLoading && <LoadPage onLoadComplete={handleLoadComplete} duration={2500} videoPath="כיף לתת מקוצר.mp4" />}
-      {!isLoading && <NavigationBar />}
+
+      {/* כדי למנוע Hydration mismatch: בזמן SSR וב-render הראשון בלקוח isHydrated=false ולכן לא מוצג לא מסך טעינה ולא Navbar */}
+      {isHydrated && isLoading && (
+        <LoadPage
+          onLoadComplete={handleLoadComplete}
+          duration={2500}
+          videoPath="כיף לתת מקוצר.mp4"
+        />
+      )}
+      {isHydrated && !isLoading && <NavigationBar />}
 
       <main ref={mainContentRef}>
       {/* className="pt-32" */}

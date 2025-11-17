@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Play, Pause, Volume2, Volume1, VolumeX } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -71,6 +71,28 @@ const VideoPlayer = ({ src }: { src: string }) => {
   const [showControls, setShowControls] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
   const [isMuted, setIsMuted] = useState(true);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    try {
+      video.muted = true;
+    } catch {}
+
+    const playPromise = video.play();
+    if (playPromise && typeof (playPromise as Promise<void>).then === "function") {
+      playPromise
+        .then(() => {
+          setIsPlaying(!video.paused);
+        })
+        .catch(() => {
+          setIsPlaying(false);
+        });
+    } else {
+      setIsPlaying(!video.paused);
+    }
+  }, [src]);
 
   const togglePlay = () => {
     const video = videoRef.current;
@@ -159,6 +181,18 @@ return (
       autoPlay
       playsInline
       preload="auto"
+      onLoadedMetadata={() => {
+        const video = videoRef.current;
+        if (!video) return;
+        if (video.paused) {
+          const playPromise = video.play();
+          if (playPromise && typeof (playPromise as Promise<void>).then === "function") {
+            playPromise.catch(() => {
+              setIsPlaying(false);
+            });
+          }
+        }
+      }}
       onPlay={() => setIsPlaying(true)}
       onPause={() => setIsPlaying(false)}
     />
