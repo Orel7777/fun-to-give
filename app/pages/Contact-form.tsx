@@ -174,7 +174,7 @@ export function ContactForm() {
 הודעה: ${data.message}
     `.trim()
 
-    const phoneNumber = '972548119221'
+    const phoneNumber = '972532217895'
     const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
 
     if (typeof window !== 'undefined') {

@@ -4,8 +4,8 @@ import nodemailer from 'nodemailer';
 
 // WhatsApp sender (Twilio or simulated)
 async function sendWhatsAppMessage(phoneNumber: string, message: string) {
-  // Destination number: env > argument > default
-  const whatsappPhone = (process.env.WHATSAPP_TO_NUMBER || phoneNumber || '972548119221').replace(/^\+/, '');
+  // Destination number: env > argument > default (client default: 0532217895 -> 972532217895)
+  const whatsappPhone = (process.env.WHATSAPP_TO_NUMBER || phoneNumber || '972532217895').replace(/^\+/, '');
   
   // Check if Twilio credentials are available
   const twilioAccountSid = process.env.TWILIO_ACCOUNT_SID;
@@ -135,7 +135,7 @@ export async function POST(req: NextRequest) {
 הודעה: ${message || '-'}
       `.trim();
 
-      await sendWhatsAppMessage(process.env.WHATSAPP_TO_NUMBER || '972548119221', whatsappMessage);
+      await sendWhatsAppMessage(process.env.WHATSAPP_TO_NUMBER || '972532217895', whatsappMessage);
       results.whatsapp = true;
     } catch (whatsappError: any) {
       console.error('WhatsApp sending failed:', whatsappError);
