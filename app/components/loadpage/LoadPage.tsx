@@ -13,6 +13,8 @@ interface LoadPageProps {
 export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 'כיף לתת מקוצר.mp4' }: LoadPageProps) {
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
+  const [waitingForVideo, setWaitingForVideo] = useState(false);
+  const [showVideoLoadingHint, setShowVideoLoadingHint] = useState(false);
 
   const { mainVideo, preloadVideo } = useVideo();
   const videoStatusRef = useRef({ isReady: false, loading: false });
@@ -24,6 +26,7 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
   const numberRef = useRef<HTMLDivElement>(null);
   const logoRef = useRef<HTMLImageElement>(null);
   const logoBgRef = useRef<HTMLDivElement>(null);
+  const videoLoadingTextRef = useRef<HTMLDivElement>(null);
 
   // עדכון סטטוס הוידאו ב-ref
   useEffect(() => {
@@ -69,70 +72,9 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       if (!isComplete) {
         animationFrameId = requestAnimationFrame(updateProgress);
       } else {
-        console.log('הטעינה הסתיימה (100%)');
-        
-        // הטעינה הסתיימה - אפקטי GSAP
-        
-        // התחל את אנימציית העיגול והפיזור
-        console.log('מתחיל אנימציית עיגול ופיזור');
-        
-        // הסתר את כל האלמנטים
-        gsap.to([numberRef.current, logoRef.current, logoBgRef.current, progressBarRef.current], {
-          opacity: 0,
-          duration: 0.2,
-          ease: "power2.out"
-        });
-
-        // המתן רגע ואז צור עיגול חדש במרכז
-        setTimeout(() => {
-          // הראה את העיגול החדש
-          gsap.set(circleRef.current, {
-            width: "50px",
-            height: "50px",
-            left: "50%",
-            top: "50%",
-            xPercent: -50,
-            yPercent: -50,
-            scale: 0,
-            opacity: 1,
-            borderRadius: "50%",
-            backgroundColor: "#fdf6ed",
-            position: "fixed",
-            zIndex: 9999,
-            display: "block"
-          });
-
-          // אנימציה 1: הראה את העיגול
-          gsap.to(circleRef.current, {
-            scale: 1,
-            duration: 0.3,
-            ease: "back.out(1.7)",
-            onComplete: () => {
-              console.log('העיגול הופיע, מתחיל פיזור');
-              
-              // אנימציה 2: הרחב את העיגול לכל המסך
-              gsap.to(circleRef.current, {
-                scale: 50,
-                duration: 0.8,
-                ease: "power2.out",
-                onComplete: () => {
-                  console.log('הפיזור הושלם');
-                  
-                  // אנימציה 3: היעלם
-                  gsap.to(preloaderRef.current, {
-                    opacity: 0,
-                    duration: 0.3,
-                    ease: "power2.out",
-                    onComplete: () => {
-                      setIsVisible(false);
-                      onLoadComplete?.();
-                    }
-                  });
-                }
-              });
-            }
-          });
-        }, 300);
+        console.log('הטעינה הסתיימה (100%) - ממתין לווידאו...');
+        // לא מתחילים את אנימציית היציאה כאן - ממתינים לווידאו להיות מוכן
+        // האנימציה תתחיל ב-useEffect נפרד שמאזין ל-mainVideo.isReady
       }
     };
 
@@ -212,18 +154,85 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
     };
   }, [duration, onLoadComplete]); // הסרת התלות ב-mainVideo
 
-  // אל תסגור את מסך הטעינה עד שהווידאו מוכן
+  // ניהול יציאה ממסך הטעינה - רק כשהטיימר הגיע ל-100% והווידאו מוכן
   useEffect(() => {
     if (progress >= 100) {
-      if (videoStatusRef.current.isReady) {
-        console.log('✅ מסך הטעינה מסתיים - וידאו מוכן');
-        setIsVisible(false);
-        onLoadComplete?.();
+      if (mainVideo.isReady) {
+        console.log('✅ טיימר הגיע ל-100% וווידאו מוכן - מתחיל אנימציית יציאה');
+        
+        // התחל את אנימציית העיגול והפיזור
+        console.log('מתחיל אנימציית עיגול ופיזור');
+        
+        // הסתר את כל האלמנטים (כולל הטקסט של טעינת וידאו אם היה)
+        gsap.to([numberRef.current, logoRef.current, logoBgRef.current, progressBarRef.current, videoLoadingTextRef.current], {
+          opacity: 0,
+          duration: 0.2,
+          ease: "power2.out"
+        });
+
+        // המתן רגע ואז צור עיגול חדש במרכז
+        setTimeout(() => {
+          // הראה את העיגול החדש
+          gsap.set(circleRef.current, {
+            width: "50px",
+            height: "50px",
+            left: "50%",
+            top: "50%",
+            xPercent: -50,
+            yPercent: -50,
+            scale: 0,
+            opacity: 1,
+            borderRadius: "50%",
+            backgroundColor: "#fdf6ed",
+            position: "fixed",
+            zIndex: 9999,
+            display: "block"
+          });
+
+          // אנימציה 1: הראה את העיגול
+          gsap.to(circleRef.current, {
+            scale: 1,
+            duration: 0.3,
+            ease: "back.out(1.7)",
+            onComplete: () => {
+              console.log('העיגול הופיע, מתחיל פיזור');
+              
+              // אנימציה 2: הרחב את העיגול לכל המסך
+              gsap.to(circleRef.current, {
+                scale: 50,
+                duration: 0.8,
+                ease: "power2.out",
+                onComplete: () => {
+                  console.log('הפיזור הושלם');
+                  
+                  // אנימציה 3: היעלם
+                  gsap.to(preloaderRef.current, {
+                    opacity: 0,
+                    duration: 0.3,
+                    ease: "power2.out",
+                    onComplete: () => {
+                      setIsVisible(false);
+                      onLoadComplete?.();
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }, 300);
       } else {
-        console.log('⏳ מחכה לוידאו להיות מוכן...');
+        console.log('⏳ טיימר הגיע ל-100% אבל ממתין לווידאו להיות מוכן...');
+        setWaitingForVideo(true);
+        
+        // אם עבר יותר מ-2 שניות מאז שהגענו ל-100%, הצג הודעה
+        const hintTimer = setTimeout(() => {
+          setShowVideoLoadingHint(true);
+        }, 2000);
+        
+        return () => clearTimeout(hintTimer);
       }
     }
-  }, [progress, onLoadComplete]);
+  }, [progress, mainVideo.isReady, onLoadComplete]);
 
   if (!isVisible) {
     return null;
@@ -250,6 +259,16 @@ export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 
       >
         {Math.round(progress).toString().padStart(3, '0')}
       </div>
+
+      {/* הודעת "טוען וידאו..." - מופיעה אם הווידאו לוקח זמן */}
+      {showVideoLoadingHint && (
+        <div 
+          ref={videoLoadingTextRef}
+          className="absolute bottom-20 left-4 sm:bottom-24 sm:left-6 text-[#fdf6ed] text-lg sm:text-2xl font-staff animate-pulse"
+        >
+          טוען וידאו<span className="inline-block animate-bounce">...</span>
+        </div>
+      )}
 
 
 
