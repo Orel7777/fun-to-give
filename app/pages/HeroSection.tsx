@@ -69,7 +69,7 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
   useEffect(() => {
     if (!isReady && !loading && !error) {
       console.log('🎬 טוען וידאו ב-HeroSection (ברענון)');
-      preloadVideo('כיף לתת מקוצר.mp4');
+      preloadVideo('כיף לתת 72.4mb.mp4');
     }
   }, [isReady, loading, error, preloadVideo]);
   

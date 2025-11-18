@@ -10,7 +10,7 @@ interface LoadPageProps {
   videoPath?: string; // נתיב הוידאו לטעינה מוקדמת
 }
 
-export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 'כיף לתת מקוצר.mp4' }: LoadPageProps) {
+export default function LoadPage({ onLoadComplete, duration = 2500, videoPath = 'כיף לתת 72.4mb.mp4' }: LoadPageProps) {
   const [progress, setProgress] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
   const [waitingForVideo, setWaitingForVideo] = useState(false);

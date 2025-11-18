@@ -94,7 +94,7 @@ export default function Home() {
         <LoadPage
           onLoadComplete={handleLoadComplete}
           duration={2500}
-          videoPath="כיף לתת מקוצר.mp4"
+          videoPath="כיף לתת 72.4mb.mp4"
         />
       )}
       {isHydrated && !isLoading && <NavigationBar />}
