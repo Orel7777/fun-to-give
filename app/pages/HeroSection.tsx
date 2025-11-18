@@ -350,18 +350,12 @@ const HeroSection = ({ showTextAnimation }: HeroSectionProps) => {
           </div>
         </div>
       
-      {/* הוידאו מתחת לטקסט – במקומו תוצג גם הודעת 'טוען וידאו' */}
-      <div className="bg-[#fdf6ed] px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10">
-        {loading && !error && (
-          <div className="relative flex justify-center items-center min-h-[200px] sm:min-h-[260px] md:min-h-[320px]">
-            <VideoLoader />
-          </div>
-        )}
-
-        {!loading && !error && mainVideo.isReady && (
+      {/* הוידאו מתחת לטקסט – יוצג רק כשהוידאו מוכן, כדי שלא תופיע מסגרת ריקה או טעינה קצרה */}
+      {!error && mainVideo.isReady && (
+        <div className="bg-[#fdf6ed] px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-10">
           <VideoPlayer src={mainVideo.videoUrl} />
-        )}
-      </div>
+        </div>
+      )}
 
       {/* גלריה של תמונות פעילות העמותה */}
       <div id="תמונות-ווידאו" className="bg-[#fdf6ed] py-6 sm:py-8 md:py-12 lg:py-16 text-center">
