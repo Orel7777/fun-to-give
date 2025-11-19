@@ -128,30 +128,60 @@ export function ContactForm() {
     formDataRef.current = formData
 
     try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
-
-      if (!res.ok) {
-        const text = await res.text().catch(() => '')
-        throw new Error(text || 'שליחה נכשלה, אנא נסו שוב')
+      console.log('Submitting form data:', formData)
+      
+      // Send directly to FormSubmit
+      const formSubmitData = {
+        name: `${formData.firstName} ${formData.lastName}`,
+        email: formData.email,
+        phone: formData.phone,
+        message: `נושא: ${formData.subject}\n\n${formData.message}`,
+        _subject: formData.subject ? `פנייה מהאתר: ${formData.subject}` : 'פנייה חדשה מהאתר',
+        _replyto: formData.email,
+        _captcha: 'false'
       }
 
-      setSent(true)
-      
-      // Reset form on success
-      setFormData({
-        subject: "",
-        firstName: "",
-        lastName: "",
-        phone: "",
-        email: "",
-        message: "",
-        notifications: false,
+      const res = await fetch('https://formsubmit.co/ajax/keflatet@gmail.com', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(formSubmitData),
       })
+
+      console.log('Response status:', res.status, res.statusText)
+
+      const data = await res.json().catch((e) => {
+        console.error('Failed to parse response:', e)
+        return {}
+      })
+
+      console.log('Response data:', data)
+
+      if (!res.ok) {
+        throw new Error(data.message || data.error || 'שליחה נכשלה, אנא נסו שוב')
+      }
+
+      // Check FormSubmit success response
+      if (data.success === 'true' || data.success === true) {
+        setSent(true)
+        
+        // Reset form on success
+        setFormData({
+          subject: "",
+          firstName: "",
+          lastName: "",
+          phone: "",
+          email: "",
+          message: "",
+          notifications: false,
+        })
+      } else {
+        throw new Error('שליחה נכשלה, אנא נסו שוב')
+      }
     } catch (err: any) {
+      console.error('Form submission error:', err)
       setSent(false)
       setError(err?.message || 'שליחה נכשלה, אנא נסו שוב')
     } finally {
